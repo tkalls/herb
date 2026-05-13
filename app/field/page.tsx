@@ -1,25 +1,44 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import dynamic from "next/dynamic";
 import {
-  Wifi,
-  WifiOff,
   MapPin,
   User,
   Leaf,
   Coffee,
   CheckCircle,
+  CheckCircle2,
   ChevronRight,
   ChevronLeft,
   Upload,
   AlertCircle,
-  Clock,
-  Navigation,
   Phone,
   Hash,
   Building2,
-  LocateFixed,
 } from "lucide-react";
+import SyncBadge from "@/components/sync/SyncBadge";
+import type { SyncStatus } from "@/lib/sync/useSyncQueue";
+
+const PolygonCapture = dynamic(
+  () => import("@/components/map/PolygonCapture"),
+  { ssr: false, loading: () => <div className="aspect-[4/3] rounded-xl bg-stone-100 animate-pulse" /> },
+);
+
+// Phase 2: swap this for useSyncQueue once Lane 1 installs dexie
+function useSyncStatus(): SyncStatus {
+  const [online, setOnline] = useState(
+    typeof navigator !== "undefined" ? navigator.onLine : true,
+  );
+  useEffect(() => {
+    const on = () => setOnline(true);
+    const off = () => setOnline(false);
+    window.addEventListener("online", on);
+    window.addEventListener("offline", off);
+    return () => { window.removeEventListener("online", on); window.removeEventListener("offline", off); };
+  }, []);
+  return { online, queued: 0, draining: false, lastError: null };
+}
 
 type Step = 0 | 1 | 2 | 3;
 
@@ -52,28 +71,6 @@ const coffeeVarieties = ["Arabica SL28", "Arabica N39", "Arabica Kent", "Arabica
 const avocadoVarieties = ["Hass", "Fuerte", "Reed", "Puebla", "Other"];
 const certOptions = ["UTZ Certified", "Rainforest Alliance", "Fair Trade", "GlobalG.A.P.", "Organic", "None"];
 
-const mockPolygonPoints = [
-  { lat: -3.2691, lng: 37.3311, label: "A" },
-  { lat: -3.2685, lng: 37.3318, label: "B" },
-  { lat: -3.2679, lng: 37.3312, label: "C" },
-  { lat: -3.2683, lng: 37.3305, label: "D" },
-];
-
-function SyncBar({ online }: { online: boolean }) {
-  return (
-    <div className={`flex items-center justify-between px-4 py-2 text-xs font-medium ${online ? "bg-emerald-600" : "bg-amber-600"} text-white`}>
-      <div className="flex items-center gap-1.5">
-        {online ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
-        {online ? "Online · Syncing" : "Offline Mode · Data queued locally"}
-      </div>
-      <div className="flex items-center gap-1.5">
-        <Clock className="w-3 h-3 opacity-70" />
-        <span className="opacity-70">3 items in queue</span>
-      </div>
-    </div>
-  );
-}
-
 function StepIndicator({ current, total }: { current: Step; total: number }) {
   return (
     <div className="flex items-center gap-2 px-4 py-3 border-b border-stone-200 bg-white">
@@ -102,65 +99,12 @@ function StepIndicator({ current, total }: { current: Step; total: number }) {
   );
 }
 
-function PolygonPreview() {
-  const viewBox = "0 0 200 180";
-  const points = [
-    [60, 50],
-    [140, 40],
-    [155, 110],
-    [80, 130],
-    [50, 90],
-  ];
-  const pointsStr = points.map((p) => p.join(",")).join(" ");
-
-  return (
-    <div className="bg-emerald-950 rounded-xl overflow-hidden relative">
-      {/* Simulated satellite bg */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-4 left-8 w-20 h-20 rounded-full bg-emerald-700" />
-        <div className="absolute bottom-6 right-6 w-16 h-16 rounded bg-emerald-800" />
-        <div className="absolute top-12 right-16 w-12 h-8 rounded bg-emerald-900" />
-      </div>
-      <svg viewBox={viewBox} className="w-full relative z-10" style={{ aspectRatio: "200/180" }}>
-        {/* Grid */}
-        {[40, 80, 120, 160].map((x) => (
-          <line key={`vg-${x}`} x1={x} y1={0} x2={x} y2={180} stroke="#16a34a" strokeWidth="0.3" opacity="0.3" />
-        ))}
-        {[30, 60, 90, 120, 150].map((y) => (
-          <line key={`hg-${y}`} x1={0} y1={y} x2={200} y2={y} stroke="#16a34a" strokeWidth="0.3" opacity="0.3" />
-        ))}
-
-        {/* Farm polygon fill */}
-        <polygon points={pointsStr} fill="#16a34a" fillOpacity="0.25" stroke="#4ade80" strokeWidth="1.5" />
-
-        {/* Vertices */}
-        {points.map((p, i) => (
-          <g key={i}>
-            <circle cx={p[0]} cy={p[1]} r="4" fill="#4ade80" stroke="#fff" strokeWidth="1" />
-            <text x={p[0] + 6} y={p[1] - 4} fill="#86efac" fontSize="8" fontFamily="monospace">
-              {mockPolygonPoints[i]?.label || String.fromCharCode(65 + i)}
-            </text>
-          </g>
-        ))}
-
-        {/* Coordinate labels */}
-        <text x="8" y="174" fill="#4ade80" fontSize="5.5" fontFamily="monospace" opacity="0.7">
-          -3.2691, 37.3311
-        </text>
-      </svg>
-
-      <div className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-black/50 rounded px-2 py-1">
-        <LocateFixed className="w-3 h-3 text-emerald-400" />
-        <span className="text-xs text-emerald-300 font-mono">GPS ±3m</span>
-      </div>
-    </div>
-  );
-}
-
 export default function FieldPage() {
-  const [online] = useState(true);
+  const syncStatus = useSyncStatus();
   const [step, setStep] = useState<Step>(0);
   const [submitted, setSubmitted] = useState(false);
+  const [capturedPolygon, setCapturedPolygon] = useState<{ type: "Polygon"; coordinates: number[][][] } | null>(null);
+  const [capturedAreaHa, setCapturedAreaHa] = useState<number | null>(null);
 
   const [farmer, setFarmer] = useState<FarmerForm>({
     name: "",
@@ -179,17 +123,6 @@ export default function FieldPage() {
     existingPlots: "",
   });
 
-  const [capturing, setCapturing] = useState(false);
-  const [captured, setCaptured] = useState(false);
-
-  function handleCapture() {
-    setCapturing(true);
-    setTimeout(() => {
-      setCapturing(false);
-      setCaptured(true);
-    }, 2200);
-  }
-
   function handleSubmit() {
     setSubmitted(true);
   }
@@ -199,7 +132,7 @@ export default function FieldPage() {
   if (submitted) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col">
-        <SyncBar online={online} />
+        <div className="px-4 pt-3"><SyncBadge status={syncStatus} /></div>
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-sm w-full text-center">
             <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
@@ -229,7 +162,7 @@ export default function FieldPage() {
               </div>
             </div>
             <button
-              onClick={() => { setSubmitted(false); setStep(0); setFarmer({ name: "", phone: "", nationalId: "", village: "", district: "", cooperative: "" }); setCrop({ cropType: "", variety: "", estimatedArea: "", certifications: [], existingPlots: "" }); setCaptured(false); }}
+              onClick={() => { setSubmitted(false); setStep(0); setFarmer({ name: "", phone: "", nationalId: "", village: "", district: "", cooperative: "" }); setCrop({ cropType: "", variety: "", estimatedArea: "", certifications: [], existingPlots: "" }); setCapturedPolygon(null); setCapturedAreaHa(null); }}
               className="w-full py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800 transition-colors"
             >
               Register Another Farm
@@ -242,7 +175,7 @@ export default function FieldPage() {
 
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col">
-      <SyncBar online={online} />
+      <div className="px-4 pt-3"><SyncBadge status={syncStatus} /></div>
 
       {/* Header */}
       <div className="bg-white border-b border-stone-200 px-4 py-4">
@@ -491,97 +424,55 @@ export default function FieldPage() {
             </div>
           )}
 
-          {/* Step 2: Map / GPS Polygon */}
+          {/* Step 2: Farm Boundary */}
           {step === 2 && (
             <div className="space-y-4">
               <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
                 <div className="p-5 border-b border-stone-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
+                      <MapPin className="w-5 h-5 text-emerald-600" />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-stone-900">GPS Farm Boundary</h2>
-                      <p className="text-xs text-stone-500">Walk the perimeter to capture the polygon</p>
+                      <h2 className="font-semibold text-stone-900">Farm Boundary</h2>
+                      <p className="text-xs text-stone-500">Walk the perimeter to record the polygon</p>
                     </div>
                   </div>
                 </div>
 
                 <div className="p-4">
-                  <PolygonPreview />
+                  <PolygonCapture
+                    villageCenter={{ lat: -3.2691, lng: 37.3311 }}
+                    seed={Date.now() % 1000}
+                    mode="simulated"
+                    onComplete={(geojson, areaHa) => {
+                      setCapturedPolygon(geojson);
+                      setCapturedAreaHa(areaHa);
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 space-y-3">
-                  {/* GPS points */}
-                  <div className="bg-stone-50 rounded-xl p-3 space-y-2">
-                    <div className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">
-                      Captured Points
-                    </div>
-                    {mockPolygonPoints.map((pt) => (
-                      <div key={pt.label} className="flex items-center justify-between text-xs">
-                        <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">
-                          {pt.label}
+                {capturedPolygon && (
+                  <div className="mx-4 mb-4 bg-emerald-50 border border-emerald-200 rounded-xl p-4">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2 className="w-4 h-4 text-emerald-600" aria-hidden="true" />
+                      <span className="text-sm font-medium text-emerald-800">
+                        Boundary recorded —{" "}
+                        <span className="font-mono tabular-nums">
+                          {capturedAreaHa?.toFixed(2)} ha
                         </span>
-                        <span className="font-mono text-stone-600">
-                          {pt.lat.toFixed(4)}, {pt.lng.toFixed(4)}
-                        </span>
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                      </div>
-                    ))}
-                  </div>
-
-                  {captured ? (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-emerald-600" />
-                        <span className="font-semibold text-emerald-800">Polygon Captured</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <span className="text-stone-500">Area:</span>
-                          <span className="ml-1 font-semibold text-stone-800">1.82 ha</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Points:</span>
-                          <span className="ml-1 font-semibold text-stone-800">4</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Accuracy:</span>
-                          <span className="ml-1 font-semibold text-stone-800">±3m GPS</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Overlap:</span>
-                          <span className="ml-1 font-semibold text-emerald-700">None ✓</span>
-                        </div>
-                      </div>
+                        {" · "}12 points
+                      </span>
                     </div>
-                  ) : (
-                    <button
-                      onClick={handleCapture}
-                      disabled={capturing}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors disabled:opacity-70"
-                    >
-                      {capturing ? (
-                        <>
-                          <Navigation className="w-4 h-4 animate-pulse" />
-                          Capturing boundary...
-                        </>
-                      ) : (
-                        <>
-                          <Navigation className="w-4 h-4" />
-                          Start GPS Capture
-                        </>
-                      )}
-                    </button>
-                  )}
-
-                  <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg">
-                    <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700">
-                      Walk slowly along the farm boundary. GPS capture works offline — points are
-                      stored locally and uploaded when signal returns.
-                    </p>
                   </div>
+                )}
+
+                <div className="mx-4 mb-4 flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg">
+                  <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" aria-hidden="true" />
+                  <p className="text-xs text-amber-700">
+                    Walk slowly along the farm boundary. Capture works offline — points are stored
+                    locally and uploaded when signal returns.
+                  </p>
                 </div>
               </div>
             </div>
@@ -641,17 +532,21 @@ export default function FieldPage() {
 
                   {/* GPS summary */}
                   <div className="rounded-xl bg-stone-50 p-4">
-                    <div className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">GPS Polygon</div>
+                    <div className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">Farm Boundary</div>
                     <div className="flex items-center gap-2">
-                      {captured ? (
+                      {capturedPolygon ? (
                         <>
-                          <CheckCircle className="w-4 h-4 text-emerald-500" />
-                          <span className="text-sm text-emerald-700 font-medium">Captured · 1.82 ha · 4 points</span>
+                          <CheckCircle2 className="w-4 h-4 text-emerald-500" aria-hidden="true" />
+                          <span className="text-sm text-emerald-700 font-medium">
+                            Recorded ·{" "}
+                            <span className="font-mono tabular-nums">{capturedAreaHa?.toFixed(2)} ha</span>
+                            {" · "}12 points
+                          </span>
                         </>
                       ) : (
                         <>
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span className="text-sm text-amber-700">Not captured — verification will be delayed</span>
+                          <AlertCircle className="w-4 h-4 text-amber-500" aria-hidden="true" />
+                          <span className="text-sm text-amber-700">Not recorded — verification will be delayed</span>
                         </>
                       )}
                     </div>
