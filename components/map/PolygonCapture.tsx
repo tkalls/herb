@@ -1,317 +1,268 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import type { Map as MapLibreMap, GeoJSONSource } from "maplibre-gl";
-import { simulatedWalk, walkFrame, type LatLng } from "./_lib/simulatedWalk";
+import { simulatedWalk, walkFrame } from "./_lib/simulatedWalk";
+import type { LatLng } from "./_lib/simulatedWalk";
 
-// Inline type until @types/geojson is installed
-type GeoJSONPolygon = { type: "Polygon"; coordinates: number[][][] };
-
-// @turf imports — resolved once deps are installed by Lane 1
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let turfArea: (geojson: any) => number = () => 0;
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
-let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
-if (typeof window !== "undefined") {
-  import("@turf/area").then((m) => { turfArea = m.default ?? m; });
-  import("@turf/helpers").then((m) => { turfHelpers = m; });
-}
+export type GeoJSONPolygon = { type: "Polygon"; coordinates: number[][][] };
 
 export interface PolygonCaptureProps {
-  /** Center point for the walk path */
   villageCenter: LatLng;
-  /** Seed for the deterministic walk — use farm code hash or index */
   seed?: number;
-  /** v1 always passes "simulated"; v1.1 will add "geolocation" */
   mode?: "simulated";
   onComplete: (geojson: GeoJSONPolygon, areaHa: number) => void;
 }
 
-type CaptureState = "idle" | "walking" | "paused" | "complete";
-
-const MAPTILER_KEY = process.env.NEXT_PUBLIC_MAPTILER_KEY ?? "";
-const WALK_INTERVAL_MS = 1500;
 const TOTAL_POINTS = 12;
-
-function latlngToCoord(p: LatLng): [number, number] {
-  return [p.lng, p.lat];
-}
+const WALK_INTERVAL_MS = 1500;
 
 export default function PolygonCapture({
   villageCenter,
-  seed = 1,
-  mode = "simulated",
+  seed = 42,
   onComplete,
 }: PolygonCaptureProps) {
   const containerRef = useRef<HTMLDivElement>(null);
-  const mapRef = useRef<MapLibreMap | null>(null);
+  // maplibre-gl Map type — use unknown to avoid importing types at module level (ssr:false)
+  const mapRef = useRef<{ remove: () => void; on: (e: string, cb: () => void) => void; getSource: (id: string) => { setData: (d: unknown) => void } | undefined; addSource: (id: string, src: unknown) => void; addLayer: (l: unknown) => void } | null>(null);
+  const mapLoadedRef = useRef(false);
   const intervalRef = useRef<ReturnType<typeof setInterval> | null>(null);
-  const pathRef = useRef<LatLng[]>([]);
-  const tickRef = useRef(0);
+  const walkPathRef = useRef<LatLng[]>([]);
+  const stepRef = useRef(0);
 
-  const [captureState, setCaptureState] = useState<CaptureState>("idle");
-  const [pointCount, setPointCount] = useState(0);
+  const [walkState, setWalkState] = useState<"idle" | "walking" | "paused" | "complete">("idle");
+  const [displayStep, setDisplayStep] = useState(0);
   const [areaHa, setAreaHa] = useState<number | null>(null);
-  const [mapReady, setMapReady] = useState(false);
 
-  // Initialise MapLibre once
   useEffect(() => {
-    if (typeof window === "undefined" || mapRef.current) return;
-    let destroyed = false;
+    if (!containerRef.current) return;
+    let cancelled = false;
 
-    import("maplibre-gl").then(({ Map, NavigationControl }) => {
-      if (destroyed || !containerRef.current) return;
+    (async () => {
+      const maplibregl = (await import("maplibre-gl")).default;
+      await import("maplibre-gl/dist/maplibre-gl.css");
+      if (cancelled || !containerRef.current) return;
 
-      const styleUrl = MAPTILER_KEY
-        ? `https://api.maptiler.com/maps/satellite/style.json?key=${MAPTILER_KEY}`
-        : "https://demotiles.maplibre.org/style.json";
+      const apiKey = process.env.NEXT_PUBLIC_MAPTILER_KEY;
 
-      const map = new Map({
+      const map = new maplibregl.Map({
         container: containerRef.current,
-        style: styleUrl,
-        center: [villageCenter.lng, villageCenter.lat],
+        style: apiKey
+          ? `https://api.maptiler.com/maps/satellite/style.json?key=${apiKey}`
+          : {
+              version: 8 as const,
+              sources: {
+                osm: {
+                  type: "raster" as const,
+                  tiles: ["https://tile.openstreetmap.org/{z}/{x}/{y}.png"],
+                  tileSize: 256,
+                },
+              },
+              layers: [{ id: "osm", type: "raster" as const, source: "osm" }],
+            },
+        center: [villageCenter.lng, villageCenter.lat] as [number, number],
         zoom: 16,
-        attributionControl: true,
+        attributionControl: {},
       });
 
-      map.addControl(new NavigationControl({ showCompass: false }), "top-right");
-
       map.on("load", () => {
-        // Polygon source
-        map.addSource("walk-polygon", {
-          type: "geojson",
-          data: { type: "Feature", geometry: { type: "Polygon", coordinates: [[]] }, properties: {} },
-        });
+        mapLoadedRef.current = true;
+      });
+
+      mapRef.current = map as typeof mapRef.current;
+    })();
+
+    return () => {
+      cancelled = true;
+      mapLoadedRef.current = false;
+      if (mapRef.current) {
+        mapRef.current.remove();
+        mapRef.current = null;
+      }
+    };
+  }, [villageCenter.lat, villageCenter.lng]);
+
+  const renderPolygon = useCallback(
+    async (pts: LatLng[], closed: boolean) => {
+      const map = mapRef.current;
+      if (!map || !mapLoadedRef.current || pts.length < 2) return;
+
+      const coords = pts.map((p) => [p.lng, p.lat]);
+      const geojsonData = {
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            geometry: { type: "Polygon", coordinates: [coords] },
+            properties: {},
+          },
+        ],
+      };
+
+      const src = map.getSource("walk-polygon");
+      if (src) {
+        src.setData(geojsonData);
+      } else {
+        map.addSource("walk-polygon", { type: "geojson", data: geojsonData });
         map.addLayer({
-          id: "walk-polygon-fill",
+          id: "walk-fill",
           type: "fill",
           source: "walk-polygon",
-          paint: { "fill-color": "#10b981", "fill-opacity": 0.15 },
+          paint: { "fill-color": "#059669", "fill-opacity": 0.15 },
         });
         map.addLayer({
-          id: "walk-polygon-line",
+          id: "walk-stroke",
           type: "line",
           source: "walk-polygon",
           paint: {
-            "line-color": "#059669",
+            "line-color": "#047857",
             "line-width": 2,
             "line-dasharray": [6, 4],
           },
         });
+      }
 
-        // Head marker source
-        map.addSource("walk-head", {
-          type: "geojson",
-          data: { type: "Feature", geometry: { type: "Point", coordinates: [villageCenter.lng, villageCenter.lat] }, properties: {} },
+      if (closed && pts.length >= 3) {
+        // Upgrade fill and stroke to solid on close
+        map.addLayer({
+          id: "walk-fill-closed",
+          type: "fill",
+          source: "walk-polygon",
+          paint: { "fill-color": "#059669", "fill-opacity": 0.25 },
         });
         map.addLayer({
-          id: "walk-head-circle",
-          type: "circle",
-          source: "walk-head",
-          paint: {
-            "circle-radius": 7,
-            "circle-color": "#059669",
-            "circle-stroke-width": 2,
-            "circle-stroke-color": "#ffffff",
-          },
+          id: "walk-stroke-closed",
+          type: "line",
+          source: "walk-polygon",
+          paint: { "line-color": "#047857", "line-width": 2 },
         });
 
-        if (!destroyed) setMapReady(true);
-      });
+        const { polygon } = await import("@turf/helpers");
+        const { default: turfArea } = await import("@turf/area");
+        const poly = polygon([coords]);
+        const sqM = turfArea(poly) as number;
+        const ha = sqM / 10_000;
+        setAreaHa(ha);
 
-      mapRef.current = map;
-    });
+        const geojsonPolygon: GeoJSONPolygon = {
+          type: "Polygon",
+          coordinates: [coords],
+        };
+        onComplete(geojsonPolygon, ha);
+      }
+    },
+    [onComplete],
+  );
 
-    return () => {
-      destroyed = true;
-      mapRef.current?.remove();
-      mapRef.current = null;
-    };
-    // villageCenter is stable per render; seed does not change
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const tick = useCallback(async () => {
+    stepRef.current += 1;
+    const n = stepRef.current;
+    setDisplayStep(n);
 
-  const updateMapSources = useCallback((points: LatLng[], closed: boolean) => {
-    const map = mapRef.current;
-    if (!map) return;
+    const closed = n >= TOTAL_POINTS;
+    // Show n+1 points: at step 12, walkFrame(path, 13) = all 13 pts (ring closed)
+    const frame = walkFrame(walkPathRef.current, closed ? walkPathRef.current.length : n + 1);
+    await renderPolygon(frame, closed);
 
-    const coords = points.map(latlngToCoord);
-    const ring = closed ? coords : [...coords, coords[0]].filter((_, i) => i < coords.length || coords.length >= 3);
-
-    const polygonSrc = map.getSource("walk-polygon") as GeoJSONSource | undefined;
-    polygonSrc?.setData({
-      type: "Feature",
-      geometry: { type: "Polygon", coordinates: [ring.length >= 3 ? ring : []] },
-      properties: {},
-    });
-
-    if (points.length > 0) {
-      const last = points[points.length - 1];
-      const headSrc = map.getSource("walk-head") as GeoJSONSource | undefined;
-      headSrc?.setData({
-        type: "Feature",
-        geometry: { type: "Point", coordinates: latlngToCoord(last) },
-        properties: {},
-      });
-      map.panTo([last.lng, last.lat], { duration: 400 });
+    if (closed) {
+      if (intervalRef.current) {
+        clearInterval(intervalRef.current);
+        intervalRef.current = null;
+      }
+      setWalkState("complete");
     }
-  }, []);
+  }, [renderPolygon]);
 
-  const stopInterval = useCallback(() => {
+  const startWalk = useCallback(() => {
+    walkPathRef.current = simulatedWalk(villageCenter, seed);
+    stepRef.current = 0;
+    setWalkState("walking");
+    setDisplayStep(0);
+
+    intervalRef.current = setInterval(() => {
+      tick();
+    }, WALK_INTERVAL_MS);
+  }, [villageCenter, seed, tick]);
+
+  const pauseWalk = useCallback(() => {
     if (intervalRef.current) {
       clearInterval(intervalRef.current);
       intervalRef.current = null;
     }
+    setWalkState("paused");
   }, []);
 
-  const finishWalk = useCallback((fullPath: LatLng[]) => {
-    stopInterval();
-    // Drop the closing duplicate before building GeoJSON
-    const ring = fullPath.slice(0, TOTAL_POINTS).map(latlngToCoord);
-    ring.push(ring[0]); // close
-
-    const poly = turfHelpers.polygon([ring]);
-    const m2 = poly ? turfArea(poly) : 0;
-    const ha = Math.round((m2 / 10_000) * 100) / 100;
-
-    setAreaHa(ha);
-    setCaptureState("complete");
-    updateMapSources(fullPath.slice(0, TOTAL_POINTS), true);
-
-    // Solid line for completed polygon
-    mapRef.current?.setPaintProperty("walk-polygon-line", "line-dasharray", [1, 0]);
-    mapRef.current?.setPaintProperty("walk-polygon-fill", "fill-opacity", 0.25);
-
-    const geojson: GeoJSONPolygon = { type: "Polygon", coordinates: [ring] };
-    onComplete(geojson, ha);
-  }, [stopInterval, updateMapSources, onComplete]);
-
-  const startWalk = useCallback(() => {
-    if (!mapReady) return;
-    const path = simulatedWalk(villageCenter, seed);
-    pathRef.current = path;
-    tickRef.current = 0;
-    setCaptureState("walking");
-    setPointCount(0);
-
-    intervalRef.current = setInterval(() => {
-      tickRef.current += 1;
-      const n = tickRef.current;
-      const frame = walkFrame(path, n - 1);
-      setPointCount(n);
-      updateMapSources(frame, false);
-
-      if (n >= TOTAL_POINTS) {
-        finishWalk(path);
-      }
-    }, WALK_INTERVAL_MS);
-  }, [mapReady, villageCenter, seed, updateMapSources, finishWalk]);
-
-  const pauseWalk = useCallback(() => {
-    stopInterval();
-    setCaptureState("paused");
-  }, [stopInterval]);
-
   const resumeWalk = useCallback(() => {
-    if (captureState !== "paused") return;
-    setCaptureState("walking");
-
+    setWalkState("walking");
     intervalRef.current = setInterval(() => {
-      tickRef.current += 1;
-      const n = tickRef.current;
-      const frame = walkFrame(pathRef.current, n - 1);
-      setPointCount(n);
-      updateMapSources(frame, false);
-
-      if (n >= TOTAL_POINTS) {
-        finishWalk(pathRef.current);
-      }
+      tick();
     }, WALK_INTERVAL_MS);
-  }, [captureState, updateMapSources, finishWalk]);
+  }, [tick]);
 
-  useEffect(() => () => stopInterval(), [stopInterval]);
+  useEffect(() => {
+    return () => {
+      if (intervalRef.current) clearInterval(intervalRef.current);
+    };
+  }, []);
 
-  // Button label + progress
-  const progress = Math.round((pointCount / TOTAL_POINTS) * 100);
+  const progress =
+    walkState === "complete" ? 1 : displayStep / TOTAL_POINTS;
 
   let buttonLabel: string;
-  let buttonAction: (() => void) | null = null;
-  let buttonDisabled = false;
-
-  if (captureState === "idle") {
+  if (walkState === "idle") {
     buttonLabel = "Start walk";
-    buttonAction = startWalk;
-    buttonDisabled = !mapReady;
-  } else if (captureState === "walking") {
-    buttonLabel = `Walking — ${pointCount} of ${TOTAL_POINTS} points`;
-    buttonAction = null; // pause handled by separate button
-    buttonDisabled = true;
-  } else if (captureState === "paused") {
-    buttonLabel = "Resume";
-    buttonAction = resumeWalk;
-  } else {
+  } else if (walkState === "complete") {
     buttonLabel = "Walk complete";
-    buttonDisabled = true;
+  } else {
+    buttonLabel = `Walking — ${displayStep} of ${TOTAL_POINTS}`;
   }
 
-  void mode; // prop reserved for v1.1 geolocation branch
-
   return (
-    <div className="flex flex-col gap-3">
-      {/* Map container */}
-      <div className="relative rounded-xl border border-stone-200 overflow-hidden aspect-[4/3] md:aspect-[16/10]">
-        <div ref={containerRef} className="absolute inset-0" />
+    <div className="relative rounded-xl border border-stone-200 overflow-hidden aspect-[4/3] md:aspect-[16/10]">
+      <div ref={containerRef} className="absolute inset-0" />
 
-        {/* Accuracy chip — top left */}
-        <div className="absolute top-2 left-2 z-10 inline-flex items-center gap-1 rounded-full bg-white/90 px-2.5 py-1 text-xs font-mono text-emerald-700 shadow-sm">
-          ±3 m
-        </div>
-
-        {/* Area chip — bottom left */}
-        {areaHa !== null && (
-          <div className="absolute bottom-2 left-2 z-10 inline-flex items-center rounded-full bg-white/90 px-2.5 py-1 text-xs font-mono tabular-nums text-stone-900 shadow-sm">
-            {areaHa.toFixed(2)} ha
-          </div>
-        )}
-
-        {/* Loading state */}
-        {!mapReady && (
-          <div className="absolute inset-0 z-20 flex items-center justify-center bg-stone-100">
-            <svg className="w-6 h-6 animate-spin text-stone-400" viewBox="0 0 24 24" fill="none">
-              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
-              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
-            </svg>
-          </div>
-        )}
+      {/* Accuracy chip — top left */}
+      <div className="absolute top-2 left-2 z-10 rounded-md bg-white/90 border border-stone-200 px-2 py-1 text-xs font-mono text-emerald-700">
+        ±3 m
       </div>
 
-      {/* Capture controls */}
-      <div className="relative">
-        {/* Primary walk button */}
+      {/* Area chip — bottom left, visible once polygon closes */}
+      {areaHa !== null && (
+        <div className="absolute bottom-16 left-2 z-10 rounded-md bg-white/90 border border-stone-200 px-2 py-1 text-xs font-mono tabular-nums text-stone-800">
+          {areaHa.toFixed(2)} ha
+        </div>
+      )}
+
+      {/* Walk controls */}
+      <div className="absolute bottom-2 inset-x-2 z-10 flex gap-2">
         <button
-          onClick={buttonAction ?? undefined}
-          disabled={buttonDisabled || captureState === "complete"}
-          aria-label={buttonLabel}
-          className="relative w-full overflow-hidden inline-flex items-center justify-center rounded-2xl bg-emerald-700 px-5 py-3.5 text-base font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 disabled:cursor-not-allowed disabled:opacity-60 min-h-14"
+          type="button"
+          onClick={walkState === "idle" ? startWalk : undefined}
+          disabled={walkState === "walking" || walkState === "complete"}
+          className="relative flex-1 min-h-14 rounded-2xl bg-emerald-700 text-white font-semibold text-sm overflow-hidden disabled:opacity-80 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
         >
-          {/* Progress bar inside button */}
-          {captureState === "walking" && (
-            <span
-              aria-hidden="true"
-              className="absolute inset-y-0 left-0 bg-white/20 transition-all duration-300"
-              style={{ width: `${progress}%` }}
-            />
-          )}
+          <span
+            className="absolute inset-y-0 left-0 bg-white/20 transition-[width] duration-300"
+            style={{ width: `${progress * 100}%` }}
+          />
           <span className="relative z-10">{buttonLabel}</span>
         </button>
 
-        {/* Pause / resume secondary button */}
-        {captureState === "walking" && (
+        {walkState === "walking" && (
           <button
+            type="button"
             onClick={pauseWalk}
-            className="absolute right-3 top-1/2 -translate-y-1/2 z-20 inline-flex items-center justify-center rounded-lg border border-white/30 bg-white/10 px-3 py-1.5 text-xs font-medium text-white backdrop-blur-sm transition hover:bg-white/20 focus-visible:outline focus-visible:outline-2 focus-visible:outline-white min-h-9"
+            className="min-h-14 px-4 rounded-2xl bg-white border border-stone-200 text-stone-700 font-medium text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
           >
             Pause
+          </button>
+        )}
+        {walkState === "paused" && (
+          <button
+            type="button"
+            onClick={resumeWalk}
+            className="min-h-14 px-4 rounded-2xl bg-white border border-stone-200 text-stone-700 font-medium text-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+          >
+            Resume
           </button>
         )}
       </div>

@@ -63,7 +63,7 @@ export default function PolygonView({ farmCode, polygonR2Url, polygonInline }: P
         center: [centerLng, centerLat],
         zoom: 16,
         interactive: false,
-        attributionControl: true,
+        attributionControl: {},
       });
 
       map.addControl(new NavigationControl({ showCompass: false }), "top-right");
