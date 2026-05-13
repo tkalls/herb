@@ -41,6 +41,25 @@ export const presignUpload = action({
   },
 });
 
+// Lane 2 convenience — derives the key from farmCode so the client doesn't craft paths.
+export const presignPolygonUpload = action({
+  args: { farmCode: v.string() },
+  handler: async (_ctx, { farmCode }) => {
+    const client = r2Client();
+    const key = `polygons/${farmCode}-${Date.now()}.geojson`;
+    const url = await getSignedUrl(
+      client,
+      new PutObjectCommand({
+        Bucket: BUCKET,
+        Key: key,
+        ContentType: "application/geo+json",
+      }),
+      { expiresIn: EXPIRY_SECONDS },
+    );
+    return { key, url, expiresIn: EXPIRY_SECONDS };
+  },
+});
+
 // Internal — used by buyer worker to generate a short-lived read URL.
 export const presignDownload = internalAction({
   args: { key: v.string() },
