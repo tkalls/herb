@@ -22,6 +22,7 @@ import {
   Loader2,
 } from "lucide-react";
 import SyncBadge from "@/components/sync/SyncBadge";
+import ConflictModal from "@/components/sync/ConflictModal";
 import { useSyncQueue } from "@/lib/sync/useSyncQueue";
 import { enqueue } from "@/lib/sync/queue";
 import type { PolygonCaptureProps, GeoJSONPolygon } from "@/components/map/PolygonCapture";
@@ -237,6 +238,13 @@ export default function FieldPage() {
   if (submittedFarmCode) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col">
+        {syncStatus.conflict && (
+          <ConflictModal
+            conflict={syncStatus.conflict}
+            onSkip={() => syncStatus.resolveConflict("skip", syncStatus.conflict!.id)}
+            onRetry={() => syncStatus.resolveConflict("retry", syncStatus.conflict!.id)}
+          />
+        )}
         <div className="px-4 pt-3">
           <SyncBadge status={syncStatus} />
         </div>
@@ -296,6 +304,13 @@ export default function FieldPage() {
   // ── Main form ──────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col">
+      {syncStatus.conflict && (
+        <ConflictModal
+          conflict={syncStatus.conflict}
+          onSkip={() => syncStatus.resolveConflict("skip", syncStatus.conflict!.id)}
+          onRetry={() => syncStatus.resolveConflict("retry", syncStatus.conflict!.id)}
+        />
+      )}
       <div className="px-4 pt-3">
         <SyncBadge status={syncStatus} />
       </div>
@@ -866,7 +881,7 @@ export default function FieldPage() {
       </div>
 
       {/* ── Sticky stepper ─────────────────────────────────────────────── */}
-      <div className="sticky bottom-0 bg-stone-50 border-t border-stone-200 px-4 py-4">
+      <div className="sticky bottom-0 bg-stone-50 border-t border-stone-200 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="max-w-lg mx-auto flex gap-3">
           {step > 0 && (
             <button

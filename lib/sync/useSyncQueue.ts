@@ -1,7 +1,7 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
-import { useMutation } from "convex/react";
+import { useCallback, useEffect, useRef, useState } from "react";
+import { useMutation, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import {
@@ -16,22 +16,39 @@ import {
   type QueuedMutation,
 } from "./queue";
 
+export interface ConflictInfo {
+  id: number;
+  entity: string;
+  message: string;
+}
+
 export interface SyncStatus {
   online: boolean;
   queued: number;
   draining: boolean;
   lastError: string | null;
+  conflict: ConflictInfo | null;
+  resolveConflict: (action: "skip" | "retry", id: number) => Promise<void>;
 }
 
 const MAX_ATTEMPTS = 5;
 
 function isValidationError(err: unknown): boolean {
   if (!(err instanceof Error)) return false;
-  // Convex surfaces 4xx-class errors with these patterns
   return (
     err.message.includes("ArgumentValidationError") ||
     err.message.includes("invalid") ||
     err.message.includes("required")
+  );
+}
+
+function isConflictError(err: unknown): boolean {
+  if (!(err instanceof Error)) return false;
+  return (
+    err.message.includes("already exists") ||
+    err.message.includes("duplicate") ||
+    err.message.includes("unique constraint") ||
+    err.message.includes("ConflictError")
   );
 }
 
@@ -46,12 +63,15 @@ export function useSyncQueue(): SyncStatus {
   const [queued, setQueued] = useState(0);
   const [draining, setDraining] = useState(false);
   const [lastError, setLastError] = useState<string | null>(null);
+  const [conflict, setConflict] = useState<ConflictInfo | null>(null);
+  const [drainVersion, setDrainVersion] = useState(0);
   const drainingRef = useRef(false);
 
-  // Real Convex mutations
+  // Real Convex mutations + R2 presign action
   const farmerCreate = useMutation(api.farmers.create);
   const farmCreate = useMutation(api.farms.create);
   const attachPolygon = useMutation(api.farms.attachPolygon);
+  const presignPolygonUpload = useAction(api.r2.presignPolygonUpload);
 
   // Keep queued count fresh
   useEffect(() => {
@@ -83,7 +103,7 @@ export function useSyncQueue(): SyncStatus {
     };
   }, []);
 
-  // Drain when coming online
+  // Drain when coming online or after conflict resolution
   useEffect(() => {
     if (!online || drainingRef.current) return;
 
@@ -114,12 +134,16 @@ export function useSyncQueue(): SyncStatus {
         } catch (err) {
           const msg = err instanceof Error ? err.message : String(err);
           await markAttempted(row.id, msg);
-          setLastError(msg);
-          if (isValidationError(err)) {
-            // 4xx: stop drain, surface error, do not retry
+          if (isConflictError(err)) {
+            if (!cancelled) {
+              setConflict({ id: row.id, entity: row.type, message: msg });
+            }
             break;
           }
-          // 5xx / network: continue to next row, backoff will apply on retry
+          setLastError(msg);
+          if (isValidationError(err)) {
+            break;
+          }
         }
 
         const remaining = await pendingCount();
@@ -139,7 +163,7 @@ export function useSyncQueue(): SyncStatus {
       cancelled = true;
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [online]);
+  }, [online, drainVersion]);
 
   // ── Per-row drain logic ──────────────────────────────────────────────────
 
@@ -207,9 +231,28 @@ export function useSyncQueue(): SyncStatus {
             `farm.attachPolygon blocked: farm ${p.farmCode} not yet synced`,
           );
         }
+
+        // Try R2 upload; fall back to inline polygon if R2 is unavailable
+        let r2Key: string | undefined;
+        try {
+          const { key, url } = await presignPolygonUpload({ farmCode: p.farmCode });
+          const geojson = {
+            type: "Polygon" as const,
+            coordinates: [p.polygonInline.map(({ lat, lng }) => [lng, lat])],
+          };
+          const res = await fetch(url, {
+            method: "PUT",
+            body: JSON.stringify(geojson),
+            headers: { "Content-Type": "application/geo+json" },
+          });
+          if (res.ok) r2Key = key;
+        } catch {
+          // R2 unavailable — polygonInline used as fallback below
+        }
+
         await attachPolygon({
           farmId: p.resolvedFarmId as Id<"farms">,
-          polygonInline: p.polygonInline,
+          ...(r2Key ? { r2Key } : { polygonInline: p.polygonInline }),
           areaHa: p.areaHa,
         });
         break;
@@ -217,5 +260,22 @@ export function useSyncQueue(): SyncStatus {
     }
   }
 
-  return { online, queued, draining, lastError };
+  const resolveConflict = useCallback(async (action: "skip" | "retry", id: number) => {
+    if (action === "skip") {
+      await dequeue(id);
+    } else {
+      await queueDb.mutations
+        .where("id")
+        .equals(id)
+        .modify((row: QueuedMutation) => {
+          row.attempts = 0;
+          row.lastError = undefined;
+        });
+    }
+    setConflict(null);
+    setLastError(null);
+    setDrainVersion((v) => v + 1);
+  }, []);
+
+  return { online, queued, draining, lastError, conflict, resolveConflict };
 }
