@@ -1,65 +1,18 @@
 "use client";
 
 import { useEffect, useRef } from "react";
-import { X, FileText, ExternalLink, CheckCircle2 } from "lucide-react";
-
-export interface AuditEvent {
-  id: string;
-  action: string;
-  actor: string;
-  at: number;
-  traceId: string;
-  diff?: Record<string, { from: unknown; to: unknown }>;
-}
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+import { X, FileText, ExternalLink, CheckCircle2, Loader2, AlertTriangle } from "lucide-react";
 
 interface AuditDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   entityType: string;
+  /** Convex _id of the entity (string) — used to query audit events */
   entityId: string;
-  events?: AuditEvent[];
-}
-
-// Phase 1 stub — replaced by api.audit.recentForEntity in Phase 2
-function stubEvents(entityType: string, entityId: string): AuditEvent[] {
-  const now = Date.now();
-  return [
-    {
-      id: "ae-001",
-      action: `${entityType}.create`,
-      actor: "Amani Tarimo",
-      at: now - 86_400_000 * 3,
-      traceId: "7f2a1b9c3d4e5f6a8b9c0d1e",
-    },
-    {
-      id: "ae-002",
-      action: `${entityType}.eudrScore.compute`,
-      actor: "system",
-      at: now - 86_400_000 * 3 + 1_200,
-      traceId: "8b3c2d1e4f5a6b7c9d0e1f2a",
-      diff: {
-        eudrScore: { from: 0, to: 87 },
-        verificationStatus: { from: "unverified", to: "pending" },
-      },
-    },
-    {
-      id: "ae-003",
-      action: `${entityType}.verificationStatus.update`,
-      actor: "David Mushi",
-      at: now - 86_400_000 * 1.5,
-      traceId: "9c4d3e2f1a6b7c8d0e1f2a3b",
-      diff: {
-        verificationStatus: { from: "pending", to: "verified" },
-      },
-    },
-    {
-      id: "ae-004",
-      action: `${entityType}.polygon.upload`,
-      actor: "Amani Tarimo",
-      at: now - 86_400_000,
-      traceId: "0d5e4f3a2b7c8d9e1f2a3b4c",
-    },
-  ];
+  /** Human-readable label shown in the drawer header */
+  entityLabel?: string;
 }
 
 const ACTION_LABELS: Record<string, string> = {
@@ -67,6 +20,7 @@ const ACTION_LABELS: Record<string, string> = {
   "farm.eudrScore.compute": "EUDR score computed",
   "farm.verificationStatus.update": "Verification status updated",
   "farm.polygon.upload": "GPS polygon uploaded",
+  "farm.attachPolygon": "GPS polygon attached",
   "farmer.create": "Farmer registered",
   "batch.create": "Batch created",
   "batch.export": "Prepared for export",
@@ -96,17 +50,21 @@ export default function AuditDrawer({
   onClose,
   entityType,
   entityId,
-  events,
+  entityLabel,
 }: AuditDrawerProps) {
   const closeButtonRef = useRef<HTMLButtonElement>(null);
-  const displayEvents = events ?? stubEvents(entityType, entityId);
 
-  // Focus the close button on open
+  const events = useQuery(
+    api.audit.recentForEntity,
+    isOpen ? { entityType, entityId } : "skip",
+  );
+
+  // Focus close button on open
   useEffect(() => {
     if (isOpen) closeButtonRef.current?.focus();
   }, [isOpen]);
 
-  // Escape key closes
+  // Escape closes
   useEffect(() => {
     if (!isOpen) return;
     function handleKey(e: KeyboardEvent) {
@@ -116,17 +74,16 @@ export default function AuditDrawer({
     return () => document.removeEventListener("keydown", handleKey);
   }, [isOpen, onClose]);
 
-  // Lock body scroll while open
+  // Lock body scroll
   useEffect(() => {
-    if (isOpen) {
-      document.body.style.overflow = "hidden";
-    }
-    return () => {
-      document.body.style.overflow = "";
-    };
+    if (isOpen) document.body.style.overflow = "hidden";
+    return () => { document.body.style.overflow = ""; };
   }, [isOpen]);
 
   if (!isOpen) return null;
+
+  const isLoading = events === undefined;
+  const isEmpty = events !== undefined && events.length === 0;
 
   return (
     <div className="fixed inset-0 z-50">
@@ -141,7 +98,7 @@ export default function AuditDrawer({
       <div
         role="dialog"
         aria-modal="true"
-        aria-label={`Audit trail for ${entityType} ${entityId}`}
+        aria-label={`Audit trail for ${entityType} ${entityLabel ?? entityId}`}
         className="absolute right-0 top-0 h-full w-96 max-w-full bg-white shadow-lg flex flex-col"
         style={{ transition: "transform 200ms ease-out" }}
       >
@@ -153,7 +110,7 @@ export default function AuditDrawer({
             </div>
             <div className="font-semibold text-stone-900 text-sm leading-tight">
               {entityType}{" "}
-              <span className="font-mono text-stone-500">{entityId}</span>
+              <span className="font-mono text-stone-500">{entityLabel ?? entityId.slice(0, 12)}</span>
             </div>
           </div>
           <button
@@ -168,19 +125,43 @@ export default function AuditDrawer({
 
         {/* Event list */}
         <div className="flex-1 overflow-y-auto py-4 px-5">
-          {displayEvents.length === 0 ? (
+          {/* Loading */}
+          {isLoading && (
+            <div className="space-y-4">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="flex items-start gap-3">
+                  <div className="w-2 h-2 rounded-full bg-stone-200 animate-pulse mt-1.5 flex-shrink-0" />
+                  <div className="flex-1 space-y-1.5">
+                    <div className="h-3 bg-stone-200 animate-pulse rounded w-3/4" />
+                    <div className="h-2.5 bg-stone-100 animate-pulse rounded w-1/2" />
+                    <div className="h-2 bg-stone-100 animate-pulse rounded w-2/3" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Empty */}
+          {isEmpty && (
             <div className="flex flex-col items-center justify-center h-32 text-center">
               <FileText size={32} className="text-stone-300 mb-2" aria-hidden="true" />
               <p className="text-sm text-stone-500">No audit events recorded yet.</p>
             </div>
-          ) : (
+          )}
+
+          {/* Loaded */}
+          {events && events.length > 0 && (
             <ol className="space-y-0" aria-label="Audit events">
-              {displayEvents.map((event, i) => (
-                <li key={event.id} className="flex items-start gap-3">
+              {events.map((event, i) => (
+                <li key={event._id} className="flex items-start gap-3">
                   {/* Timeline spine */}
                   <div className="flex flex-col items-center flex-shrink-0 mt-1.5">
-                    <div className="w-2 h-2 rounded-full bg-emerald-600 flex-shrink-0" />
-                    {i < displayEvents.length - 1 && (
+                    <div
+                      className={`w-2 h-2 rounded-full flex-shrink-0 ${
+                        event.action.includes("received") ? "bg-emerald-600" : "bg-emerald-400"
+                      }`}
+                    />
+                    {i < events.length - 1 && (
                       <div className="w-px bg-stone-200 flex-1 min-h-[2.5rem] mt-1" />
                     )}
                   </div>
@@ -192,10 +173,10 @@ export default function AuditDrawer({
                         <div className="text-sm font-medium text-stone-900">
                           {labelFor(event.action)}
                         </div>
-                        <div className="text-xs text-stone-500 mt-0.5">
-                          by{" "}
-                          <span className="font-medium text-stone-700">
-                            {event.actor}
+                        <div className="text-xs text-stone-500 mt-0.5 font-mono">
+                          actor:{" "}
+                          <span className="text-stone-400">
+                            {(event.actor as string).slice(-8)}
                           </span>
                         </div>
                       </div>
@@ -217,24 +198,25 @@ export default function AuditDrawer({
                     </div>
 
                     {/* Diff */}
-                    {event.diff && Object.keys(event.diff).length > 0 && (
+                    {event.diff && typeof event.diff === "object" && Object.keys(event.diff as object).length > 0 && (
                       <div className="mt-2 rounded-lg bg-stone-50 border border-stone-100 px-2.5 py-2 space-y-0.5">
-                        {Object.entries(event.diff).map(([field, change]) => (
+                        {Object.entries(event.diff as Record<string, { from: unknown; to: unknown }>).map(([field, change]) => (
                           <div key={field} className="text-xs font-mono">
                             <span className="text-stone-400">{field}:</span>{" "}
-                            <span className="text-red-500 line-through">
-                              {String(change.from)}
-                            </span>{" "}
-                            <span className="text-stone-400">→</span>{" "}
+                            {change?.from !== undefined && (
+                              <>
+                                <span className="text-red-500 line-through">{String(change.from)}</span>{" "}
+                                <span className="text-stone-400">→</span>{" "}
+                              </>
+                            )}
                             <span className="text-emerald-700">
-                              {String(change.to)}
+                              {change?.to !== undefined ? String(change.to) : String(change)}
                             </span>
                           </div>
                         ))}
                       </div>
                     )}
 
-                    {/* Confirmed events get a stamp */}
                     {event.action.includes("received") && (
                       <div className="mt-2 flex items-center gap-1.5 text-xs text-emerald-700 font-medium">
                         <CheckCircle2 size={12} aria-hidden="true" />
@@ -250,10 +232,17 @@ export default function AuditDrawer({
 
         {/* Footer */}
         <div className="px-5 py-3 border-t border-stone-100 flex-shrink-0">
-          <p className="text-xs text-stone-400 font-mono">
-            {displayEvents.length} event{displayEvents.length !== 1 ? "s" : ""} ·
-            tamper-evident via SHA-256
-          </p>
+          {events && (
+            <p className="text-xs text-stone-400 font-mono">
+              {events.length} event{events.length !== 1 ? "s" : ""} · tamper-evident via SHA-256
+            </p>
+          )}
+          {isLoading && (
+            <p className="text-xs text-stone-300 font-mono flex items-center gap-1">
+              <Loader2 size={10} className="animate-spin" aria-hidden="true" />
+              Loading audit trail…
+            </p>
+          )}
         </div>
       </div>
     </div>
