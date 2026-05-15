@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
@@ -50,23 +50,8 @@ export function useSyncQueue(): SyncStatus {
 
   // Real Convex mutations
   const farmerCreate = useMutation(api.farmers.create);
+  const farmCreate = useMutation(api.farms.create);
   const attachPolygon = useMutation(api.farms.attachPolygon);
-
-  // HANDOFF: api.farms.create not yet available — see HANDOFF.md Request 1.
-  // Stub fails gracefully: items stay queued until Lane 1 ships the mutation.
-  const farmCreateStub = useCallback(
-    async (_args: {
-      farmerId: Id<"farmers">;
-      code: string;
-      crop: "coffee" | "avocado" | "macadamia";
-      variety: string;
-      estimatedAreaHa: number;
-      certifications: string[];
-    }): Promise<{ id: string; traceId: string }> => {
-      throw new Error("api.farms.create not yet available — see HANDOFF.md");
-    },
-    [],
-  );
 
   // Keep queued count fresh
   useEffect(() => {
@@ -193,7 +178,7 @@ export function useSyncQueue(): SyncStatus {
             `farm.create blocked: farmer ${p.farmerCode} not yet synced`,
           );
         }
-        const result = await farmCreateStub({
+        const result = await farmCreate({
           farmerId: p.resolvedFarmerId as Id<"farmers">,
           code: p.farmCode,
           crop: p.crop,
@@ -224,7 +209,6 @@ export function useSyncQueue(): SyncStatus {
         }
         await attachPolygon({
           farmId: p.resolvedFarmId as Id<"farms">,
-          r2Key: "",   // inline path; r2Key optional pending HANDOFF.md Request 2
           polygonInline: p.polygonInline,
           areaHa: p.areaHa,
         });
