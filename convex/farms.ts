@@ -1,4 +1,5 @@
 import { mutation, query, internalMutation } from "./_generated/server";
+import { getAuthUserId } from "@convex-dev/auth/server";
 import { v } from "convex/values";
 import { withAudit } from "./_lib/audited";
 
@@ -41,11 +42,42 @@ export const getByCode = query({
   },
 });
 
+// Called by Lane 2 sync queue drain — auth-gated, audited.
+export const create = mutation({
+  args: {
+    farmerId: v.id("farmers"),
+    code: v.string(),
+    crop: v.union(
+      v.literal("coffee"),
+      v.literal("avocado"),
+      v.literal("macadamia"),
+    ),
+    variety: v.string(),
+    estimatedAreaHa: v.number(),
+    certifications: v.array(v.string()),
+  },
+  handler: async (ctx, args) => {
+    const actorId = await getAuthUserId(ctx);
+    if (!actorId) throw new Error("Authentication required");
+    return withAudit(ctx, "farm.create", async () => {
+      const id = await ctx.db.insert("farms", {
+        ...args,
+        verificationStatus: "unverified",
+        eudrCompliant: false,
+        eudrScore: 0,
+        deforestationRisk: "none",
+        lastSyncedAt: Date.now(),
+      });
+      return { id: id as string, entityType: "farm", diff: { code: args.code } };
+    });
+  },
+});
+
 // Called by Lane 2 after polygon capture.
 export const attachPolygon = mutation({
   args: {
     farmId: v.id("farms"),
-    r2Key: v.string(),
+    r2Key: v.optional(v.string()),
     polygonInline: v.optional(
       v.array(v.object({ lat: v.number(), lng: v.number() })),
     ),
@@ -54,7 +86,7 @@ export const attachPolygon = mutation({
   handler: async (ctx, { farmId, r2Key, polygonInline, areaHa }) => {
     return withAudit(ctx, "farm.attachPolygon", async () => {
       await ctx.db.patch(farmId, {
-        polygonR2Key: r2Key,
+        ...(r2Key ? { polygonR2Key: r2Key } : {}),
         polygonPreview: polygonInline?.slice(0, 8),
         estimatedAreaHa: areaHa,
         lastSyncedAt: Date.now(),

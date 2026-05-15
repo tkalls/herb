@@ -113,6 +113,9 @@ export default defineSchema({
     exportReadiness: v.number(),
     eudrDeclarationId: v.optional(v.string()),
     certificateR2Key: v.optional(v.string()),
+    receiptSigner: v.optional(v.string()),
+    receiptAt: v.optional(v.number()),
+    receiptHash: v.optional(v.string()),
   })
     .index("by_coop", ["cooperativeId"])
     .index("by_code", ["code"]),
