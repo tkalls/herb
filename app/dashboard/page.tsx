@@ -1,8 +1,10 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useQuery } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import type { Id } from "@/convex/_generated/dataModel";
+import dynamic from "next/dynamic";
 import {
   CheckCircle,
   Clock,
@@ -11,7 +13,6 @@ import {
   TrendingUp,
   Package,
   MapPin,
-  Users,
   Shield,
   Coffee,
   Leaf,
@@ -19,43 +20,24 @@ import {
   ArrowUpRight,
   Filter,
   Download,
-  RefreshCw,
+  History,
+  Truck,
 } from "lucide-react";
 import { statusConfig, batchStatusConfig, type VerificationStatus } from "@/lib/data";
+import KpiTile from "@/components/dashboard/KpiTile";
+import ScoreGauge from "@/components/dashboard/ScoreGauge";
+import AuditDrawer from "@/components/dashboard/AuditDrawer";
 
-function ComplianceGauge({ score, label }: { score: number; label: string }) {
-  const radius = 54;
-  const circumference = 2 * Math.PI * radius;
-  const offset = circumference - (score / 100) * circumference;
-  const color = score >= 80 ? "#16a34a" : score >= 60 ? "#d97706" : "#dc2626";
-
-  return (
-    <div className="flex flex-col items-center">
-      <div className="relative w-36 h-36">
-        <svg className="w-full h-full -rotate-90" viewBox="0 0 120 120">
-          <circle cx="60" cy="60" r={radius} fill="none" stroke="#e7e5e4" strokeWidth="10" />
-          <circle
-            cx="60"
-            cy="60"
-            r={radius}
-            fill="none"
-            stroke={color}
-            strokeWidth="10"
-            strokeDasharray={circumference}
-            strokeDashoffset={offset}
-            strokeLinecap="round"
-            style={{ transition: "stroke-dashoffset 0.8s ease" }}
-          />
-        </svg>
-        <div className="absolute inset-0 flex flex-col items-center justify-center">
-          <span className="text-3xl font-bold text-stone-900">{score}</span>
-          <span className="text-xs text-stone-400">/ 100</span>
-        </div>
-      </div>
-      <div className="text-sm font-medium text-stone-600 mt-2 text-center">{label}</div>
-    </div>
-  );
-}
+// BatchTraceMap is SSR-unsafe (MapLibre) — lazy-load client-only
+const BatchTraceMap = dynamic(
+  () => import("@/components/map/BatchTraceMap"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="rounded-xl bg-stone-200 animate-pulse aspect-[4/3] md:aspect-[16/10]" />
+    ),
+  },
+);
 
 function StatusBadge({ status }: { status: VerificationStatus }) {
   const cfg = statusConfig[status];
@@ -82,17 +64,23 @@ const cropFilter = ["all", "coffee", "avocado"] as const;
 export default function DashboardPage() {
   const [activeCrop, setActiveCrop] = useState<"all" | "coffee" | "avocado">("all");
   const [activeTab, setActiveTab] = useState<"overview" | "farms" | "batches" | "buyers">("overview");
+  const [expandedBatchId, setExpandedBatchId] = useState<string | null>(null);
+  const [auditOpen, setAuditOpen] = useState(false);
+  const [auditEntity, setAuditEntity] = useState<{ type: string; id: string; label: string } | null>(null);
 
-  // ── Convex queries ───────────────────────────────────────────────────────────
+  // ── Convex queries ────────────────────────────────────────────────────────
   const coopDoc = useQuery(api.cooperatives.getByCode, { code: "KNCU" });
   const coopId = coopDoc?._id;
   const rawFarmers = useQuery(api.farmers.listByCoop, coopId ? { cooperativeId: coopId } : "skip");
   const rawFarms = useQuery(api.farms.listByCoop, coopId ? { cooperativeId: coopId } : "skip");
   const rawBatches = useQuery(api.batches.listByCoop, coopId ? { cooperativeId: coopId } : "skip");
 
+  const simulateTransit = useMutation(api.transit.simulateBatchTransit);
+  const advanceTransit = useAction(api.transit.advanceTransit);
+
   const isLoading = !coopDoc || !rawFarmers || !rawFarms || !rawBatches;
 
-  // ── Transform to UI shapes ───────────────────────────────────────────────────
+  // ── Transform to UI shapes ────────────────────────────────────────────────
   const farmerById = useMemo(() => {
     const m = new Map<string, { name: string; village: string }>();
     rawFarmers?.forEach((f) => m.set(f._id, { name: f.fullName, village: f.village }));
@@ -107,6 +95,7 @@ export default function DashboardPage() {
         const farmer = farmerById.get(f.farmerId as string);
         return {
           id: f.code,
+          convexId: f._id as string,
           farmerId: f.farmerId as string,
           farmerName: farmer?.name ?? "—",
           cropType: f.crop as "coffee" | "avocado",
@@ -134,6 +123,7 @@ export default function DashboardPage() {
         const uniqueFarmerIds = new Set(b.farmIds.map((fid) => farmMap.get(fid as string)).filter(Boolean));
         return {
           id: b.code,
+          convexId: b._id as string,
           farmIds: b.farmIds as string[],
           farmerCount: uniqueFarmerIds.size || b.farmIds.length,
           cropType: b.crop as "coffee" | "avocado",
@@ -177,25 +167,44 @@ export default function DashboardPage() {
     };
   }, [coopDoc, farms, batches, rawFarms, rawFarmers]);
 
+  // ── Loading state ─────────────────────────────────────────────────────────
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="text-stone-400 text-sm">Loading…</div>
+      <div className="min-h-screen bg-stone-50">
+        <div className="bg-white border-b border-stone-200 px-4 sm:px-6 lg:px-8 py-6">
+          <div className="max-w-7xl mx-auto">
+            <div className="h-4 bg-stone-200 animate-pulse rounded w-48 mb-2" />
+            <div className="h-7 bg-stone-200 animate-pulse rounded w-80 mb-1" />
+            <div className="h-3 bg-stone-100 animate-pulse rounded w-64" />
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+          <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
+            {[1, 2, 3, 4].map((i) => (
+              <div key={i} className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+                <div className="h-3 bg-stone-200 animate-pulse rounded w-2/3 mb-3" />
+                <div className="h-8 bg-stone-200 animate-pulse rounded w-1/2 mb-1" />
+                <div className="h-3 bg-stone-100 animate-pulse rounded w-3/4" />
+              </div>
+            ))}
+          </div>
+        </div>
       </div>
     );
   }
+
   if (!cooperative) return null;
 
-  // ── Derived UI values ────────────────────────────────────────────────────────
+  // ── Derived UI values ─────────────────────────────────────────────────────
   const filteredFarms = farms.filter((f) => activeCrop === "all" || f.cropType === activeCrop);
   const filteredBatches = batches.filter((b) => activeCrop === "all" || b.cropType === activeCrop);
 
-  const verifiedCount = cooperative.verifiedFarms;
-  const pendingCount = cooperative.pendingFarms;
-  const reviewCount = cooperative.needsReviewFarms;
-  const unverifiedCount = cooperative.unverifiedFarms;
   const eudrCount = farms.filter((f) => f.eudrCompliant).length;
-  const totalArea = cooperative.totalAreaHa.toString();
+
+  function openAudit(entityType: string, entityId: string, label: string) {
+    setAuditEntity({ type: entityType, id: entityId, label });
+    setAuditOpen(true);
+  }
 
   return (
     <div className="min-h-screen bg-stone-50">
@@ -224,10 +233,6 @@ export default function DashboardPage() {
                 <Download className="w-4 h-4" />
                 Export
               </button>
-              <button className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-stone-300 text-stone-600 text-sm hover:bg-stone-50 transition-colors">
-                <RefreshCw className="w-4 h-4" />
-                Sync
-              </button>
             </div>
           </div>
 
@@ -243,7 +248,7 @@ export default function DashboardPage() {
                     : "text-stone-500 hover:text-stone-700"
                 }`}
               >
-                {f === "all" ? "All Crops" : f === "coffee" ? "☕ Coffee" : "🥑 Avocado"}
+                {f === "all" ? "All Crops" : f === "coffee" ? "Coffee" : "Avocado"}
               </button>
             ))}
           </div>
@@ -276,64 +281,59 @@ export default function DashboardPage() {
         {/* OVERVIEW TAB */}
         {activeTab === "overview" && (
           <div className="space-y-8">
-            {/* KPI row */}
+            {/* KPI row — shared KpiTile component */}
             <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-              {[
-                { label: "Total Farms (demo)", value: farms.length, sub: `${totalArea} ha mapped`, icon: MapPin, color: "text-stone-700", bg: "bg-stone-100" },
-                { label: "Verified", value: verifiedCount, sub: `${Math.round((verifiedCount / farms.length) * 100)}% of registered`, icon: CheckCircle, color: "text-emerald-700", bg: "bg-emerald-50" },
-                { label: "EUDR Compliant", value: eudrCount, sub: `${farms.length - eudrCount} farms need action`, icon: Shield, color: "text-blue-700", bg: "bg-blue-50" },
-                { label: "Active Batches", value: cooperative.activeBatches, sub: "pending + in transit", icon: Package, color: "text-amber-700", bg: "bg-amber-50" },
-              ].map((kpi) => (
-                <div key={kpi.label} className="bg-white rounded-xl border border-stone-200 p-5 shadow-sm">
-                  <div className="flex items-center justify-between mb-3">
-                    <div className={`w-9 h-9 rounded-lg ${kpi.bg} flex items-center justify-center`}>
-                      <kpi.icon className={`w-4.5 h-4.5 ${kpi.color}`} style={{ width: "18px", height: "18px" }} />
-                    </div>
-                  </div>
-                  <div className="text-3xl font-bold text-stone-900 mb-0.5">{kpi.value}</div>
-                  <div className="text-sm font-medium text-stone-600">{kpi.label}</div>
-                  <div className="text-xs text-stone-400 mt-1">{kpi.sub}</div>
-                </div>
-              ))}
+              <KpiTile
+                label="Total Farms"
+                value={farms.length}
+                sub={`${cooperative.totalAreaHa} ha mapped`}
+              />
+              <KpiTile
+                label="Verified"
+                value={cooperative.verifiedFarms}
+                sub={`${farms.length > 0 ? Math.round((cooperative.verifiedFarms / farms.length) * 100) : 0}% of registered`}
+              />
+              <KpiTile
+                label="EUDR Compliant"
+                value={eudrCount}
+                sub={`${farms.length - eudrCount} farms need action`}
+              />
+              <KpiTile
+                label="Active Batches"
+                value={cooperative.activeBatches}
+                sub="pending + in transit"
+              />
             </div>
 
-            {/* Compliance gauges + verification breakdown */}
+            {/* Compliance gauges — shared ScoreGauge component */}
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
               <div className="lg:col-span-1 bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
                 <h3 className="font-semibold text-stone-900 mb-6">Compliance Scores</h3>
                 <div className="flex justify-around">
-                  <ComplianceGauge score={cooperative.complianceScore} label="Overall" />
-                  <ComplianceGauge score={cooperative.eudrReadiness} label="EUDR Ready" />
+                  <ScoreGauge
+                    score={cooperative.complianceScore}
+                    label="Overall"
+                  />
+                  <ScoreGauge
+                    score={cooperative.eudrReadiness}
+                    label="EUDR Ready"
+                  />
                 </div>
                 <div className="mt-6 pt-5 border-t border-stone-100 space-y-2">
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-stone-500">Documentation</span>
-                    <div className="flex items-center gap-2">
-                      <ScoreBar value={82} />
-                      <span className="font-mono text-stone-700 w-8 text-right text-xs">82%</span>
+                  {[
+                    { label: "Documentation", value: 82 },
+                    { label: "GPS Coverage", value: 74 },
+                    { label: "Deforestation Check", value: 91 },
+                    { label: "Certification", value: 58 },
+                  ].map((s) => (
+                    <div key={s.label} className="flex items-center justify-between text-sm">
+                      <span className="text-stone-500">{s.label}</span>
+                      <div className="flex items-center gap-2 w-32">
+                        <ScoreBar value={s.value} />
+                        <span className="font-mono text-stone-700 w-8 text-right text-xs tabular-nums">{s.value}%</span>
+                      </div>
                     </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-stone-500">GPS Coverage</span>
-                    <div className="flex items-center gap-2">
-                      <ScoreBar value={74} />
-                      <span className="font-mono text-stone-700 w-8 text-right text-xs">74%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-stone-500">Deforestation Check</span>
-                    <div className="flex items-center gap-2">
-                      <ScoreBar value={91} />
-                      <span className="font-mono text-stone-700 w-8 text-right text-xs">91%</span>
-                    </div>
-                  </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-stone-500">Certification</span>
-                    <div className="flex items-center gap-2">
-                      <ScoreBar value={58} />
-                      <span className="font-mono text-stone-700 w-8 text-right text-xs">58%</span>
-                    </div>
-                  </div>
+                  ))}
                 </div>
               </div>
 
@@ -341,10 +341,10 @@ export default function DashboardPage() {
                 <h3 className="font-semibold text-stone-900 mb-4">Farm Verification Status</h3>
                 <div className="space-y-3 mb-6">
                   {[
-                    { label: "Verified", count: cooperative.verifiedFarms, total: cooperative.farmCount, color: "bg-emerald-500", text: "text-emerald-700" },
-                    { label: "Pending Review", count: cooperative.pendingFarms, total: cooperative.farmCount, color: "bg-amber-500", text: "text-amber-700" },
-                    { label: "Needs Action", count: cooperative.needsReviewFarms, total: cooperative.farmCount, color: "bg-red-500", text: "text-red-700" },
-                    { label: "Unverified", count: cooperative.unverifiedFarms, total: cooperative.farmCount, color: "bg-stone-400", text: "text-stone-600" },
+                    { label: "Verified", count: cooperative.verifiedFarms, color: "bg-emerald-500", text: "text-emerald-700" },
+                    { label: "Pending Review", count: cooperative.pendingFarms, color: "bg-amber-500", text: "text-amber-700" },
+                    { label: "Needs Action", count: cooperative.needsReviewFarms, color: "bg-red-500", text: "text-red-700" },
+                    { label: "Unverified", count: cooperative.unverifiedFarms, color: "bg-stone-400", text: "text-stone-600" },
                   ].map((row) => (
                     <div key={row.label}>
                       <div className="flex items-center justify-between text-sm mb-1.5">
@@ -352,34 +352,30 @@ export default function DashboardPage() {
                         <span className={`font-semibold ${row.text}`}>
                           {row.count.toLocaleString()}
                           <span className="text-stone-400 font-normal ml-1">
-                            ({Math.round((row.count / row.total) * 100)}%)
+                            ({cooperative.farmCount > 0 ? Math.round((row.count / cooperative.farmCount) * 100) : 0}%)
                           </span>
                         </span>
                       </div>
                       <div className="w-full bg-stone-100 rounded-full h-2">
                         <div
                           className={`${row.color} h-2 rounded-full`}
-                          style={{ width: `${(row.count / row.total) * 100}%` }}
+                          style={{ width: cooperative.farmCount > 0 ? `${(row.count / cooperative.farmCount) * 100}%` : "0%" }}
                         />
                       </div>
                     </div>
                   ))}
                 </div>
 
-                {/* EUDR action needed */}
                 <div className="bg-amber-50 border border-amber-200 rounded-xl p-4">
                   <div className="flex items-start gap-3">
                     <AlertTriangle className="w-5 h-5 text-amber-600 flex-shrink-0 mt-0.5" />
                     <div>
                       <div className="font-semibold text-amber-900 text-sm">EUDR Compliance Gap</div>
                       <div className="text-sm text-amber-800 mt-1">
-                        <strong>{cooperative.farmCount - Math.round(cooperative.farmCount * cooperative.eudrReadiness / 100)}</strong> farms
-                        ({100 - cooperative.eudrReadiness}%) are not yet EUDR-compliant. At current rate,
-                        85% readiness will be reached by November 2025 — cutting it close for the December deadline.
+                        <strong>{cooperative.farmCount - eudrCount}</strong> farms ({100 - cooperative.eudrReadiness}%)
+                        are not yet EUDR-compliant. The December 2025 regulation requires full traceability to
+                        sub-hectare polygon level for all EU-bound exports.
                       </div>
-                      <button className="mt-2 text-xs font-semibold text-amber-700 underline">
-                        View remediation plan →
-                      </button>
                     </div>
                   </div>
                 </div>
@@ -397,37 +393,43 @@ export default function DashboardPage() {
                   View all <ArrowUpRight className="w-3.5 h-3.5" />
                 </button>
               </div>
-              <div className="divide-y divide-stone-100">
-                {batches.slice(0, 3).map((batch) => {
-                  const bsCfg = batchStatusConfig[batch.status];
-                  return (
-                    <div key={batch.id} className="px-6 py-4 flex items-center gap-4">
-                      <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${batch.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
-                        {batch.cropType === "coffee"
-                          ? <Coffee className="w-4.5 h-4.5 text-amber-600" style={{ width: "18px", height: "18px" }} />
-                          : <Leaf className="w-4.5 h-4.5 text-emerald-600" style={{ width: "18px", height: "18px" }} />}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-center gap-2">
-                          <span className="font-mono text-xs text-stone-400">{batch.id}</span>
-                          <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${bsCfg.bg} ${bsCfg.color}`}>
-                            {bsCfg.label}
-                          </span>
+              {batches.length === 0 ? (
+                <div className="px-6 py-8 text-center">
+                  <Package className="w-8 h-8 text-stone-300 mx-auto mb-2" aria-hidden="true" />
+                  <p className="text-sm text-stone-500">No active batches.</p>
+                </div>
+              ) : (
+                <div className="divide-y divide-stone-100">
+                  {batches.slice(0, 3).map((batch) => {
+                    const bsCfg = batchStatusConfig[batch.status];
+                    return (
+                      <div key={batch.id} className="px-6 py-4 flex items-center gap-4">
+                        <div className={`w-9 h-9 rounded-lg flex items-center justify-center flex-shrink-0 ${batch.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
+                          {batch.cropType === "coffee"
+                            ? <Coffee className="text-amber-600" style={{ width: "18px", height: "18px" }} />
+                            : <Leaf className="text-emerald-600" style={{ width: "18px", height: "18px" }} />}
                         </div>
-                        <div className="text-sm font-medium text-stone-800 mt-0.5 truncate">{batch.variety}</div>
-                        <div className="text-xs text-stone-400 mt-0.5">
-                          {batch.weightKg.toLocaleString()} kg · {batch.farmerCount} farmers · {batch.buyer}
+                        <div className="flex-1 min-w-0">
+                          <div className="flex items-center gap-2">
+                            <span className="font-mono text-xs text-stone-400">{batch.id}</span>
+                            <span className={`px-2 py-0.5 rounded-full text-xs font-medium ${bsCfg.bg} ${bsCfg.color}`}>
+                              {bsCfg.label}
+                            </span>
+                          </div>
+                          <div className="text-sm font-medium text-stone-800 mt-0.5 truncate">{batch.variety}</div>
+                          <div className="text-xs text-stone-400 mt-0.5">
+                            {batch.weightKg.toLocaleString()} kg · {batch.farmerCount} farmers · {batch.buyer}
+                          </div>
+                        </div>
+                        <div className="w-20">
+                          <ScoreBar value={batch.traceabilityScore} />
+                          <div className="text-xs font-mono tabular-nums text-stone-500 mt-1 text-right">{batch.traceabilityScore}</div>
                         </div>
                       </div>
-                      <div className="text-right hidden sm:block">
-                        <div className="text-sm font-bold text-stone-900">{batch.traceabilityScore}</div>
-                        <div className="text-xs text-stone-400">trace score</div>
-                      </div>
-                      <ScoreBar value={batch.traceabilityScore} />
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
           </div>
         )}
@@ -443,77 +445,107 @@ export default function DashboardPage() {
               </button>
             </div>
 
-            <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
-              <div className="overflow-x-auto">
-                <table className="w-full">
-                  <thead>
-                    <tr className="border-b border-stone-100 bg-stone-50">
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">Farm</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">Farmer</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">Crop</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">Area</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">Status</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider">EUDR</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider hidden md:table-cell">Risk</th>
-                      <th className="text-left px-4 py-3 text-xs font-semibold text-stone-500 uppercase tracking-wider hidden lg:table-cell">Last Sync</th>
-                    </tr>
-                  </thead>
-                  <tbody className="divide-y divide-stone-100">
-                    {filteredFarms.map((farm) => (
-                      <tr key={farm.id} className="hover:bg-stone-50 transition-colors">
-                        <td className="px-4 py-3">
-                          <span className="font-mono text-xs text-stone-500">{farm.id}</span>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div>
-                            <div className="text-sm font-medium text-stone-800">{farm.farmerName}</div>
-                            <div className="text-xs text-stone-400">{farm.village}</div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3">
-                          <div className="flex items-center gap-1.5">
-                            {farm.cropType === "coffee"
-                              ? <Coffee className="w-3.5 h-3.5 text-amber-600" />
-                              : <Leaf className="w-3.5 h-3.5 text-emerald-600" />}
-                            <div>
-                              <div className="text-sm text-stone-700 capitalize">{farm.cropType}</div>
-                              <div className="text-xs text-stone-400">{farm.variety}</div>
-                            </div>
-                          </div>
-                        </td>
-                        <td className="px-4 py-3 text-sm font-mono text-stone-700">{farm.areaHa} ha</td>
-                        <td className="px-4 py-3">
-                          <StatusBadge status={farm.verificationStatus} />
-                        </td>
-                        <td className="px-4 py-3">
-                          {farm.eudrCompliant ? (
-                            <CheckCircle className="w-4.5 h-4.5 text-emerald-500" style={{ width: "18px", height: "18px" }} />
-                          ) : (
-                            <XCircle className="w-4.5 h-4.5 text-red-400" style={{ width: "18px", height: "18px" }} />
-                          )}
-                        </td>
-                        <td className="px-4 py-3 hidden md:table-cell">
-                          <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
-                            farm.deforestationRisk === "low"
-                              ? "bg-emerald-50 text-emerald-700"
-                              : farm.deforestationRisk === "medium"
-                              ? "bg-amber-50 text-amber-700"
-                              : "bg-red-50 text-red-700"
-                          }`}>
-                            {farm.deforestationRisk}
-                          </span>
-                        </td>
-                        <td className="px-4 py-3 hidden lg:table-cell">
-                          <div className="text-xs text-stone-400">
-                            {new Date(farm.lastSynced).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
-                          </div>
-                        </td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
+            {filteredFarms.length === 0 ? (
+              <div className="rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
+                <MapPin className="w-8 h-8 text-stone-300 mx-auto mb-3" aria-hidden="true" />
+                {farms.length === 0 ? (
+                  <>
+                    <p className="text-sm font-medium text-stone-600 mb-1">No farms registered yet.</p>
+                    <p className="text-xs text-stone-400">Use the field app to register the first farm and it will appear here within seconds.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm font-medium text-stone-600 mb-1">No {activeCrop === "all" ? "" : activeCrop + " "}farms match the current filter.</p>
+                    <p className="text-xs text-stone-400">Try selecting a different crop using the tabs above.</p>
+                  </>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+                <div className="overflow-x-auto">
+                  <table className="w-full">
+                    <thead>
+                      <tr className="border-b border-stone-100 bg-stone-50 sticky top-0 z-10">
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">Farm</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">Farmer</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">Crop</th>
+                        <th scope="col" className="text-right px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">Area</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">Status</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600">EUDR</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600 hidden md:table-cell">Risk</th>
+                        <th scope="col" className="text-left px-4 py-3 text-xs font-mono uppercase tracking-wider text-stone-600 hidden lg:table-cell">Last Sync</th>
+                        <th scope="col" className="px-4 py-3"><span className="sr-only">Actions</span></th>
+                      </tr>
+                    </thead>
+                    <tbody className="divide-y divide-stone-100">
+                      {filteredFarms.map((farm) => (
+                        <tr key={farm.id} className="hover:bg-stone-50 transition-colors">
+                          <td className="px-4 py-3">
+                            <span className="font-mono text-xs text-stone-500">{farm.id}</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div>
+                              <div className="text-sm font-medium text-stone-800">{farm.farmerName}</div>
+                              <div className="text-xs text-stone-400">{farm.village}</div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <div className="flex items-center gap-1.5">
+                              {farm.cropType === "coffee"
+                                ? <Coffee className="w-3.5 h-3.5 text-amber-600" />
+                                : <Leaf className="w-3.5 h-3.5 text-emerald-600" />}
+                              <div>
+                                <div className="text-sm text-stone-700 capitalize">{farm.cropType}</div>
+                                <div className="text-xs text-stone-400">{farm.variety}</div>
+                              </div>
+                            </div>
+                          </td>
+                          <td className="px-4 py-3 text-right">
+                            <span className="text-sm font-mono text-stone-700 tabular-nums">{farm.areaHa} ha</span>
+                          </td>
+                          <td className="px-4 py-3">
+                            <StatusBadge status={farm.verificationStatus} />
+                          </td>
+                          <td className="px-4 py-3">
+                            {farm.eudrCompliant ? (
+                              <CheckCircle className="text-emerald-500" style={{ width: "18px", height: "18px" }} />
+                            ) : (
+                              <XCircle className="text-red-400" style={{ width: "18px", height: "18px" }} />
+                            )}
+                          </td>
+                          <td className="px-4 py-3 hidden md:table-cell">
+                            <span className={`text-xs font-medium px-2 py-0.5 rounded-full ${
+                              farm.deforestationRisk === "low"
+                                ? "bg-emerald-50 text-emerald-700"
+                                : farm.deforestationRisk === "medium"
+                                ? "bg-amber-50 text-amber-700"
+                                : "bg-red-50 text-red-700"
+                            }`}>
+                              {farm.deforestationRisk}
+                            </span>
+                          </td>
+                          <td className="px-4 py-3 hidden lg:table-cell">
+                            <div className="text-xs text-stone-400">
+                              {new Date(farm.lastSynced).toLocaleDateString("en-GB", { day: "numeric", month: "short" })}
+                            </div>
+                          </td>
+                          <td className="px-4 py-3">
+                            <button
+                              onClick={() => openAudit("farm", farm.convexId, farm.id)}
+                              className="inline-flex items-center gap-1 rounded-lg px-2 py-1 text-xs text-stone-500 hover:bg-stone-100 hover:text-stone-700 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600"
+                              aria-label={`View audit trail for farm ${farm.id}`}
+                            >
+                              <History size={12} aria-hidden="true" />
+                              Audit
+                            </button>
+                          </td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            )}
 
             {/* Notes for farms needing attention */}
             {filteredFarms.filter(f => f.notes).map((farm) => (
@@ -526,9 +558,7 @@ export default function DashboardPage() {
                   farm.verificationStatus === "needs_review" ? "text-red-500" : "text-amber-500"
                 }`} />
                 <div>
-                  <div className="text-sm font-medium text-stone-800">
-                    {farm.id} · {farm.farmerName}
-                  </div>
+                  <div className="text-sm font-medium text-stone-800">{farm.id} · {farm.farmerName}</div>
                   <div className="text-sm text-stone-600 mt-0.5">{farm.notes}</div>
                 </div>
               </div>
@@ -539,91 +569,137 @@ export default function DashboardPage() {
         {/* BATCHES TAB */}
         {activeTab === "batches" && (
           <div className="space-y-4">
-            {filteredBatches.map((batch) => {
-              const bsCfg = batchStatusConfig[batch.status];
-              return (
-                <div key={batch.id} className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
-                  <div className="px-6 py-4 border-b border-stone-100">
-                    <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                      <div className="flex items-center gap-3">
-                        <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${batch.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
-                          {batch.cropType === "coffee"
-                            ? <Coffee className="w-5 h-5 text-amber-600" />
-                            : <Leaf className="w-5 h-5 text-emerald-600" />}
+            {filteredBatches.length === 0 ? (
+              <div className="rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
+                <Package className="w-8 h-8 text-stone-300 mx-auto mb-3" aria-hidden="true" />
+                <p className="text-sm font-medium text-stone-600 mb-1">No export batches yet.</p>
+                <p className="text-xs text-stone-400">Batches are created once farms pass EUDR verification and are grouped for export.</p>
+              </div>
+            ) : (
+              filteredBatches.map((batch) => {
+                const bsCfg = batchStatusConfig[batch.status];
+                const isExpanded = expandedBatchId === batch.convexId;
+                return (
+                  <div key={batch.id} className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
+                    <div className="px-6 py-4 border-b border-stone-100">
+                      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                        <div className="flex items-center gap-3">
+                          <div className={`w-10 h-10 rounded-xl flex items-center justify-center ${batch.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
+                            {batch.cropType === "coffee"
+                              ? <Coffee className="w-5 h-5 text-amber-600" />
+                              : <Leaf className="w-5 h-5 text-emerald-600" />}
+                          </div>
+                          <div>
+                            <div className="flex items-center gap-2">
+                              <span className="font-mono text-sm font-semibold text-stone-800">{batch.id}</span>
+                              <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${bsCfg.bg} ${bsCfg.color}`}>
+                                {bsCfg.label}
+                              </span>
+                            </div>
+                            <div className="text-sm text-stone-500 mt-0.5">{batch.variety}</div>
+                          </div>
+                        </div>
+                        <div className="flex items-center gap-2 flex-wrap">
+                          {batch.eudrDeclarationId && (
+                            <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
+                              <Shield className="w-3.5 h-3.5 text-emerald-600" />
+                              <span className="text-xs font-mono text-emerald-700">{batch.eudrDeclarationId}</span>
+                            </div>
+                          )}
+                          {/* Dispatch button — only for ready batches */}
+                          {batch.status === "ready" && (
+                            <button
+                              onClick={async () => {
+                                await simulateTransit({ batchId: batch.convexId as Id<"batches"> });
+                              }}
+                              className="inline-flex items-center gap-1.5 rounded-lg bg-emerald-700 px-3 py-1.5 text-xs font-medium text-white shadow-sm hover:bg-emerald-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+                            >
+                              <Truck className="w-3.5 h-3.5" aria-hidden="true" />
+                              Dispatch to {batch.buyer}
+                            </button>
+                          )}
+                          {/* +30 min — dev/admin tool, advances transit simulator */}
+                          {batch.status === "in_transit" && (
+                            <button
+                              onClick={async () => {
+                                await advanceTransit({ batchId: batch.convexId as Id<"batches"> });
+                              }}
+                              className="inline-flex items-center gap-1 rounded-lg border border-stone-300 bg-stone-50 px-2.5 py-1.5 text-xs font-mono text-stone-600 hover:bg-stone-100 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600"
+                              title="Advance transit simulator by ~125 km (admin only)"
+                            >
+                              +30 min
+                            </button>
+                          )}
+                          <button
+                            onClick={() => setExpandedBatchId(isExpanded ? null : batch.convexId)}
+                            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-1.5 text-xs text-stone-600 border border-stone-300 hover:bg-stone-50 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600"
+                          >
+                            {isExpanded ? "Collapse" : "View map"}
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="px-6 py-4">
+                      <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
+                        <div>
+                          <div className="text-xs text-stone-400 mb-0.5">Weight</div>
+                          <div className="text-sm font-semibold font-mono tabular-nums text-stone-800">{batch.weightKg.toLocaleString()} kg</div>
                         </div>
                         <div>
-                          <div className="flex items-center gap-2">
-                            <span className="font-mono text-sm font-semibold text-stone-800">{batch.id}</span>
-                            <span className={`px-2.5 py-0.5 rounded-full text-xs font-medium ${bsCfg.bg} ${bsCfg.color}`}>
-                              {bsCfg.label}
-                            </span>
+                          <div className="text-xs text-stone-400 mb-0.5">Farmers</div>
+                          <div className="text-sm font-semibold text-stone-800">{batch.farmerCount}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-stone-400 mb-0.5">Processing date</div>
+                          <div className="text-sm font-semibold text-stone-800">
+                            {new Date(batch.processingDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
                           </div>
-                          <div className="text-sm text-stone-500 mt-0.5">{batch.variety}</div>
+                        </div>
+                        <div>
+                          <div className="text-xs text-stone-400 mb-0.5">Destination</div>
+                          <div className="text-sm font-semibold text-stone-800">{batch.buyer}</div>
+                          <div className="text-xs text-stone-400">{batch.buyerCountry}</div>
                         </div>
                       </div>
-                      <div className="flex items-center gap-3">
-                        {batch.eudrDeclarationId && (
-                          <div className="flex items-center gap-1.5 px-3 py-1.5 bg-emerald-50 border border-emerald-200 rounded-lg">
-                            <Shield className="w-3.5 h-3.5 text-emerald-600" />
-                            <span className="text-xs font-mono text-emerald-700">{batch.eudrDeclarationId}</span>
+
+                      <div className="grid grid-cols-2 gap-4 mb-4">
+                        <div>
+                          <div className="flex items-center justify-between text-sm mb-1.5">
+                            <span className="text-stone-500">Traceability score</span>
+                            <span className="font-mono font-bold tabular-nums text-stone-900">{batch.traceabilityScore}/100</span>
                           </div>
-                        )}
+                          <ScoreBar value={batch.traceabilityScore} />
+                        </div>
+                        <div>
+                          <div className="flex items-center justify-between text-sm mb-1.5">
+                            <span className="text-stone-500">Export readiness</span>
+                            <span className="font-mono font-bold tabular-nums text-stone-900">{batch.exportReadiness}/100</span>
+                          </div>
+                          <ScoreBar value={batch.exportReadiness} />
+                        </div>
                       </div>
+
+                      {/* Expandable transit map */}
+                      {isExpanded && (
+                        <div className="mt-2">
+                          <BatchTraceMap batchId={batch.convexId} />
+                        </div>
+                      )}
+
+                      {batch.exportReadiness < 80 && (
+                        <div className="mt-3 flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
+                          <Clock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
+                          {batch.exportReadiness < 70
+                            ? "Missing GPS polygons for contributing farms. EUDR declaration cannot be issued until resolved."
+                            : "Minor documentation gaps. All critical checks passed. Declaration ready within 48 hrs."}
+                        </div>
+                      )}
                     </div>
                   </div>
-
-                  <div className="px-6 py-4">
-                    <div className="grid grid-cols-2 sm:grid-cols-4 gap-4 mb-4">
-                      <div>
-                        <div className="text-xs text-stone-400 mb-0.5">Weight</div>
-                        <div className="text-sm font-semibold text-stone-800">{batch.weightKg.toLocaleString()} kg</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-stone-400 mb-0.5">Farmers</div>
-                        <div className="text-sm font-semibold text-stone-800">{batch.farmerCount}</div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-stone-400 mb-0.5">Processing Date</div>
-                        <div className="text-sm font-semibold text-stone-800">
-                          {new Date(batch.processingDate).toLocaleDateString("en-GB", { day: "numeric", month: "short", year: "numeric" })}
-                        </div>
-                      </div>
-                      <div>
-                        <div className="text-xs text-stone-400 mb-0.5">Destination</div>
-                        <div className="text-sm font-semibold text-stone-800">{batch.buyer}</div>
-                        <div className="text-xs text-stone-400">{batch.buyerCountry}</div>
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-2 gap-4">
-                      <div>
-                        <div className="flex items-center justify-between text-sm mb-1.5">
-                          <span className="text-stone-500">Traceability Score</span>
-                          <span className="font-bold text-stone-900">{batch.traceabilityScore}/100</span>
-                        </div>
-                        <ScoreBar value={batch.traceabilityScore} />
-                      </div>
-                      <div>
-                        <div className="flex items-center justify-between text-sm mb-1.5">
-                          <span className="text-stone-500">Export Readiness</span>
-                          <span className="font-bold text-stone-900">{batch.exportReadiness}/100</span>
-                        </div>
-                        <ScoreBar value={batch.exportReadiness} />
-                      </div>
-                    </div>
-
-                    {batch.exportReadiness < 80 && (
-                      <div className="mt-3 flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg text-xs text-amber-700">
-                        <Clock className="w-3.5 h-3.5 flex-shrink-0 mt-0.5" />
-                        {batch.exportReadiness < 70
-                          ? "Missing GPS polygons for 2 contributing farms. EUDR declaration cannot be issued until resolved."
-                          : "Minor documentation gaps. All critical checks passed. Declaration ready within 48 hrs."}
-                      </div>
-                    )}
-                  </div>
-                </div>
-              );
-            })}
+                );
+              })
+            )}
           </div>
         )}
 
@@ -633,68 +709,92 @@ export default function DashboardPage() {
             <div className="bg-white rounded-xl border border-stone-200 p-6 shadow-sm">
               <h3 className="font-semibold text-stone-900 mb-1">Export Pipeline</h3>
               <p className="text-sm text-stone-500 mb-6">Current buyer relationships and readiness status</p>
-              <div className="space-y-4">
-                {filteredBatches.map((b) => (
-                  <div key={b.id} className="rounded-xl border border-stone-200 p-5">
-                    <div className="flex items-start gap-4">
-                      <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 text-lg ${b.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
-                        {b.cropType === "coffee" ? "☕" : "🥑"}
-                      </div>
-                      <div className="flex-1 min-w-0">
-                        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
-                          <div>
-                            <div className="font-semibold text-stone-900">{b.buyer}</div>
-                            <div className="text-sm text-stone-500 flex items-center gap-1.5">
-                              <Globe className="w-3.5 h-3.5" />
-                              {b.buyerCountry}
-                              <span className="mx-1">·</span>
-                              <span className="font-mono text-xs">{b.id}</span>
+              {filteredBatches.length === 0 ? (
+                <div className="text-center py-8">
+                  <Globe className="w-8 h-8 text-stone-300 mx-auto mb-2" aria-hidden="true" />
+                  <p className="text-sm text-stone-500">No active buyer relationships.</p>
+                </div>
+              ) : (
+                <div className="space-y-4">
+                  {filteredBatches.map((b) => (
+                    <div key={b.id} className="rounded-xl border border-stone-200 p-5">
+                      <div className="flex items-start gap-4">
+                        <div className={`w-12 h-12 rounded-xl flex items-center justify-center flex-shrink-0 ${b.cropType === "coffee" ? "bg-amber-50" : "bg-emerald-50"}`}>
+                          {b.cropType === "coffee"
+                            ? <Coffee className="w-5 h-5 text-amber-600" />
+                            : <Leaf className="w-5 h-5 text-emerald-600" />}
+                        </div>
+                        <div className="flex-1 min-w-0">
+                          <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-2">
+                            <div>
+                              <div className="font-semibold text-stone-900">{b.buyer}</div>
+                              <div className="text-sm text-stone-500 flex items-center gap-1.5">
+                                <Globe className="w-3.5 h-3.5" />
+                                {b.buyerCountry}
+                                <span className="mx-1">·</span>
+                                <span className="font-mono text-xs">{b.id}</span>
+                              </div>
+                            </div>
+                            <div className="text-right">
+                              <div className="text-sm font-semibold font-mono tabular-nums text-stone-700">{b.weightKg.toLocaleString()} kg</div>
+                              <div className="text-xs text-stone-400">batch weight</div>
                             </div>
                           </div>
-                          <div className="text-right">
-                            <div className="text-sm font-semibold text-stone-700">{b.weightKg.toLocaleString()} kg</div>
-                            <div className="text-xs text-stone-400">batch weight</div>
+                          <div className="mb-2">
+                            <div className="flex items-center justify-between text-sm mb-1">
+                              <span className="text-stone-500">Export readiness</span>
+                              <span className="font-semibold font-mono tabular-nums">{b.exportReadiness}%</span>
+                            </div>
+                            <ScoreBar value={b.exportReadiness} />
                           </div>
-                        </div>
-                        <div className="mb-2">
-                          <div className="flex items-center justify-between text-sm mb-1">
-                            <span className="text-stone-500">Export Readiness</span>
-                            <span className="font-semibold">{b.exportReadiness}%</span>
+                          <div className="flex items-center justify-end">
+                            {b.exportReadiness >= 80 ? (
+                              <span className="flex items-center gap-1 text-xs text-emerald-700 font-medium">
+                                <CheckCircle className="w-3.5 h-3.5" />
+                                EUDR Declaration Ready
+                              </span>
+                            ) : (
+                              <span className="flex items-center gap-1 text-xs text-amber-700 font-medium">
+                                <Clock className="w-3.5 h-3.5" />
+                                Pending documentation
+                              </span>
+                            )}
                           </div>
-                          <ScoreBar value={b.exportReadiness} />
-                        </div>
-                        <div className="flex items-center justify-end">
-                          {b.exportReadiness >= 80 ? (
-                            <span className="flex items-center gap-1 text-xs text-emerald-700 font-medium">
-                              <CheckCircle className="w-3.5 h-3.5" />
-                              EUDR Declaration Ready
-                            </span>
-                          ) : (
-                            <span className="flex items-center gap-1 text-xs text-amber-700 font-medium">
-                              <Clock className="w-3.5 h-3.5" />
-                              Pending documentation
-                            </span>
-                          )}
                         </div>
                       </div>
                     </div>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
-            {/* Future marketplace teaser */}
-            <div className="rounded-xl border border-dashed border-stone-300 p-6 text-center">
-              <TrendingUp className="w-8 h-8 text-stone-300 mx-auto mb-3" />
-              <h3 className="font-semibold text-stone-600 mb-1">Buyer Marketplace — Coming Soon</h3>
-              <p className="text-sm text-stone-400 max-w-sm mx-auto">
-                Direct RFQ from verified EU, Middle East, and US buyers. Transparent pricing,
-                EUDR documentation auto-attached. Part of Herb&apos;s 12-month roadmap.
+            <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="text-stone-500" style={{ width: "18px", height: "18px" }} aria-hidden="true" />
+                </div>
+                <h3 className="font-semibold text-stone-800">Export coordinator</h3>
+              </div>
+              <p className="text-sm text-stone-500">
+                To initiate a new buyer relationship or issue a direct RFQ, contact the KNCU export desk
+                at <span className="font-mono text-stone-700">exports@kncu.coop.tz</span>.
+                Verified EUDR documentation is attached automatically to every shipment.
               </p>
             </div>
           </div>
         )}
       </div>
+
+      {/* Audit drawer — rendered at page level to avoid z-index issues */}
+      {auditEntity && (
+        <AuditDrawer
+          isOpen={auditOpen}
+          onClose={() => setAuditOpen(false)}
+          entityType={auditEntity.type}
+          entityId={auditEntity.id}
+          entityLabel={auditEntity.label}
+        />
+      )}
     </div>
   );
 }

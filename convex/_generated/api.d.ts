@@ -12,11 +12,14 @@ import type * as _lib_audited from "../_lib/audited.js";
 import type * as audit from "../audit.js";
 import type * as auth from "../auth.js";
 import type * as batches from "../batches.js";
+import type * as buyer from "../buyer.js";
 import type * as cooperatives from "../cooperatives.js";
 import type * as farmers from "../farmers.js";
 import type * as farms from "../farms.js";
 import type * as http from "../http.js";
+import type * as r2 from "../r2.js";
 import type * as seed from "../seed.js";
+import type * as transit from "../transit.js";
 
 import type {
   ApiFromModules,
@@ -29,11 +32,14 @@ declare const fullApi: ApiFromModules<{
   audit: typeof audit;
   auth: typeof auth;
   batches: typeof batches;
+  buyer: typeof buyer;
   cooperatives: typeof cooperatives;
   farmers: typeof farmers;
   farms: typeof farms;
   http: typeof http;
+  r2: typeof r2;
   seed: typeof seed;
+  transit: typeof transit;
 }>;
 
 /**
