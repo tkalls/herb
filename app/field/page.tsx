@@ -32,7 +32,7 @@ const PolygonCapture = dynamic<PolygonCaptureProps>(
   {
     ssr: false,
     loading: () => (
-      <div className="aspect-[4/3] rounded-xl bg-stone-100 animate-pulse" />
+      <div className="aspect-[4/3] rounded-xl bg-zinc-800 animate-pulse" />
     ),
   },
 );
@@ -97,16 +97,16 @@ function varietiesFor(crop: CropType | ""): string[] {
 // ── Step indicator ──────────────────────────────────────────────────────────
 function StepIndicator({ current, total }: { current: Step; total: number }) {
   return (
-    <div className="flex items-center gap-2 px-4 py-3 border-b border-stone-200 bg-white">
+    <div className="flex items-center gap-2 px-4 py-3 border-b border-zinc-800 bg-zinc-900">
       {Array.from({ length: total }).map((_, i) => (
         <div key={i} className="flex items-center gap-2">
           <div
             className={`w-7 h-7 rounded-full flex items-center justify-center text-xs font-bold transition-colors ${
               i < current
-                ? "bg-emerald-600 text-white"
+                ? "bg-amber-500 text-black"
                 : i === current
-                  ? "bg-emerald-700 text-white ring-2 ring-emerald-300 ring-offset-1"
-                  : "bg-stone-200 text-stone-500"
+                  ? "bg-amber-500 text-black ring-2 ring-amber-400 ring-offset-1 ring-offset-zinc-900"
+                  : "bg-zinc-800 text-zinc-500"
             }`}
           >
             {i < current ? (
@@ -117,12 +117,12 @@ function StepIndicator({ current, total }: { current: Step; total: number }) {
           </div>
           {i < total - 1 && (
             <div
-              className={`h-0.5 w-8 ${i < current ? "bg-emerald-500" : "bg-stone-200"}`}
+              className={`h-0.5 w-8 ${i < current ? "bg-amber-500" : "bg-zinc-800"}`}
             />
           )}
         </div>
       ))}
-      <div className="ml-2 text-xs text-stone-500 font-mono">
+      <div className="ml-2 text-xs text-zinc-500 font-mono">
         {current + 1} / {total}
       </div>
     </div>
@@ -237,7 +237,7 @@ export default function FieldPage() {
   // ── Confirmation screen ────────────────────────────────────────────────
   if (submittedFarmCode) {
     return (
-      <div className="min-h-screen bg-stone-50 flex flex-col">
+      <div className="min-h-screen bg-black flex flex-col">
         {syncStatus.conflict && (
           <ConflictModal
             conflict={syncStatus.conflict}
@@ -250,48 +250,48 @@ export default function FieldPage() {
         </div>
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-sm w-full text-center">
-            <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
+            <div className="w-20 h-20 bg-emerald-500/10 rounded-full flex items-center justify-center mx-auto mb-6">
               <CheckCircle2
-                className="w-10 h-10 text-emerald-600"
+                className="w-10 h-10 text-emerald-400"
                 aria-hidden="true"
               />
             </div>
-            <h2 className="text-2xl font-semibold text-stone-900 mb-2">
+            <h2 className="text-2xl font-semibold text-white mb-2">
               Farm registered
             </h2>
-            <p className="text-sm text-stone-500 mb-6">
-              <strong className="text-stone-700">{farmer.name}</strong>&apos;s{" "}
+            <p className="text-sm text-zinc-400 mb-6">
+              <strong className="text-zinc-200">{farmer.name}</strong>&apos;s{" "}
               {crop.cropType || "farm"} plot is queued for sync.
             </p>
-            <div className="rounded-xl bg-stone-100 p-4 text-left mb-6 space-y-2 text-sm">
+            <div className="rounded-xl bg-zinc-900 border border-zinc-800 p-4 text-left mb-6 space-y-2 text-sm">
               <div className="flex justify-between items-center">
-                <span className="text-stone-500">Farm ID</span>
-                <span className="font-mono font-semibold text-stone-800 text-xs">
+                <span className="text-zinc-500">Farm ID</span>
+                <span className="font-mono font-semibold text-zinc-200 text-xs">
                   {submittedFarmCode}
                 </span>
               </div>
               <div className="flex justify-between">
-                <span className="text-stone-500">Verification</span>
-                <span className="text-amber-600 font-medium">Pending</span>
+                <span className="text-zinc-500">Verification</span>
+                <span className="text-amber-400 font-medium">Pending</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-stone-500">EUDR status</span>
-                <span className="text-stone-500">Awaiting polygon review</span>
+                <span className="text-zinc-500">EUDR status</span>
+                <span className="text-zinc-500">Awaiting polygon review</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-stone-500">Boundary</span>
+                <span className="text-zinc-500">Boundary</span>
                 {capturedAreaHa !== null ? (
-                  <span className="font-mono text-stone-800">
+                  <span className="font-mono text-zinc-200">
                     {capturedAreaHa.toFixed(2)} ha · 12 pts
                   </span>
                 ) : (
-                  <span className="text-stone-400">Not recorded</span>
+                  <span className="text-zinc-600">Not recorded</span>
                 )}
               </div>
             </div>
             <button
               onClick={resetForm}
-              className="w-full py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+              className="w-full py-3 rounded-xl bg-amber-500 text-black font-black hover:bg-amber-400 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2"
             >
               Register another farm
             </button>
@@ -303,7 +303,7 @@ export default function FieldPage() {
 
   // ── Main form ──────────────────────────────────────────────────────────
   return (
-    <div className="min-h-screen bg-stone-50 flex flex-col">
+    <div className="min-h-screen bg-black flex flex-col">
       {syncStatus.conflict && (
         <ConflictModal
           conflict={syncStatus.conflict}
@@ -315,12 +315,12 @@ export default function FieldPage() {
         <SyncBadge status={syncStatus} />
       </div>
 
-      <div className="bg-white border-b border-stone-200 px-4 py-4">
+      <div className="bg-zinc-900 border-b border-zinc-800 px-4 py-4">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-semibold text-stone-900">
+          <h1 className="text-lg font-semibold text-white">
             Farm Registration
           </h1>
-          <p className="text-xs text-stone-500">{COOP_NAME}</p>
+          <p className="text-xs text-zinc-500">{COOP_NAME}</p>
         </div>
       </div>
 
@@ -332,14 +332,14 @@ export default function FieldPage() {
           {/* ── Step 0: Farmer ─────────────────────────────────────────── */}
           {step === 0 && (
             <div className="space-y-4">
-              <div className="rounded-2xl border border-stone-200 bg-white p-6">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
-                    <User className="w-5 h-5 text-emerald-600" aria-hidden="true" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
+                    <User className="w-5 h-5 text-emerald-400" aria-hidden="true" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-stone-900">Farmer details</h2>
-                    <p className="text-xs text-stone-500">Search existing or register new</p>
+                    <h2 className="font-semibold text-white">Farmer details</h2>
+                    <p className="text-xs text-zinc-500">Search existing or register new</p>
                   </div>
                 </div>
 
@@ -347,13 +347,13 @@ export default function FieldPage() {
                   <div>
                     <label
                       htmlFor="farmer-name"
-                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                      className="block text-sm font-medium text-zinc-300 mb-1.5"
                     >
                       Full name
                     </label>
                     <div className="relative">
                       <User
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
                         aria-hidden="true"
                       />
                       <input
@@ -364,15 +364,15 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setFarmer({ ...farmer, name: e.target.value })
                         }
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
 
                   {/* Existing-farmer match chip */}
                   {farmerMatches.length > 0 && (
-                    <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 space-y-2">
-                      <p className="text-xs font-medium text-emerald-800">
+                    <div className="rounded-xl bg-emerald-500/10 border border-emerald-500/25 p-3 space-y-2">
+                      <p className="text-xs font-medium text-emerald-400">
                         Existing farmers found
                       </p>
                       {farmerMatches.slice(0, 3).map((f) => (
@@ -388,17 +388,17 @@ export default function FieldPage() {
                               region: f.region ?? COOP_REGION,
                             })
                           }
-                          className="w-full flex items-start gap-2 text-left hover:bg-emerald-100 rounded-lg p-2 transition"
+                          className="w-full flex items-start gap-2 text-left hover:bg-emerald-500/10 rounded-lg p-2 transition"
                         >
                           <CheckCircle2
-                            className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"
+                            className="w-4 h-4 text-emerald-400 mt-0.5 flex-shrink-0"
                             aria-hidden="true"
                           />
                           <div>
-                            <span className="text-sm font-medium text-emerald-900">
+                            <span className="text-sm font-medium text-emerald-300">
                               {f.fullName}
                             </span>
-                            <span className="text-xs text-emerald-600 ml-2">
+                            <span className="text-xs text-emerald-500 ml-2">
                               · {f.code} · {f.village}
                             </span>
                           </div>
@@ -410,13 +410,13 @@ export default function FieldPage() {
                   <div>
                     <label
                       htmlFor="farmer-phone"
-                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                      className="block text-sm font-medium text-zinc-300 mb-1.5"
                     >
                       Phone number
                     </label>
                     <div className="relative">
                       <Phone
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
                         aria-hidden="true"
                       />
                       <input
@@ -427,7 +427,7 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setFarmer({ ...farmer, phone: e.target.value })
                         }
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
@@ -435,13 +435,13 @@ export default function FieldPage() {
                   <div>
                     <label
                       htmlFor="farmer-nid"
-                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                      className="block text-sm font-medium text-zinc-300 mb-1.5"
                     >
                       National ID
                     </label>
                     <div className="relative">
                       <Hash
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
                         aria-hidden="true"
                       />
                       <input
@@ -452,10 +452,10 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setFarmer({ ...farmer, nationalId: e.target.value })
                         }
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm font-mono bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-zinc-700 text-sm font-mono bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
-                    <p className="text-xs text-stone-600 mt-1">
+                    <p className="text-xs text-zinc-600 mt-1">
                       Leave blank to auto-assign on verification
                     </p>
                   </div>
@@ -464,13 +464,13 @@ export default function FieldPage() {
                     <div>
                       <label
                         htmlFor="farmer-village"
-                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                        className="block text-sm font-medium text-zinc-300 mb-1.5"
                       >
                         Village
                       </label>
                       <div className="relative">
                         <MapPin
-                          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
                           aria-hidden="true"
                         />
                         <input
@@ -481,14 +481,14 @@ export default function FieldPage() {
                           onChange={(e) =>
                             setFarmer({ ...farmer, village: e.target.value })
                           }
-                          className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                          className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                         />
                       </div>
                     </div>
                     <div>
                       <label
                         htmlFor="farmer-district"
-                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                        className="block text-sm font-medium text-zinc-300 mb-1.5"
                       >
                         District
                       </label>
@@ -500,7 +500,7 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setFarmer({ ...farmer, district: e.target.value })
                         }
-                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full px-3 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
@@ -508,21 +508,21 @@ export default function FieldPage() {
                   <div>
                     <label
                       htmlFor="farmer-coop"
-                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                      className="block text-sm font-medium text-zinc-300 mb-1.5"
                     >
                       Cooperative
                     </label>
                     <div className="relative">
                       <Building2
-                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-zinc-600"
                         aria-hidden="true"
                       />
                       <div
                         id="farmer-coop"
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-200 text-sm bg-stone-50 text-stone-700 min-h-12 flex items-center"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-zinc-800 text-sm bg-zinc-800/50 text-zinc-400 min-h-12 flex items-center"
                       >
                         {coop ? coop.name : (
-                          <span className="text-stone-400">Loading…</span>
+                          <span className="text-zinc-600">Loading…</span>
                         )}
                       </div>
                     </div>
@@ -534,14 +534,14 @@ export default function FieldPage() {
 
           {/* ── Step 1: Crop profile ────────────────────────────────────── */}
           {step === 1 && (
-            <div className="rounded-2xl border border-stone-200 bg-white p-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
-                  <Leaf className="w-5 h-5 text-amber-600" aria-hidden="true" />
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 flex items-center justify-center">
+                  <Leaf className="w-5 h-5 text-amber-400" aria-hidden="true" />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-stone-900">Crop profile</h2>
-                  <p className="text-xs text-stone-500">
+                  <h2 className="font-semibold text-white">Crop profile</h2>
+                  <p className="text-xs text-zinc-500">
                     What is grown on this farm plot?
                   </p>
                 </div>
@@ -550,7 +550,7 @@ export default function FieldPage() {
               <div className="space-y-4">
                 <div>
                   <fieldset>
-                    <legend className="block text-sm font-medium text-stone-800 mb-2">
+                    <legend className="block text-sm font-medium text-zinc-300 mb-2">
                       Crop type
                     </legend>
                     <div className="grid grid-cols-3 gap-2">
@@ -567,22 +567,22 @@ export default function FieldPage() {
                           onClick={() =>
                             setCrop({ ...crop, cropType: type, variety: "" })
                           }
-                          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 ${
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 ${
                             crop.cropType === type
-                              ? "border-emerald-500 bg-emerald-50"
-                              : "border-stone-200 hover:border-stone-300"
+                              ? "border-amber-400 bg-amber-500/10"
+                              : "border-zinc-700 bg-zinc-800 hover:border-zinc-600"
                           }`}
                         >
                           <Icon
-                            className={`w-5 h-5 ${crop.cropType === type ? "text-emerald-600" : "text-stone-400"}`}
+                            className={`w-5 h-5 ${crop.cropType === type ? "text-amber-400" : "text-zinc-500"}`}
                             aria-hidden="true"
                           />
                           <span
-                            className={`text-xs font-semibold capitalize ${crop.cropType === type ? "text-emerald-700" : "text-stone-700"}`}
+                            className={`text-xs font-semibold capitalize ${crop.cropType === type ? "text-amber-300" : "text-zinc-300"}`}
                           >
                             {type}
                           </span>
-                          <span className="text-[10px] text-stone-400">{sub}</span>
+                          <span className="text-[10px] text-zinc-600">{sub}</span>
                         </button>
                       ))}
                     </div>
@@ -594,7 +594,7 @@ export default function FieldPage() {
                     <div>
                       <label
                         htmlFor="crop-variety"
-                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                        className="block text-sm font-medium text-zinc-300 mb-1.5"
                       >
                         Variety
                       </label>
@@ -604,7 +604,7 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setCrop({ ...crop, variety: e.target.value })
                         }
-                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full px-3 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       >
                         <option value="">Select variety</option>
                         {varietiesFor(crop.cropType).map((v) => (
@@ -618,7 +618,7 @@ export default function FieldPage() {
                     <div>
                       <label
                         htmlFor="crop-area"
-                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                        className="block text-sm font-medium text-zinc-300 mb-1.5"
                       >
                         Estimated area (ha)
                       </label>
@@ -632,15 +632,15 @@ export default function FieldPage() {
                         onChange={(e) =>
                           setCrop({ ...crop, estimatedArea: e.target.value })
                         }
-                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                        className="w-full px-3 py-2.5 rounded-lg border border-zinc-700 text-sm bg-zinc-800 text-white placeholder:text-zinc-600 focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 min-h-12"
                       />
-                      <p className="text-xs text-stone-600 mt-1">
+                      <p className="text-xs text-zinc-600 mt-1">
                         Confirmed by polygon capture in the next step
                       </p>
                     </div>
 
                     <fieldset>
-                      <legend className="block text-sm font-medium text-stone-800 mb-2">
+                      <legend className="block text-sm font-medium text-zinc-300 mb-2">
                         Existing certifications
                       </legend>
                       <div className="flex flex-wrap gap-2">
@@ -657,10 +657,10 @@ export default function FieldPage() {
                                   : [...crop.certifications, cert],
                               });
                             }}
-                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 ${
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2 ${
                               crop.certifications.includes(cert)
                                 ? "bg-emerald-600 text-white border-emerald-600"
-                                : "bg-white text-stone-600 border-stone-300 hover:border-stone-400"
+                                : "bg-zinc-800 text-zinc-400 border-zinc-700 hover:border-zinc-500"
                             }`}
                           >
                             {cert}
@@ -677,18 +677,18 @@ export default function FieldPage() {
           {/* ── Step 2: Farm boundary ───────────────────────────────────── */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="rounded-2xl border border-stone-200 bg-white overflow-hidden">
-                <div className="p-5 border-b border-stone-100">
+              <div className="rounded-2xl border border-zinc-800 bg-zinc-900 overflow-hidden">
+                <div className="p-5 border-b border-zinc-800">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                    <div className="w-10 h-10 rounded-xl bg-emerald-500/10 flex items-center justify-center">
                       <MapPin
-                        className="w-5 h-5 text-emerald-600"
+                        className="w-5 h-5 text-emerald-400"
                         aria-hidden="true"
                       />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-stone-900">Farm boundary</h2>
-                      <p className="text-xs text-stone-500">
+                      <h2 className="font-semibold text-white">Farm boundary</h2>
+                      <p className="text-xs text-zinc-500">
                         Walk the perimeter to record the polygon
                       </p>
                     </div>
@@ -708,13 +708,13 @@ export default function FieldPage() {
                 </div>
 
                 {capturedPolygon && (
-                  <div className="mx-4 mb-4 rounded-xl bg-emerald-50 border border-emerald-200 p-4">
+                  <div className="mx-4 mb-4 rounded-xl bg-emerald-500/10 border border-emerald-500/25 p-4">
                     <div className="flex items-center gap-2">
                       <CheckCircle2
-                        className="w-4 h-4 text-emerald-600"
+                        className="w-4 h-4 text-emerald-400"
                         aria-hidden="true"
                       />
-                      <span className="text-sm font-medium text-emerald-800">
+                      <span className="text-sm font-medium text-emerald-300">
                         Boundary recorded —{" "}
                         <span className="font-mono tabular-nums">
                           {capturedAreaHa?.toFixed(2)} ha
@@ -725,12 +725,12 @@ export default function FieldPage() {
                   </div>
                 )}
 
-                <div className="mx-4 mb-4 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-100 p-3">
+                <div className="mx-4 mb-4 flex items-start gap-2 rounded-lg bg-amber-500/[0.07] border border-amber-500/20 p-3">
                   <AlertCircle
-                    className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"
+                    className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5"
                     aria-hidden="true"
                   />
-                  <p className="text-xs text-amber-700">
+                  <p className="text-xs text-amber-300/80">
                     Walk slowly along the farm boundary. Capture works offline —
                     points are stored locally and uploaded when signal returns.
                   </p>
@@ -741,17 +741,17 @@ export default function FieldPage() {
 
           {/* ── Step 3: Review & submit ─────────────────────────────────── */}
           {step === 3 && (
-            <div className="rounded-2xl border border-stone-200 bg-white p-6">
+            <div className="rounded-2xl border border-zinc-800 bg-zinc-900 p-6">
               <div className="flex items-center gap-3 mb-6">
-                <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-zinc-800 flex items-center justify-center">
                   <Upload
-                    className="w-5 h-5 text-stone-600"
+                    className="w-5 h-5 text-zinc-400"
                     aria-hidden="true"
                   />
                 </div>
                 <div>
-                  <h2 className="font-semibold text-stone-900">Review &amp; submit</h2>
-                  <p className="text-xs text-stone-500">
+                  <h2 className="font-semibold text-white">Review &amp; submit</h2>
+                  <p className="text-xs text-zinc-500">
                     Confirm before queueing for verification
                   </p>
                 </div>
@@ -759,46 +759,46 @@ export default function FieldPage() {
 
               <div className="space-y-4">
                 {/* Farmer */}
-                <div className="rounded-xl bg-stone-50 p-4">
-                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                <div className="rounded-xl bg-zinc-800/50 border border-zinc-800 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-3">
                     Farmer
                   </div>
                   <div className="grid grid-cols-2 gap-y-2 text-sm">
-                    <span className="text-stone-500">Name</span>
-                    <span className="font-medium text-stone-900">
+                    <span className="text-zinc-500">Name</span>
+                    <span className="font-medium text-white">
                       {farmer.name || "—"}
                     </span>
-                    <span className="text-stone-500">Phone</span>
-                    <span className="font-medium text-stone-900 font-mono text-xs">
+                    <span className="text-zinc-500">Phone</span>
+                    <span className="font-medium text-zinc-200 font-mono text-xs">
                       {farmer.phone || "—"}
                     </span>
-                    <span className="text-stone-500">Village</span>
-                    <span className="font-medium text-stone-900">
+                    <span className="text-zinc-500">Village</span>
+                    <span className="font-medium text-white">
                       {farmer.village || "—"}
                     </span>
-                    <span className="text-stone-500">Cooperative</span>
-                    <span className="font-medium text-stone-900 text-xs">
+                    <span className="text-zinc-500">Cooperative</span>
+                    <span className="font-medium text-zinc-200 text-xs">
                       {coop?.name ?? COOP_NAME}
                     </span>
                   </div>
                 </div>
 
                 {/* Crop */}
-                <div className="rounded-xl bg-stone-50 p-4">
-                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                <div className="rounded-xl bg-zinc-800/50 border border-zinc-800 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-3">
                     Crop
                   </div>
                   <div className="grid grid-cols-2 gap-y-2 text-sm">
-                    <span className="text-stone-500">Type</span>
-                    <span className="font-medium text-stone-900 capitalize">
+                    <span className="text-zinc-500">Type</span>
+                    <span className="font-medium text-white capitalize">
                       {crop.cropType || "—"}
                     </span>
-                    <span className="text-stone-500">Variety</span>
-                    <span className="font-medium text-stone-900">
+                    <span className="text-zinc-500">Variety</span>
+                    <span className="font-medium text-white">
                       {crop.variety || "—"}
                     </span>
-                    <span className="text-stone-500">Estimated area</span>
-                    <span className="font-mono tabular-nums text-stone-900">
+                    <span className="text-zinc-500">Estimated area</span>
+                    <span className="font-mono tabular-nums text-white">
                       {crop.estimatedArea ? `${crop.estimatedArea} ha` : "—"}
                     </span>
                   </div>
@@ -807,7 +807,7 @@ export default function FieldPage() {
                       {crop.certifications.map((c) => (
                         <span
                           key={c}
-                          className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700"
+                          className="px-2 py-0.5 rounded-full text-xs bg-emerald-500/15 text-emerald-400 border border-emerald-500/20"
                         >
                           {c}
                         </span>
@@ -817,18 +817,18 @@ export default function FieldPage() {
                 </div>
 
                 {/* Boundary */}
-                <div className="rounded-xl bg-stone-50 p-4">
-                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                <div className="rounded-xl bg-zinc-800/50 border border-zinc-800 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-zinc-500 mb-3">
                     Farm boundary
                   </div>
                   <div className="flex items-center gap-2">
                     {capturedPolygon ? (
                       <>
                         <CheckCircle2
-                          className="w-4 h-4 text-emerald-500"
+                          className="w-4 h-4 text-emerald-400"
                           aria-hidden="true"
                         />
-                        <span className="text-sm font-medium text-emerald-700">
+                        <span className="text-sm font-medium text-emerald-300">
                           Recorded ·{" "}
                           <span className="font-mono tabular-nums">
                             {capturedAreaHa?.toFixed(2)} ha
@@ -839,10 +839,10 @@ export default function FieldPage() {
                     ) : (
                       <>
                         <AlertCircle
-                          className="w-4 h-4 text-amber-500"
+                          className="w-4 h-4 text-amber-400"
                           aria-hidden="true"
                         />
-                        <span className="text-sm text-amber-700">
+                        <span className="text-sm text-amber-400">
                           Not recorded — verification will be delayed
                         </span>
                       </>
@@ -851,8 +851,8 @@ export default function FieldPage() {
                 </div>
 
                 {/* What happens next */}
-                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-                  <div className="text-xs font-mono uppercase tracking-wider text-emerald-700 mb-2">
+                <div className="rounded-xl border border-emerald-500/20 bg-emerald-500/[0.07] p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-emerald-400 mb-2">
                     What happens next
                   </div>
                   <ul className="space-y-1.5">
@@ -865,7 +865,7 @@ export default function FieldPage() {
                     ].map((item) => (
                       <li
                         key={item}
-                        className="flex items-start gap-2 text-xs text-emerald-800"
+                        className="flex items-start gap-2 text-xs text-emerald-300/80"
                       >
                         <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
                         {item}
@@ -881,12 +881,12 @@ export default function FieldPage() {
       </div>
 
       {/* ── Sticky stepper ─────────────────────────────────────────────── */}
-      <div className="sticky bottom-0 bg-stone-50 border-t border-stone-200 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
+      <div className="sticky bottom-0 bg-black border-t border-zinc-800 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="max-w-lg mx-auto flex gap-3">
           {step > 0 && (
             <button
               onClick={() => setStep((s) => (s - 1) as Step)}
-              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl border border-stone-300 bg-white text-stone-700 font-medium text-sm hover:bg-stone-50 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl border border-zinc-700 bg-zinc-800 text-zinc-300 font-medium text-sm hover:bg-zinc-700 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2"
             >
               <ChevronLeft className="w-4 h-4" aria-hidden="true" />
               Back
@@ -896,7 +896,7 @@ export default function FieldPage() {
           {step < 3 ? (
             <button
               onClick={() => setStep((s) => (s + 1) as Step)}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-amber-500 text-black font-black text-sm hover:bg-amber-400 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2"
             >
               {["Farmer", "Crop", "Map", "Submit"][step + 1]}
               <ChevronRight className="w-4 h-4" aria-hidden="true" />
@@ -905,7 +905,7 @@ export default function FieldPage() {
             <button
               onClick={handleSubmit}
               disabled={submitting || !coop}
-              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-amber-500 text-black font-black text-sm hover:bg-amber-400 transition disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-amber-400 focus-visible:outline-offset-2"
             >
               {submitting ? (
                 <>

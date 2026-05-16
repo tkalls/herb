@@ -58,8 +58,7 @@ export default function Footer() {
         </div>
 
         <div className="mt-12 pt-6 border-t border-white/[0.06] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-zinc-700">
-          <p>© 2025 Herb · Farm-to-market traceability infrastructure.</p>
-          <p>Shortcut Asia Challenge · Tanzania pilot</p>
+          <p>© 2026 Herb · Farm-to-market traceability infrastructure.</p>
         </div>
       </div>
     </footer>

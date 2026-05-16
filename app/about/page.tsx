@@ -621,7 +621,7 @@ export default function AboutPage() {
                   costs them nothing and costs the cooperative a fraction of what it earns in
                   premium market access.&quot;
                 </blockquote>
-                <p className="text-black/50 text-sm mt-5 font-semibold">Herb · 2025</p>
+                <p className="text-black/50 text-sm mt-5 font-semibold">Herb · 2026</p>
               </div>
 
               <div className="flex flex-col sm:flex-row gap-4">
