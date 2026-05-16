@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { useQuery, useMutation } from "convex/react";
+import { useQuery, useMutation, useAction } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
 import dynamic from "next/dynamic";
@@ -76,6 +76,7 @@ export default function DashboardPage() {
   const rawBatches = useQuery(api.batches.listByCoop, coopId ? { cooperativeId: coopId } : "skip");
 
   const simulateTransit = useMutation(api.transit.simulateBatchTransit);
+  const advanceTransit = useAction(api.transit.advanceTransit);
 
   const isLoading = !coopDoc || !rawFarmers || !rawFarms || !rawBatches;
 
@@ -605,6 +606,18 @@ export default function DashboardPage() {
                             >
                               <Truck className="w-3.5 h-3.5" aria-hidden="true" />
                               Dispatch to {batch.buyer}
+                            </button>
+                          )}
+                          {/* +30 min — dev/admin tool, advances transit simulator */}
+                          {batch.status === "in_transit" && (
+                            <button
+                              onClick={async () => {
+                                await advanceTransit({ batchId: batch.convexId as Id<"batches"> });
+                              }}
+                              className="inline-flex items-center gap-1 rounded-lg border border-stone-300 bg-stone-50 px-2.5 py-1.5 text-xs font-mono text-stone-600 hover:bg-stone-100 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600"
+                              title="Advance transit simulator by ~125 km (admin only)"
+                            >
+                              +30 min
                             </button>
                           )}
                           <button

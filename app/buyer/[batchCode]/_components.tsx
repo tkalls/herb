@@ -1,9 +1,12 @@
 "use client";
 
 import dynamic from "next/dynamic";
+import { useMemo } from "react";
 import { useQuery, useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import type { Id } from "@/convex/_generated/dataModel";
+import distance from "@turf/distance";
+import { point } from "@turf/helpers";
 import {
   ShieldCheck,
   Ship,
@@ -15,10 +18,12 @@ import {
   Leaf,
   User,
   Package,
-  Loader2,
   AlertTriangle,
 } from "lucide-react";
 import SignatureButtonInner from "@/components/signature/SignatureButton";
+
+const ROTTERDAM = point([4.4792, 51.9225]); // destination port [lng, lat]
+const PROXIMITY_KM = 10;
 
 // BatchTraceMap is SSR-unsafe (MapLibre) — keep the dynamic wrapper
 export const BatchTraceMap = dynamic(
@@ -94,13 +99,31 @@ export function BuyerTraceContent({ batchCode }: { batchCode: string }) {
   const batchDoc = useQuery(api.batches.getByCode, { code: batchCode });
   const confirmReceipt = useMutation(api.buyer.confirmReceipt);
 
-  // Loading state
+  // Loading state — skeletons, no page-load spinner (per §6)
   if (trace === undefined || batchDoc === undefined) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-stone-400">
-          <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" />
-          <span className="text-sm font-mono">Loading trace…</span>
+      <div className="min-h-screen bg-stone-50">
+        <div className="bg-stone-900 h-24 animate-pulse" />
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 py-8 space-y-8">
+          <div className="rounded-xl border border-stone-200 bg-white shadow-sm overflow-hidden">
+            <div className="grid grid-cols-3 divide-x divide-stone-100">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="p-5 space-y-2">
+                  <div className="h-3 bg-stone-200 animate-pulse rounded w-1/2" />
+                  <div className="h-8 bg-stone-200 animate-pulse rounded w-3/4" />
+                </div>
+              ))}
+            </div>
+          </div>
+          <div className="rounded-xl bg-stone-200 animate-pulse aspect-[4/3] md:aspect-[16/10]" />
+          <div className="space-y-3">
+            <div className="h-5 bg-stone-200 animate-pulse rounded w-32" />
+            <div className="grid grid-cols-2 gap-4">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="rounded-xl border border-stone-200 bg-white p-5 h-20 animate-pulse" />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     );
@@ -124,6 +147,13 @@ export function BuyerTraceContent({ batchCode }: { batchCode: string }) {
 
   const CropIcon = trace.crop === "coffee" ? Coffee : Leaf;
   const batchId = batchDoc._id as Id<"batches">;
+
+  // Proximity gate: show SignatureButton only when within 10 km of Rotterdam
+  const canSign = useMemo(() => {
+    if (!trace.lastPing) return false;
+    const current = point([trace.lastPing.lng, trace.lastPing.lat]);
+    return distance(current, ROTTERDAM, { units: "kilometers" }) <= PROXIMITY_KM;
+  }, [trace.lastPing]);
 
   // Build signed state from trace data if batch is already delivered
   const initialSigned =
@@ -309,14 +339,29 @@ export function BuyerTraceContent({ batchCode }: { batchCode: string }) {
             Confirm receipt of this batch to close the traceability loop. Your signature
             is recorded permanently against this trace.
           </p>
-          <SignatureButtonInner
-            batchCode={batchCode}
-            initialSigned={initialSigned}
-            onConfirm={async (signerName) => {
-              const result = await confirmReceipt({ batchId, signerName });
-              return { hash: result.hash, at: result.at };
-            }}
-          />
+          {(canSign || trace.status === "delivered") ? (
+            <SignatureButtonInner
+              batchCode={batchCode}
+              initialSigned={initialSigned}
+              onConfirm={async (signerName) => {
+                const result = await confirmReceipt({ batchId, signerName });
+                return { hash: result.hash, at: result.at };
+              }}
+            />
+          ) : (
+            <div className="rounded-xl bg-stone-50 border border-stone-200 p-6 flex items-start gap-4">
+              <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <Ship size={18} className="text-stone-400" aria-hidden="true" />
+              </div>
+              <div>
+                <div className="font-medium text-stone-700 text-sm">Awaiting arrival</div>
+                <p className="text-sm text-stone-500 mt-1">
+                  Receipt signature becomes available when the shipment reaches within{" "}
+                  {PROXIMITY_KM} km of the destination port. Track progress on the map above.
+                </p>
+              </div>
+            </div>
+          )}
         </div>
 
         {/* Section 5 — Documents (static — R2 links wired in Phase 3) */}

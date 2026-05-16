@@ -2,7 +2,7 @@
 
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
-import { History, AlertTriangle, FileText, ShieldCheck, Loader2 } from "lucide-react";
+import { History, AlertTriangle, FileText, ShieldCheck } from "lucide-react";
 
 const ACTION_LABELS: Record<string, string> = {
   "farm.create": "Farm registered",
@@ -32,13 +32,34 @@ function formatDateTime(ms: number): string {
 export default function AuditPage() {
   const events = useQuery(api.audit.recentAll, { limit: 200 });
 
-  // Loading state
+  // Loading state — skeletons, no page-load spinner (per §6)
   if (events === undefined) {
     return (
-      <div className="min-h-screen bg-stone-50 flex items-center justify-center">
-        <div className="flex flex-col items-center gap-3 text-stone-400">
-          <Loader2 className="w-6 h-6 animate-spin" aria-hidden="true" />
-          <span className="text-sm font-mono">Loading audit log…</span>
+      <div className="min-h-screen bg-stone-50">
+        <div className="bg-white border-b border-stone-200 px-4 sm:px-6 lg:px-8 py-6">
+          <div className="max-w-5xl mx-auto flex items-center gap-3">
+            <div className="w-10 h-10 rounded-xl bg-stone-200 animate-pulse" />
+            <div>
+              <div className="h-5 bg-stone-200 animate-pulse rounded w-32 mb-1" />
+              <div className="h-3 bg-stone-100 animate-pulse rounded w-56" />
+            </div>
+          </div>
+        </div>
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-8 space-y-6">
+          <div className="grid grid-cols-3 gap-4">
+            {[1, 2, 3].map((i) => (
+              <div key={i} className="rounded-xl border border-stone-200 bg-white p-4 h-20 animate-pulse" />
+            ))}
+          </div>
+          <div className="rounded-xl border border-stone-200 bg-white overflow-hidden">
+            {[1, 2, 3, 4, 5, 6].map((i) => (
+              <div key={i} className="px-4 py-3 border-b border-stone-100 flex gap-4">
+                <div className="h-4 bg-stone-200 animate-pulse rounded w-40" />
+                <div className="h-4 bg-stone-100 animate-pulse rounded w-24" />
+                <div className="h-4 bg-stone-100 animate-pulse rounded w-32 ml-auto" />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
     );
