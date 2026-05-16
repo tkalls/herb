@@ -8,9 +8,11 @@ export default function ScoreGauge({ score, label, subScores }: ScoreGaugeProps)
   const radius = 54;
   const circumference = 2 * Math.PI * radius;
   const offset = circumference - (score / 100) * circumference;
-  // emerald-600 ≥80, amber-500 60–79, red-500 <60
+  // emerald ≥80, amber 60–79, red <60
   const strokeColor =
-    score >= 80 ? "#16a34a" : score >= 60 ? "#f59e0b" : "#ef4444";
+    score >= 80 ? "#10b981" : score >= 60 ? "#f59e0b" : "#ef4444";
+  const textColor =
+    score >= 80 ? "text-emerald-400" : score >= 60 ? "text-amber-400" : "text-red-400";
 
   return (
     <div className="flex flex-col items-center">
@@ -25,7 +27,7 @@ export default function ScoreGauge({ score, label, subScores }: ScoreGaugeProps)
             cy="60"
             r={radius}
             fill="none"
-            stroke="#e7e5e4"
+            stroke="#27272a"
             strokeWidth="10"
           />
           <circle
@@ -43,15 +45,15 @@ export default function ScoreGauge({ score, label, subScores }: ScoreGaugeProps)
         </svg>
         <div className="absolute inset-0 flex flex-col items-center justify-center">
           <span
-            className="text-3xl font-mono font-semibold text-stone-900 tabular-nums"
+            className={`text-3xl font-black tabular-nums ${textColor}`}
             aria-label={`${score} out of 100`}
           >
             {score}
           </span>
-          <span className="text-xs text-stone-400 font-mono">/ 100</span>
+          <span className="text-xs text-zinc-600 font-mono">/ 100</span>
         </div>
       </div>
-      <div className="mt-2 text-xs font-mono uppercase tracking-wider text-stone-500 text-center">
+      <div className="mt-2 text-xs font-bold uppercase tracking-wider text-zinc-500 text-center">
         {label}
       </div>
 
@@ -67,12 +69,12 @@ export default function ScoreGauge({ score, label, subScores }: ScoreGaugeProps)
             return (
               <div key={s.label}>
                 <div className="flex items-center justify-between mb-1">
-                  <span className="text-xs text-stone-500">{s.label}</span>
-                  <span className="text-xs font-mono text-stone-700 tabular-nums">
+                  <span className="text-xs text-zinc-500">{s.label}</span>
+                  <span className="text-xs font-mono text-zinc-400 tabular-nums">
                     {s.value}%
                   </span>
                 </div>
-                <div className="w-full bg-stone-100 rounded-full h-1.5">
+                <div className="w-full bg-zinc-800 rounded-full h-1.5">
                   <div
                     className={`${barColor} h-1.5 rounded-full transition-all duration-700`}
                     style={{ width: `${s.value}%` }}

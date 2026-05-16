@@ -101,14 +101,6 @@ export default function Home() {
         />
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
           <div className="max-w-5xl">
-            <div className="flex flex-wrap items-center gap-2 mb-10">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/[0.05] text-zinc-400 border border-white/[0.08] tracking-widest uppercase">
-                Tanzania · East Africa · EUDR
-              </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/[0.08] text-amber-400 border border-amber-500/20 tracking-widest uppercase">
-                Shortcut Asia Challenge
-              </span>
-            </div>
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.92] mb-8">
               <span className="block text-white">Farm-to-Market</span>
               <span className="block text-amber-400">Trust Infrastructure</span>
@@ -158,10 +150,10 @@ export default function Home() {
       {/* ── EUDR ALERT ── */}
       <section className="bg-black border-b border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-5">
-          <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/[0.06] border border-amber-500/20">
-            <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
-            <p className="text-sm text-zinc-400 leading-relaxed">
-              <span className="font-bold text-amber-400">EUDR Enforcement Notice: </span>
+          <div className="flex items-start gap-4 p-5 rounded-2xl bg-red-600 shadow-lg shadow-red-900/30">
+            <AlertTriangle className="w-5 h-5 text-white flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-white/90 leading-relaxed">
+              <span className="font-black text-white">EUDR Enforcement is Live. </span>
               From December 2025, all coffee, cocoa, palm oil, soy, wood, rubber, cattle, and derived
               products entering the EU must prove they were not produced on deforested land.
               No documentation = no EU market access. Tanzania exports ~$200M in coffee and avocado to Europe annually.
@@ -179,19 +171,25 @@ export default function Home() {
               Three steps from smallholder to EUDR-compliant export.
             </h2>
           </div>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {steps.map((step) => (
-              <div key={step.number} className="card-hover bg-zinc-950 rounded-2xl p-8 border border-white/[0.07]">
-                <div className="flex items-start justify-between mb-8">
-                  <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                    <step.icon className="w-5 h-5 text-amber-400" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+            {steps.map((step, i) => {
+              const palette = [
+                { bg: "bg-emerald-500", icon: "text-black", num: "text-black/10", title: "text-black", desc: "text-black/70" },
+                { bg: "bg-blue-600",    icon: "text-white",  num: "text-white/10", title: "text-white", desc: "text-white/70" },
+                { bg: "bg-amber-500",   icon: "text-black",  num: "text-black/10", title: "text-black", desc: "text-black/70" },
+              ];
+              const p = palette[i];
+              return (
+                <div key={step.number} className={`card-hover ${p.bg} rounded-2xl p-8`}>
+                  <div className="flex items-start justify-between mb-8">
+                    <step.icon className={`w-7 h-7 ${p.icon}`} />
+                    <span className={`text-5xl font-black tabular-nums ${p.num}`}>{step.number}</span>
                   </div>
-                  <span className="text-5xl font-black text-white/[0.05] tabular-nums">{step.number}</span>
+                  <h3 className={`text-xl font-black mb-3 ${p.title}`}>{step.title}</h3>
+                  <p className={`text-sm leading-relaxed ${p.desc}`}>{step.description}</p>
                 </div>
-                <h3 className="text-xl font-black text-white mb-3">{step.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed">{step.description}</p>
-              </div>
-            ))}
+              );
+            })}
           </div>
         </div>
       </section>

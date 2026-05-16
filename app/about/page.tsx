@@ -212,41 +212,49 @@ export default function AboutPage() {
                 </p>
               </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 mb-8">
                 {[
                   {
                     region: "Kilimanjaro",
                     crops: "Arabica coffee, avocado",
                     notes: "Home of KNCU, Tanzania's oldest cooperative. Moshi and Marangu produce premium single-origin beans at 1,400–1,800m altitude.",
-                    color: "border-amber-500/20 bg-amber-500/[0.04]",
-                    label: "text-amber-400",
+                    bg: "bg-amber-500",
+                    label: "text-black/60",
+                    title: "text-black",
+                    body: "text-black/70",
                   },
                   {
                     region: "Mbeya",
                     crops: "Arabica coffee, avocado",
                     notes: "Southern highlands. Shade-grown coffee under indigenous forest. High EUDR sensitivity due to proximity to reserve boundaries.",
-                    color: "border-zinc-800 bg-zinc-900",
-                    label: "text-zinc-400",
+                    bg: "bg-blue-600",
+                    label: "text-white/60",
+                    title: "text-white",
+                    body: "text-white/70",
                   },
                   {
                     region: "Mbinga (Ruvuma)",
                     crops: "Arabica coffee",
                     notes: "High-altitude Bourbon variety dominance. Strong Fair Trade presence. Very limited mobile connectivity — offline-first critical here.",
-                    color: "border-zinc-800 bg-zinc-900",
-                    label: "text-zinc-400",
+                    bg: "bg-emerald-600",
+                    label: "text-white/60",
+                    title: "text-white",
+                    body: "text-white/70",
                   },
                   {
                     region: "Iringa / Njombe",
                     crops: "Avocado, coffee",
                     notes: "Emerging avocado export hub. Hass and Fuerte growing rapidly. Limited cooperative structure — direct buyer relationships common.",
-                    color: "border-amber-500/20 bg-amber-500/[0.04]",
-                    label: "text-amber-400",
+                    bg: "bg-red-600",
+                    label: "text-white/60",
+                    title: "text-white",
+                    body: "text-white/70",
                   },
                 ].map((r) => (
-                  <div key={r.region} className={`rounded-xl p-5 border ${r.color}`}>
-                    <p className="font-bold text-white mb-1">{r.region}</p>
-                    <p className={`text-xs font-semibold mb-3 ${r.label}`}>{r.crops}</p>
-                    <p className="text-sm text-zinc-500 leading-relaxed">{r.notes}</p>
+                  <div key={r.region} className={`card-hover rounded-2xl p-6 ${r.bg}`}>
+                    <p className={`font-black text-xl mb-1 ${r.title}`}>{r.region}</p>
+                    <p className={`text-xs font-bold mb-3 uppercase tracking-widest ${r.label}`}>{r.crops}</p>
+                    <p className={`text-sm leading-relaxed ${r.body}`}>{r.notes}</p>
                   </div>
                 ))}
               </div>
