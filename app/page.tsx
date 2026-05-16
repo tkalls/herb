@@ -17,64 +17,28 @@ import {
 const stats = [
   { value: "2.4M+", label: "Smallholder farmers in Tanzania", sub: "avg. farm size 1–3 ha" },
   { value: "87%", label: "Lack digital farm documentation", sub: "manual paper records only" },
-  { value: "€150B", label: "EU agri-imports facing EUDR scrutiny", sub: "coffee & avocado at risk" },
-  { value: "Dec 2025", label: "EUDR enforcement deadline", sub: "no documentation = no EU access" },
+  { value: "€150B", label: "EU agri-imports under EUDR", sub: "coffee & avocado at risk" },
+  { value: "Dec 2025", label: "EUDR enforcement active", sub: "no docs = no EU access. Now." },
 ];
 
 const steps = [
   {
     number: "01",
     title: "Register & Map",
-    description:
-      "Field agents register farmers and walk farm boundaries for GPS polygon mapping — offline-capable, works in 2G zones.",
+    description: "Field agents register farmers and walk farm boundaries for GPS polygon mapping — offline-capable, works in 2G zones.",
     icon: MapPin,
   },
   {
     number: "02",
     title: "Verify & Score",
-    description:
-      "Farm polygons are cross-checked against deforestation baselines. Each farm receives an EUDR compliance score.",
+    description: "Farm polygons are cross-checked against deforestation baselines. Each farm receives an EUDR compliance score.",
     icon: Shield,
   },
   {
     number: "03",
     title: "Connect & Export",
-    description:
-      "Verified farms batch into traceable lots with EUDR-ready declarations. Buyers get full supply chain visibility.",
+    description: "Verified farms batch into traceable lots with EUDR-ready declarations. Buyers get full supply chain visibility.",
     icon: TrendingUp,
-  },
-];
-
-const features = [
-  {
-    title: "GPS Polygon Capture",
-    description: "Walk the boundary, capture the plot. Works offline in the Tanzanian highlands and syncs when connectivity returns.",
-    icon: MapPin,
-  },
-  {
-    title: "Offline-First Architecture",
-    description: "Full farm registration and data capture in 2G zones or no signal. Queues locally, drains automatically.",
-    icon: WifiOff,
-  },
-  {
-    title: "EUDR Compliance Engine",
-    description: "Automated deforestation cross-checks against PRODES, Global Forest Watch, and EU reference data.",
-    icon: Shield,
-  },
-  {
-    title: "Batch Traceability",
-    description: "Farm-to-container audit trails for coffee and avocado. Full lot provenance for customs and roasters.",
-    icon: CheckCircle,
-  },
-  {
-    title: "Cooperative Dashboard",
-    description: "Compliance overview, export pipeline, buyer readiness cards, and farm verification status — all live.",
-    icon: TrendingUp,
-  },
-  {
-    title: "Real-time Sync",
-    description: "Changes from field agents propagate to the cooperative dashboard instantly via Convex reactive queries.",
-    icon: Wifi,
   },
 ];
 
@@ -86,8 +50,7 @@ const crops = [
     variety: "Arabica SL28, N39, Bourbon, Kent",
     eudrRisk: "High",
     marketSize: "$43B global specialty",
-    insight:
-      "Tanzania produces ~75,000 MT annually. Kilimanjaro Arabica commands premium prices in European specialty markets — but zero EUDR documentation means zero EU access from Dec 2025.",
+    insight: "Tanzania produces ~75,000 MT annually. Kilimanjaro Arabica commands premium prices in European specialty markets — but zero EUDR documentation means zero EU access from Dec 2025.",
     challenges: ["No GPS farm boundaries", "Paper-only certifications", "Fragmented cooperative records", "Deforestation adjacency risk"],
     accentColor: "amber",
   },
@@ -98,8 +61,7 @@ const crops = [
     variety: "Hass, Fuerte, Reed",
     eudrRisk: "Medium-High",
     marketSize: "$2.4B EA export opportunity",
-    insight:
-      "East Africa's avocado export has grown 400% in five years. EU buyers now demand full traceability from farm to port, not just phytosanitary certificates.",
+    insight: "East Africa's avocado export has grown 400% in five years. EU buyers now demand full traceability from farm to port, not just phytosanitary certificates.",
     challenges: ["No soil/water data per-farm", "Mixed-farm tracking gaps", "Inconsistent GlobalG.A.P. adoption", "Cold chain visibility gaps"],
     accentColor: "emerald",
   },
@@ -129,58 +91,45 @@ export default function Home() {
 
       {/* ── HERO ── */}
       <section className="relative min-h-[92vh] flex items-center bg-black overflow-hidden">
-        {/* Ambient glow */}
         <div className="absolute inset-0 pointer-events-none overflow-hidden">
           <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[900px] h-[500px] bg-amber-500/[0.07] blur-[140px] rounded-full" />
           <div className="absolute top-1/3 right-1/4 w-[500px] h-[500px] bg-amber-600/[0.04] blur-[120px] rounded-full" />
         </div>
-        {/* Subtle dot grid */}
         <div
           className="absolute inset-0 opacity-[0.018]"
-          style={{
-            backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)",
-            backgroundSize: "40px 40px",
-          }}
+          style={{ backgroundImage: "radial-gradient(circle, #fff 1px, transparent 1px)", backgroundSize: "40px 40px" }}
         />
-
         <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-32 w-full">
           <div className="max-w-5xl">
-            {/* Tag row */}
             <div className="flex flex-wrap items-center gap-2 mb-10">
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-white/[0.05] text-zinc-400 border border-white/[0.08] tracking-wide">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-white/[0.05] text-zinc-400 border border-white/[0.08] tracking-widest uppercase">
                 Tanzania · East Africa · EUDR
               </span>
-              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-medium bg-amber-500/[0.08] text-amber-400 border border-amber-500/20 tracking-wide">
+              <span className="inline-flex items-center px-3 py-1 rounded-full text-xs font-bold bg-amber-500/[0.08] text-amber-400 border border-amber-500/20 tracking-widest uppercase">
                 Shortcut Asia Challenge
               </span>
             </div>
-
-            {/* Headline */}
             <h1 className="text-6xl sm:text-7xl lg:text-8xl font-black tracking-tighter leading-[0.92] mb-8">
               <span className="block text-white">Farm-to-Market</span>
               <span className="block text-amber-400">Trust Infrastructure</span>
               <span className="block text-white">for East Africa</span>
             </h1>
-
-            {/* Subtitle */}
             <p className="text-lg sm:text-xl text-zinc-400 leading-relaxed max-w-2xl mb-12">
               Herb connects 2.4 million Tanzanian smallholder farmers to global coffee and avocado
               buyers through GPS-verified, EUDR-compliant traceability — built to work offline,
               in the highlands, at the farm gate.
             </p>
-
-            {/* CTAs */}
             <div className="flex flex-col sm:flex-row gap-4">
               <Link
                 href="/dashboard"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-amber-500 text-black font-bold text-base hover:bg-amber-400 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-amber-500/20"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl bg-amber-500 text-black font-black text-base hover:bg-amber-400 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-amber-500/20"
               >
                 View Cooperative Dashboard
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
                 href="/field"
-                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/10 text-white font-semibold text-base hover:bg-white/[0.05] hover:border-white/20 transition-all duration-200"
+                className="inline-flex items-center justify-center gap-2 px-7 py-4 rounded-xl border border-white/10 text-white font-bold text-base hover:bg-white/[0.05] hover:border-white/20 transition-all duration-200"
               >
                 Try Field App
                 <MapPin className="w-4 h-4" />
@@ -188,8 +137,6 @@ export default function Home() {
             </div>
           </div>
         </div>
-
-        {/* Bottom fade */}
         <div className="absolute bottom-0 inset-x-0 h-32 bg-gradient-to-t from-black to-transparent pointer-events-none" />
       </section>
 
@@ -199,10 +146,8 @@ export default function Home() {
           <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-white/[0.06]">
             {stats.map((stat) => (
               <div key={stat.value} className="px-6 py-10">
-                <div className="text-3xl sm:text-4xl font-black text-amber-400 mb-1 tracking-tight">
-                  {stat.value}
-                </div>
-                <div className="text-sm font-medium text-white mb-1">{stat.label}</div>
+                <div className="text-3xl sm:text-4xl font-black text-amber-400 mb-1 tracking-tight">{stat.value}</div>
+                <div className="text-sm font-bold text-white mb-1">{stat.label}</div>
                 <div className="text-xs text-zinc-600">{stat.sub}</div>
               </div>
             ))}
@@ -216,7 +161,7 @@ export default function Home() {
           <div className="flex items-start gap-3 p-4 rounded-xl bg-amber-500/[0.06] border border-amber-500/20">
             <AlertTriangle className="w-4 h-4 text-amber-400 flex-shrink-0 mt-0.5" />
             <p className="text-sm text-zinc-400 leading-relaxed">
-              <span className="font-semibold text-amber-400">EUDR Enforcement Notice: </span>
+              <span className="font-bold text-amber-400">EUDR Enforcement Notice: </span>
               From December 2025, all coffee, cocoa, palm oil, soy, wood, rubber, cattle, and derived
               products entering the EU must prove they were not produced on deforested land.
               No documentation = no EU market access. Tanzania exports ~$200M in coffee and avocado to Europe annually.
@@ -229,27 +174,21 @@ export default function Home() {
       <section className="py-32 bg-black">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-20">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-[0.2em] mb-4">How It Works</p>
+            <p className="text-xs font-black text-amber-400 uppercase tracking-[0.2em] mb-4">How It Works</p>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-white max-w-xl leading-tight">
               Three steps from smallholder to EUDR-compliant export.
             </h2>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {steps.map((step) => (
-              <div
-                key={step.number}
-                className="card-hover bg-zinc-950 rounded-2xl p-8 border border-white/[0.07]"
-              >
+              <div key={step.number} className="card-hover bg-zinc-950 rounded-2xl p-8 border border-white/[0.07]">
                 <div className="flex items-start justify-between mb-8">
                   <div className="w-11 h-11 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
                     <step.icon className="w-5 h-5 text-amber-400" />
                   </div>
-                  <span className="text-5xl font-black text-white/[0.05] tabular-nums">
-                    {step.number}
-                  </span>
+                  <span className="text-5xl font-black text-white/[0.05] tabular-nums">{step.number}</span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-3">{step.title}</h3>
+                <h3 className="text-xl font-black text-white mb-3">{step.title}</h3>
                 <p className="text-sm text-zinc-500 leading-relaxed">{step.description}</p>
               </div>
             ))}
@@ -261,71 +200,45 @@ export default function Home() {
       <section className="py-32 bg-zinc-950 border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-20">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-[0.2em] mb-4">The Crops</p>
+            <p className="text-xs font-black text-amber-400 uppercase tracking-[0.2em] mb-4">The Crops</p>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-white max-w-xl leading-tight">
               Tanzania&apos;s two highest-value smallholder exports.
             </h2>
           </div>
-
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
             {crops.map((crop) => (
-              <div
-                key={crop.name}
-                className="card-hover rounded-2xl border border-white/[0.07] overflow-hidden bg-zinc-950"
-              >
-                {/* Top */}
-                <div
-                  className={`p-8 border-b border-white/[0.06] ${
-                    crop.accentColor === "amber"
-                      ? "bg-gradient-to-br from-amber-950/60 to-zinc-950"
-                      : "bg-gradient-to-br from-emerald-950/50 to-zinc-950"
-                  }`}
-                >
+              <div key={crop.name} className="card-hover rounded-2xl border border-white/[0.07] overflow-hidden bg-zinc-950">
+                <div className={`p-8 border-b border-white/[0.06] ${
+                  crop.accentColor === "amber"
+                    ? "bg-gradient-to-br from-amber-950/60 to-zinc-950"
+                    : "bg-gradient-to-br from-emerald-950/50 to-zinc-950"
+                }`}>
                   <div className="flex items-start justify-between mb-6">
                     <div>
-                      <p className="text-xs font-medium text-zinc-600 uppercase tracking-widest mb-2">
-                        {crop.origin}
-                      </p>
+                      <p className="text-xs font-bold text-zinc-600 uppercase tracking-widest mb-2">{crop.origin}</p>
                       <h3 className="text-4xl font-black text-white tracking-tight">{crop.name}</h3>
                       <p className="text-sm text-zinc-500 mt-1">{crop.variety}</p>
                     </div>
-                    <crop.icon
-                      className={`w-10 h-10 opacity-20 ${
-                        crop.accentColor === "amber" ? "text-amber-400" : "text-emerald-400"
-                      }`}
-                    />
+                    <crop.icon className={`w-10 h-10 opacity-20 ${crop.accentColor === "amber" ? "text-amber-400" : "text-emerald-400"}`} />
                   </div>
                   <div className="flex gap-8">
                     <div>
                       <p className="text-xs text-zinc-600 mb-1">Market Size</p>
-                      <p className="text-sm font-semibold text-white">{crop.marketSize}</p>
+                      <p className="text-sm font-bold text-white">{crop.marketSize}</p>
                     </div>
                     <div>
                       <p className="text-xs text-zinc-600 mb-1">EUDR Risk</p>
-                      <p
-                        className={`text-sm font-semibold ${
-                          crop.eudrRisk === "High" ? "text-red-400" : "text-amber-400"
-                        }`}
-                      >
-                        {crop.eudrRisk}
-                      </p>
+                      <p className={`text-sm font-bold ${crop.eudrRisk === "High" ? "text-red-400" : "text-amber-400"}`}>{crop.eudrRisk}</p>
                     </div>
                   </div>
                 </div>
-                {/* Bottom */}
                 <div className="p-8">
                   <p className="text-sm text-zinc-400 leading-relaxed mb-6">{crop.insight}</p>
-                  <p className="text-xs font-semibold text-zinc-600 uppercase tracking-widest mb-3">
-                    Key Traceability Gaps
-                  </p>
+                  <p className="text-xs font-bold text-zinc-600 uppercase tracking-widest mb-3">Key Traceability Gaps</p>
                   <ul className="space-y-2">
                     {crop.challenges.map((c) => (
                       <li key={c} className="flex items-center gap-2.5 text-sm text-zinc-500">
-                        <span
-                          className={`w-1 h-1 rounded-full flex-shrink-0 ${
-                            crop.accentColor === "amber" ? "bg-amber-500" : "bg-emerald-500"
-                          }`}
-                        />
+                        <span className={`w-1 h-1 rounded-full flex-shrink-0 ${crop.accentColor === "amber" ? "bg-amber-500" : "bg-emerald-500"}`} />
                         {c}
                       </li>
                     ))}
@@ -337,33 +250,73 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── FEATURES ── */}
+      {/* ── BUILT DIFFERENT — COLORED BENTO ── */}
       <section className="py-32 bg-black border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="mb-20">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-[0.2em] mb-4">Built Different</p>
+          <div className="mb-16">
+            <p className="text-xs font-black text-amber-400 uppercase tracking-[0.2em] mb-4">Built Different</p>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-white max-w-xl leading-tight">
               Designed for the realities of East Africa.
             </h2>
-            <p className="text-zinc-500 text-lg mt-4 max-w-xl">
-              Not another SaaS dashboard that breaks in the field. Herb is designed around
-              actual connectivity, literacy, and workflow constraints.
-            </p>
           </div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
-            {features.map((feature) => (
-              <div
-                key={feature.title}
-                className="card-hover bg-zinc-950 rounded-xl p-6 border border-white/[0.07]"
-              >
-                <div className="w-10 h-10 rounded-lg bg-amber-500/10 border border-amber-500/15 flex items-center justify-center mb-5">
-                  <feature.icon className="w-5 h-5 text-amber-400" />
-                </div>
-                <h3 className="font-bold text-white mb-2">{feature.title}</h3>
-                <p className="text-sm text-zinc-500 leading-relaxed">{feature.description}</p>
-              </div>
-            ))}
+          {/* Bento grid — colored blocks */}
+          <div className="grid grid-cols-2 lg:grid-cols-3 gap-3">
+
+            {/* GPS — amber hero block */}
+            <div className="card-hover bg-amber-500 rounded-2xl p-7 col-span-2 lg:col-span-1 row-span-1">
+              <MapPin className="w-7 h-7 text-black mb-6" />
+              <h3 className="text-xl font-black text-black mb-2">GPS Polygon Capture</h3>
+              <p className="text-sm text-black/70 leading-relaxed">
+                Walk the boundary, capture the plot. Works offline in the Tanzanian highlands and syncs when connectivity returns.
+              </p>
+            </div>
+
+            {/* Offline-first — orange */}
+            <div className="card-hover bg-orange-600 rounded-2xl p-7">
+              <WifiOff className="w-7 h-7 text-white mb-6" />
+              <h3 className="text-xl font-black text-white mb-2">Offline-First</h3>
+              <p className="text-sm text-white/70 leading-relaxed">
+                Full farm registration in 2G zones or no signal. Queues locally, drains automatically on reconnection.
+              </p>
+            </div>
+
+            {/* EUDR — dark */}
+            <div className="card-hover bg-zinc-900 border border-zinc-800 rounded-2xl p-7">
+              <Shield className="w-7 h-7 text-amber-400 mb-6" />
+              <h3 className="text-xl font-black text-white mb-2">EUDR Compliance Engine</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Automated deforestation cross-checks against PRODES, Global Forest Watch, and EU reference data.
+              </p>
+            </div>
+
+            {/* Batch — stone dark */}
+            <div className="card-hover bg-stone-900 border border-stone-800 rounded-2xl p-7">
+              <CheckCircle className="w-7 h-7 text-amber-400 mb-6" />
+              <h3 className="text-xl font-black text-white mb-2">Batch Traceability</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Farm-to-container audit trails for coffee and avocado. Full lot provenance for customs, certification bodies, and roasters.
+              </p>
+            </div>
+
+            {/* Dashboard — amber dark wide */}
+            <div className="card-hover bg-amber-950 border border-amber-900/30 rounded-2xl p-7 col-span-2 lg:col-span-1">
+              <TrendingUp className="w-7 h-7 text-amber-400 mb-6" />
+              <h3 className="text-xl font-black text-white mb-2">Cooperative Dashboard</h3>
+              <p className="text-sm text-amber-200/50 leading-relaxed">
+                Compliance overview, export pipeline, buyer readiness cards, and farm verification status — all live.
+              </p>
+            </div>
+
+            {/* Realtime — zinc */}
+            <div className="card-hover bg-zinc-900 border border-zinc-800 rounded-2xl p-7">
+              <Wifi className="w-7 h-7 text-amber-400 mb-6" />
+              <h3 className="text-xl font-black text-white mb-2">Real-time Sync</h3>
+              <p className="text-sm text-zinc-500 leading-relaxed">
+                Changes from field agents propagate to the cooperative dashboard instantly via Convex reactive queries.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
@@ -372,60 +325,36 @@ export default function Home() {
       <section className="py-32 bg-zinc-950 border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-20">
-            <p className="text-xs font-semibold text-amber-400 uppercase tracking-[0.2em] mb-4">Roadmap</p>
+            <p className="text-xs font-black text-amber-400 uppercase tracking-[0.2em] mb-4">Roadmap</p>
             <h2 className="text-4xl sm:text-5xl font-black tracking-tight text-white max-w-xl leading-tight">
               Tanzania today. East Africa next. Southeast Asia after.
             </h2>
           </div>
-
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
             {roadmap.map((phase) => (
-              <div
-                key={phase.phase}
-                className={`card-hover rounded-2xl p-8 border ${
-                  phase.status === "live"
-                    ? "border-amber-500/25 bg-amber-500/[0.04]"
-                    : "border-white/[0.07] bg-zinc-950"
-                }`}
-              >
+              <div key={phase.phase} className={`card-hover rounded-2xl p-8 border ${
+                phase.status === "live"
+                  ? "border-amber-500/25 bg-amber-500/[0.04]"
+                  : "border-white/[0.07] bg-zinc-950"
+              }`}>
                 <div className="flex items-center gap-2 mb-6">
-                  <span
-                    className={`w-2 h-2 rounded-full ${
-                      phase.status === "live"
-                        ? "bg-amber-400"
-                        : phase.status === "building"
-                        ? "bg-zinc-500"
-                        : "bg-zinc-700"
-                    }`}
-                  />
-                  <span
-                    className={`text-xs font-semibold uppercase tracking-widest ${
-                      phase.status === "live"
-                        ? "text-amber-400"
-                        : phase.status === "building"
-                        ? "text-zinc-500"
-                        : "text-zinc-700"
-                    }`}
-                  >
+                  <span className={`w-2 h-2 rounded-full ${
+                    phase.status === "live" ? "bg-amber-400" : phase.status === "building" ? "bg-zinc-500" : "bg-zinc-700"
+                  }`} />
+                  <span className={`text-xs font-black uppercase tracking-widest ${
+                    phase.status === "live" ? "text-amber-400" : phase.status === "building" ? "text-zinc-500" : "text-zinc-700"
+                  }`}>
                     {phase.status === "live" ? "Live Now" : phase.status === "building" ? "Building" : "Roadmap"}
                   </span>
                 </div>
-                <h3 className="text-xl font-bold text-white mb-6">{phase.phase}</h3>
+                <h3 className="text-xl font-black text-white mb-6">{phase.phase}</h3>
                 <ul className="space-y-3">
                   {phase.items.map((item) => (
                     <li key={item} className="flex items-start gap-2.5 text-sm">
-                      <CheckCircle
-                        className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
-                          phase.status === "live"
-                            ? "text-amber-400"
-                            : phase.status === "building"
-                            ? "text-zinc-600"
-                            : "text-zinc-800"
-                        }`}
-                      />
-                      <span className={phase.status === "live" ? "text-zinc-300" : "text-zinc-600"}>
-                        {item}
-                      </span>
+                      <CheckCircle className={`w-4 h-4 flex-shrink-0 mt-0.5 ${
+                        phase.status === "live" ? "text-amber-400" : phase.status === "building" ? "text-zinc-600" : "text-zinc-800"
+                      }`} />
+                      <span className={phase.status === "live" ? "text-zinc-300" : "text-zinc-600"}>{item}</span>
                     </li>
                   ))}
                 </ul>
@@ -435,16 +364,14 @@ export default function Home() {
         </div>
       </section>
 
-      {/* ── SEA EXPANSION ── */}
+      {/* ── SEA ── */}
       <section className="py-24 bg-black border-t border-white/[0.06]">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col lg:flex-row items-start lg:items-center gap-12">
             <div className="flex-1">
               <div className="flex items-center gap-2 mb-5">
                 <Globe className="w-4 h-4 text-amber-400" />
-                <span className="text-xs font-semibold text-amber-400 uppercase tracking-[0.2em]">
-                  Future Expansion
-                </span>
+                <span className="text-xs font-black text-amber-400 uppercase tracking-[0.2em]">Future Expansion</span>
               </div>
               <h2 className="text-3xl sm:text-4xl font-black text-white tracking-tight mb-4">
                 The same problem exists<br />in Southeast Asia.
@@ -456,10 +383,7 @@ export default function Home() {
             </div>
             <div className="flex flex-wrap gap-3">
               {["Malaysia · Palm Oil", "Indonesia · Rubber", "Vietnam · Coffee", "Philippines · Cocoa"].map((item) => (
-                <div
-                  key={item}
-                  className="px-4 py-2.5 rounded-lg bg-zinc-950 border border-white/[0.07] text-sm text-zinc-400 font-medium"
-                >
+                <div key={item} className="px-4 py-2.5 rounded-lg bg-zinc-950 border border-white/[0.07] text-sm text-zinc-400 font-bold">
                   {item}
                 </div>
               ))}
@@ -476,7 +400,7 @@ export default function Home() {
         <div className="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <Clock className="w-10 h-10 text-amber-400 mx-auto mb-8 opacity-80" />
           <h2 className="text-5xl sm:text-6xl font-black text-white tracking-tight mb-6 leading-tight">
-            EUDR enforcement<br />is coming.
+            EUDR enforcement<br />is live.
           </h2>
           <p className="text-lg text-zinc-500 mb-12 leading-relaxed max-w-xl mx-auto">
             Every month without traceability is a month of coffee and avocado exports at risk.
@@ -485,14 +409,14 @@ export default function Home() {
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
             <Link
               href="/dashboard"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-amber-500 text-black font-bold text-base hover:bg-amber-400 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-amber-500/20"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl bg-amber-500 text-black font-black text-base hover:bg-amber-400 transition-all duration-200 hover:scale-[1.02] active:scale-[0.98] shadow-2xl shadow-amber-500/20"
             >
               View Cooperative Dashboard
               <ArrowRight className="w-4 h-4" />
             </Link>
             <Link
               href="/about"
-              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/10 text-white font-semibold text-base hover:bg-white/[0.04] hover:border-white/20 transition-all duration-200"
+              className="inline-flex items-center justify-center gap-2 px-8 py-4 rounded-xl border border-white/10 text-white font-bold text-base hover:bg-white/[0.04] hover:border-white/20 transition-all duration-200"
             >
               Read the Research
             </Link>
