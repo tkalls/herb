@@ -1,27 +1,65 @@
 "use client";
 
-import { useState } from "react";
+import { useCallback, useState } from "react";
+import dynamic from "next/dynamic";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 import {
-  Wifi,
-  WifiOff,
   MapPin,
   User,
   Leaf,
   Coffee,
+  Nut,
   CheckCircle,
+  CheckCircle2,
   ChevronRight,
   ChevronLeft,
   Upload,
   AlertCircle,
-  Clock,
-  Navigation,
   Phone,
   Hash,
   Building2,
-  LocateFixed,
+  Loader2,
 } from "lucide-react";
+import SyncBadge from "@/components/sync/SyncBadge";
+import ConflictModal from "@/components/sync/ConflictModal";
+import { useSyncQueue } from "@/lib/sync/useSyncQueue";
+import { enqueue } from "@/lib/sync/queue";
+import type { PolygonCaptureProps, GeoJSONPolygon } from "@/components/map/PolygonCapture";
 
+const PolygonCapture = dynamic<PolygonCaptureProps>(
+  () => import("@/components/map/PolygonCapture"),
+  {
+    ssr: false,
+    loading: () => (
+      <div className="aspect-[4/3] rounded-xl bg-stone-100 animate-pulse" />
+    ),
+  },
+);
+
+// ── Village centre lookup (lat/lng for PolygonCapture seed) ─────────────────
+const VILLAGE_CENTRES: Record<string, { lat: number; lng: number }> = {
+  kibosho: { lat: -3.2691, lng: 37.3311 },
+  lyamungu: { lat: -3.2500, lng: 37.3450 },
+  marangu: { lat: -3.2300, lng: 37.5200 },
+  uru: { lat: -3.2100, lng: 37.2800 },
+};
+const DEFAULT_CENTRE = { lat: -3.2691, lng: 37.3311 };
+
+function villageCenter(village: string): { lat: number; lng: number } {
+  return VILLAGE_CENTRES[village.toLowerCase().trim()] ?? DEFAULT_CENTRE;
+}
+
+// Simple hash for deterministic polygon seed
+function strHash(s: string): number {
+  let h = 0;
+  for (let i = 0; i < s.length; i++) h = (Math.imul(31, h) + s.charCodeAt(i)) | 0;
+  return Math.abs(h);
+}
+
+// ── Types ───────────────────────────────────────────────────────────────────
 type Step = 0 | 1 | 2 | 3;
+type CropType = "coffee" | "avocado" | "macadamia";
 
 interface FarmerForm {
   name: string;
@@ -29,51 +67,34 @@ interface FarmerForm {
   nationalId: string;
   village: string;
   district: string;
-  cooperative: string;
+  region: string;
 }
 
 interface CropForm {
-  cropType: "coffee" | "avocado" | "";
+  cropType: CropType | "";
   variety: string;
   estimatedArea: string;
   certifications: string[];
-  existingPlots: string;
 }
 
-const cooperatives = [
-  "Kilimanjaro Native Cooperative Union (KNCU)",
-  "Mbinga Coffee Cooperative",
-  "Mbeya Coffee Cooperative",
-  "Arusha Coffee Cooperative",
-  "Other",
-];
+// ── Constants ───────────────────────────────────────────────────────────────
+const COOP_CODE = "KNCU";
+const COOP_NAME = "Kilimanjaro Native Cooperative Union";
+const COOP_REGION = "Kilimanjaro";
 
-const coffeeVarieties = ["Arabica SL28", "Arabica N39", "Arabica Kent", "Arabica Bourbon", "Robusta", "Other"];
-const avocadoVarieties = ["Hass", "Fuerte", "Reed", "Puebla", "Other"];
-const certOptions = ["UTZ Certified", "Rainforest Alliance", "Fair Trade", "GlobalG.A.P.", "Organic", "None"];
+const COFFEE_VARIETIES = ["Arabica SL28", "Arabica N39", "Arabica Kent", "Arabica Bourbon", "Robusta"];
+const AVOCADO_VARIETIES = ["Hass", "Fuerte", "Reed", "Puebla"];
+const MACADAMIA_VARIETIES = ["Beaumont", "NCRP 2", "NCRP 10", "A4", "816"];
+const CERT_OPTIONS = ["UTZ Certified", "Rainforest Alliance", "Fair Trade", "GlobalG.A.P.", "Organic"];
 
-const mockPolygonPoints = [
-  { lat: -3.2691, lng: 37.3311, label: "A" },
-  { lat: -3.2685, lng: 37.3318, label: "B" },
-  { lat: -3.2679, lng: 37.3312, label: "C" },
-  { lat: -3.2683, lng: 37.3305, label: "D" },
-];
-
-function SyncBar({ online }: { online: boolean }) {
-  return (
-    <div className={`flex items-center justify-between px-4 py-2 text-xs font-medium ${online ? "bg-emerald-600" : "bg-amber-600"} text-white`}>
-      <div className="flex items-center gap-1.5">
-        {online ? <Wifi className="w-3.5 h-3.5" /> : <WifiOff className="w-3.5 h-3.5" />}
-        {online ? "Online · Syncing" : "Offline Mode · Data queued locally"}
-      </div>
-      <div className="flex items-center gap-1.5">
-        <Clock className="w-3 h-3 opacity-70" />
-        <span className="opacity-70">3 items in queue</span>
-      </div>
-    </div>
-  );
+function varietiesFor(crop: CropType | ""): string[] {
+  if (crop === "coffee") return COFFEE_VARIETIES;
+  if (crop === "avocado") return AVOCADO_VARIETIES;
+  if (crop === "macadamia") return MACADAMIA_VARIETIES;
+  return [];
 }
 
+// ── Step indicator ──────────────────────────────────────────────────────────
 function StepIndicator({ current, total }: { current: Step; total: number }) {
   return (
     <div className="flex items-center gap-2 px-4 py-3 border-b border-stone-200 bg-white">
@@ -84,83 +105,47 @@ function StepIndicator({ current, total }: { current: Step; total: number }) {
               i < current
                 ? "bg-emerald-600 text-white"
                 : i === current
-                ? "bg-emerald-700 text-white ring-2 ring-emerald-300 ring-offset-1"
-                : "bg-stone-200 text-stone-500"
+                  ? "bg-emerald-700 text-white ring-2 ring-emerald-300 ring-offset-1"
+                  : "bg-stone-200 text-stone-500"
             }`}
           >
-            {i < current ? <CheckCircle className="w-4 h-4" /> : i + 1}
+            {i < current ? (
+              <CheckCircle className="w-4 h-4" aria-hidden="true" />
+            ) : (
+              i + 1
+            )}
           </div>
           {i < total - 1 && (
-            <div className={`h-0.5 w-8 ${i < current ? "bg-emerald-500" : "bg-stone-200"}`} />
+            <div
+              className={`h-0.5 w-8 ${i < current ? "bg-emerald-500" : "bg-stone-200"}`}
+            />
           )}
         </div>
       ))}
-      <div className="ml-2 text-xs text-stone-500">
-        Step {current + 1} of {total}
+      <div className="ml-2 text-xs text-stone-500 font-mono">
+        {current + 1} / {total}
       </div>
     </div>
   );
 }
 
-function PolygonPreview() {
-  const viewBox = "0 0 200 180";
-  const points = [
-    [60, 50],
-    [140, 40],
-    [155, 110],
-    [80, 130],
-    [50, 90],
-  ];
-  const pointsStr = points.map((p) => p.join(",")).join(" ");
-
-  return (
-    <div className="bg-emerald-950 rounded-xl overflow-hidden relative">
-      {/* Simulated satellite bg */}
-      <div className="absolute inset-0 opacity-20">
-        <div className="absolute top-4 left-8 w-20 h-20 rounded-full bg-emerald-700" />
-        <div className="absolute bottom-6 right-6 w-16 h-16 rounded bg-emerald-800" />
-        <div className="absolute top-12 right-16 w-12 h-8 rounded bg-emerald-900" />
-      </div>
-      <svg viewBox={viewBox} className="w-full relative z-10" style={{ aspectRatio: "200/180" }}>
-        {/* Grid */}
-        {[40, 80, 120, 160].map((x) => (
-          <line key={`vg-${x}`} x1={x} y1={0} x2={x} y2={180} stroke="#16a34a" strokeWidth="0.3" opacity="0.3" />
-        ))}
-        {[30, 60, 90, 120, 150].map((y) => (
-          <line key={`hg-${y}`} x1={0} y1={y} x2={200} y2={y} stroke="#16a34a" strokeWidth="0.3" opacity="0.3" />
-        ))}
-
-        {/* Farm polygon fill */}
-        <polygon points={pointsStr} fill="#16a34a" fillOpacity="0.25" stroke="#4ade80" strokeWidth="1.5" />
-
-        {/* Vertices */}
-        {points.map((p, i) => (
-          <g key={i}>
-            <circle cx={p[0]} cy={p[1]} r="4" fill="#4ade80" stroke="#fff" strokeWidth="1" />
-            <text x={p[0] + 6} y={p[1] - 4} fill="#86efac" fontSize="8" fontFamily="monospace">
-              {mockPolygonPoints[i]?.label || String.fromCharCode(65 + i)}
-            </text>
-          </g>
-        ))}
-
-        {/* Coordinate labels */}
-        <text x="8" y="174" fill="#4ade80" fontSize="5.5" fontFamily="monospace" opacity="0.7">
-          -3.2691, 37.3311
-        </text>
-      </svg>
-
-      <div className="absolute bottom-2 right-2 flex items-center gap-1.5 bg-black/50 rounded px-2 py-1">
-        <LocateFixed className="w-3 h-3 text-emerald-400" />
-        <span className="text-xs text-emerald-300 font-mono">GPS ±3m</span>
-      </div>
-    </div>
-  );
-}
-
+// ── Main page ───────────────────────────────────────────────────────────────
 export default function FieldPage() {
-  const [online] = useState(true);
+  const syncStatus = useSyncQueue();
+
+  // Load cooperative (KNCU) for cooperativeId
+  const coop = useQuery(api.cooperatives.getByCode, { code: COOP_CODE });
+
+  // Load all KNCU farmers for search (client-side filter)
+  const allFarmers = useQuery(
+    api.farmers.listByCoop,
+    coop ? { cooperativeId: coop._id } : "skip",
+  );
+
+  // ── Local state ────────────────────────────────────────────────────────
   const [step, setStep] = useState<Step>(0);
-  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+  const [submittedFarmCode, setSubmittedFarmCode] = useState<string | null>(null);
 
   const [farmer, setFarmer] = useState<FarmerForm>({
     name: "",
@@ -168,7 +153,7 @@ export default function FieldPage() {
     nationalId: "",
     village: "",
     district: "",
-    cooperative: "",
+    region: COOP_REGION,
   });
 
   const [crop, setCrop] = useState<CropForm>({
@@ -176,63 +161,139 @@ export default function FieldPage() {
     variety: "",
     estimatedArea: "",
     certifications: [],
-    existingPlots: "",
   });
 
-  const [capturing, setCapturing] = useState(false);
-  const [captured, setCaptured] = useState(false);
+  const [capturedPolygon, setCapturedPolygon] = useState<{
+    type: "Polygon";
+    coordinates: number[][][];
+  } | null>(null);
+  const [capturedAreaHa, setCapturedAreaHa] = useState<number | null>(null);
 
-  function handleCapture() {
-    setCapturing(true);
-    setTimeout(() => {
-      setCapturing(false);
-      setCaptured(true);
-    }, 2200);
+  // Farmer search: filter by typed name (≥ 2 chars)
+  const farmerMatches =
+    farmer.name.length >= 2 && allFarmers
+      ? allFarmers.filter((f) =>
+          f.fullName.toLowerCase().includes(farmer.name.toLowerCase()),
+        )
+      : [];
+
+  // ── Submit ─────────────────────────────────────────────────────────────
+  const handleSubmit = useCallback(async () => {
+    if (!coop) return;
+    setSubmitting(true);
+
+    const ts = Date.now();
+    const farmerCode = `F-tmp-${ts}`;
+    const farmCode = `FM-tmp-${ts}`;
+
+    // Convert GeoJSON ring to lat/lng objects for Convex
+    const polygonInline = capturedPolygon
+      ? capturedPolygon.coordinates[0].map(([lng, lat]) => ({ lat, lng }))
+      : [];
+
+    // Enqueue 3 mutations in dependency order.
+    // The drain in useSyncQueue threads IDs through after each succeeds.
+    await enqueue("farmer.create", {
+      farmerCode,
+      cooperativeId: coop._id as string,
+      fullName: farmer.name,
+      phone: farmer.phone,
+      nationalId: farmer.nationalId || `TZ-${ts}`,
+      village: farmer.village,
+      district: farmer.district,
+      region: farmer.region,
+    });
+
+    await enqueue("farm.create", {
+      farmCode,
+      farmerCode,
+      crop: (crop.cropType || "coffee") as CropType,
+      variety: crop.variety,
+      estimatedAreaHa: parseFloat(crop.estimatedArea) || capturedAreaHa || 0,
+      certifications: crop.certifications,
+    });
+
+    if (polygonInline.length > 0) {
+      await enqueue("farm.attachPolygon", {
+        farmCode,
+        polygonInline,
+        areaHa: capturedAreaHa ?? 0,
+      });
+    }
+
+    setSubmitting(false);
+    setSubmittedFarmCode(farmCode);
+  }, [coop, farmer, crop, capturedPolygon, capturedAreaHa]);
+
+  function resetForm() {
+    setSubmittedFarmCode(null);
+    setStep(0);
+    setFarmer({ name: "", phone: "", nationalId: "", village: "", district: "", region: COOP_REGION });
+    setCrop({ cropType: "", variety: "", estimatedArea: "", certifications: [] });
+    setCapturedPolygon(null);
+    setCapturedAreaHa(null);
   }
 
-  function handleSubmit() {
-    setSubmitted(true);
-  }
-
-  const stepLabels = ["Farmer", "Crop", "Map", "Submit"];
-
-  if (submitted) {
+  // ── Confirmation screen ────────────────────────────────────────────────
+  if (submittedFarmCode) {
     return (
       <div className="min-h-screen bg-stone-50 flex flex-col">
-        <SyncBar online={online} />
+        {syncStatus.conflict && (
+          <ConflictModal
+            conflict={syncStatus.conflict}
+            onSkip={() => syncStatus.resolveConflict("skip", syncStatus.conflict!.id)}
+            onRetry={() => syncStatus.resolveConflict("retry", syncStatus.conflict!.id)}
+          />
+        )}
+        <div className="px-4 pt-3">
+          <SyncBadge status={syncStatus} />
+        </div>
         <div className="flex-1 flex items-center justify-center p-6">
           <div className="max-w-sm w-full text-center">
             <div className="w-20 h-20 bg-emerald-100 rounded-full flex items-center justify-center mx-auto mb-6">
-              <CheckCircle className="w-10 h-10 text-emerald-600" />
+              <CheckCircle2
+                className="w-10 h-10 text-emerald-600"
+                aria-hidden="true"
+              />
             </div>
-            <h2 className="text-2xl font-bold text-stone-900 mb-2">Farm Registered</h2>
-            <p className="text-stone-500 mb-6">
-              <strong className="text-stone-700">{farmer.name || "Farmer"}</strong>&apos;s {crop.cropType || "farm"} plot has
-              been saved locally and queued for sync.
+            <h2 className="text-2xl font-semibold text-stone-900 mb-2">
+              Farm registered
+            </h2>
+            <p className="text-sm text-stone-500 mb-6">
+              <strong className="text-stone-700">{farmer.name}</strong>&apos;s{" "}
+              {crop.cropType || "farm"} plot is queued for sync.
             </p>
-            <div className="bg-stone-100 rounded-xl p-4 text-left mb-6 space-y-2 text-sm">
-              <div className="flex justify-between">
+            <div className="rounded-xl bg-stone-100 p-4 text-left mb-6 space-y-2 text-sm">
+              <div className="flex justify-between items-center">
                 <span className="text-stone-500">Farm ID</span>
-                <span className="font-mono font-semibold text-stone-800">FM{Date.now().toString().slice(-4)}</span>
+                <span className="font-mono font-semibold text-stone-800 text-xs">
+                  {submittedFarmCode}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-stone-500">Verification</span>
                 <span className="text-amber-600 font-medium">Pending</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-stone-500">EUDR Status</span>
+                <span className="text-stone-500">EUDR status</span>
                 <span className="text-stone-500">Awaiting polygon review</span>
               </div>
               <div className="flex justify-between">
-                <span className="text-stone-500">Sync</span>
-                <span className="text-emerald-600 font-medium">Queued ✓</span>
+                <span className="text-stone-500">Boundary</span>
+                {capturedAreaHa !== null ? (
+                  <span className="font-mono text-stone-800">
+                    {capturedAreaHa.toFixed(2)} ha · 12 pts
+                  </span>
+                ) : (
+                  <span className="text-stone-400">Not recorded</span>
+                )}
               </div>
             </div>
             <button
-              onClick={() => { setSubmitted(false); setStep(0); setFarmer({ name: "", phone: "", nationalId: "", village: "", district: "", cooperative: "" }); setCrop({ cropType: "", variety: "", estimatedArea: "", certifications: [], existingPlots: "" }); setCaptured(false); }}
-              className="w-full py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800 transition-colors"
+              onClick={resetForm}
+              className="w-full py-3 rounded-xl bg-emerald-700 text-white font-semibold hover:bg-emerald-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
             >
-              Register Another Farm
+              Register another farm
             </button>
           </div>
         </div>
@@ -240,475 +301,626 @@ export default function FieldPage() {
     );
   }
 
+  // ── Main form ──────────────────────────────────────────────────────────
   return (
     <div className="min-h-screen bg-stone-50 flex flex-col">
-      <SyncBar online={online} />
+      {syncStatus.conflict && (
+        <ConflictModal
+          conflict={syncStatus.conflict}
+          onSkip={() => syncStatus.resolveConflict("skip", syncStatus.conflict!.id)}
+          onRetry={() => syncStatus.resolveConflict("retry", syncStatus.conflict!.id)}
+        />
+      )}
+      <div className="px-4 pt-3">
+        <SyncBadge status={syncStatus} />
+      </div>
 
-      {/* Header */}
       <div className="bg-white border-b border-stone-200 px-4 py-4">
         <div className="max-w-lg mx-auto">
-          <h1 className="text-lg font-bold text-stone-900">Farm Registration</h1>
-          <p className="text-sm text-stone-500">Kilimanjaro Native Cooperative Union</p>
+          <h1 className="text-lg font-semibold text-stone-900">
+            Farm Registration
+          </h1>
+          <p className="text-xs text-stone-500">{COOP_NAME}</p>
         </div>
       </div>
 
       <StepIndicator current={step} total={4} />
 
       <div className="flex-1 overflow-y-auto">
-        <div className="max-w-lg mx-auto p-4 space-y-4 pb-24">
+        <div className="max-w-lg mx-auto p-4 space-y-4 pb-28">
 
-          {/* Step 0: Farmer Registration */}
+          {/* ── Step 0: Farmer ─────────────────────────────────────────── */}
           {step === 0 && (
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-stone-200 p-6">
+              <div className="rounded-2xl border border-stone-200 bg-white p-6">
                 <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-emerald-50 rounded-xl flex items-center justify-center">
-                    <User className="w-5 h-5 text-emerald-600" />
+                  <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                    <User className="w-5 h-5 text-emerald-600" aria-hidden="true" />
                   </div>
                   <div>
-                    <h2 className="font-semibold text-stone-900">Farmer Details</h2>
+                    <h2 className="font-semibold text-stone-900">Farmer details</h2>
                     <p className="text-xs text-stone-500">Search existing or register new</p>
                   </div>
                 </div>
 
                 <div className="space-y-4">
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-1.5">Full Name</label>
+                    <label
+                      htmlFor="farmer-name"
+                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                    >
+                      Full name
+                    </label>
                     <div className="relative">
-                      <User className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <User
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        aria-hidden="true"
+                      />
                       <input
+                        id="farmer-name"
                         type="text"
                         placeholder="e.g. Amina Wanjiku Mbeki"
                         value={farmer.name}
-                        onChange={(e) => setFarmer({ ...farmer, name: e.target.value })}
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        onChange={(e) =>
+                          setFarmer({ ...farmer, name: e.target.value })
+                        }
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
 
+                  {/* Existing-farmer match chip */}
+                  {farmerMatches.length > 0 && (
+                    <div className="rounded-xl bg-emerald-50 border border-emerald-200 p-3 space-y-2">
+                      <p className="text-xs font-medium text-emerald-800">
+                        Existing farmers found
+                      </p>
+                      {farmerMatches.slice(0, 3).map((f) => (
+                        <button
+                          key={f._id}
+                          onClick={() =>
+                            setFarmer({
+                              name: f.fullName,
+                              phone: f.phone,
+                              nationalId: f.nationalId,
+                              village: f.village,
+                              district: f.district,
+                              region: f.region ?? COOP_REGION,
+                            })
+                          }
+                          className="w-full flex items-start gap-2 text-left hover:bg-emerald-100 rounded-lg p-2 transition"
+                        >
+                          <CheckCircle2
+                            className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0"
+                            aria-hidden="true"
+                          />
+                          <div>
+                            <span className="text-sm font-medium text-emerald-900">
+                              {f.fullName}
+                            </span>
+                            <span className="text-xs text-emerald-600 ml-2">
+                              · {f.code} · {f.village}
+                            </span>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-1.5">Phone Number</label>
+                    <label
+                      htmlFor="farmer-phone"
+                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                    >
+                      Phone number
+                    </label>
                     <div className="relative">
-                      <Phone className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <Phone
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        aria-hidden="true"
+                      />
                       <input
+                        id="farmer-phone"
                         type="tel"
-                        placeholder="+255 7XX XXX XXX"
+                        placeholder="+255 712 345 678"
                         value={farmer.phone}
-                        onChange={(e) => setFarmer({ ...farmer, phone: e.target.value })}
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        onChange={(e) =>
+                          setFarmer({ ...farmer, phone: e.target.value })
+                        }
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-1.5">National ID</label>
+                    <label
+                      htmlFor="farmer-nid"
+                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                    >
+                      National ID
+                    </label>
                     <div className="relative">
-                      <Hash className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                      <Hash
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        aria-hidden="true"
+                      />
                       <input
+                        id="farmer-nid"
                         type="text"
                         placeholder="TZ-YYYYMMDD-XXX"
                         value={farmer.nationalId}
-                        onChange={(e) => setFarmer({ ...farmer, nationalId: e.target.value })}
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent font-mono"
+                        onChange={(e) =>
+                          setFarmer({ ...farmer, nationalId: e.target.value })
+                        }
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm font-mono bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
+                    <p className="text-xs text-stone-600 mt-1">
+                      Leave blank to auto-assign on verification
+                    </p>
                   </div>
 
                   <div className="grid grid-cols-2 gap-3">
                     <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-1.5">Village</label>
+                      <label
+                        htmlFor="farmer-village"
+                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                      >
+                        Village
+                      </label>
                       <div className="relative">
-                        <MapPin className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+                        <MapPin
+                          className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                          aria-hidden="true"
+                        />
                         <input
+                          id="farmer-village"
                           type="text"
                           placeholder="e.g. Kibosho"
                           value={farmer.village}
-                          onChange={(e) => setFarmer({ ...farmer, village: e.target.value })}
-                          className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                          onChange={(e) =>
+                            setFarmer({ ...farmer, village: e.target.value })
+                          }
+                          className="w-full pl-9 pr-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
                         />
                       </div>
                     </div>
                     <div>
-                      <label className="block text-sm font-medium text-stone-700 mb-1.5">District</label>
+                      <label
+                        htmlFor="farmer-district"
+                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                      >
+                        District
+                      </label>
                       <input
+                        id="farmer-district"
                         type="text"
                         placeholder="e.g. Moshi Rural"
                         value={farmer.district}
-                        onChange={(e) => setFarmer({ ...farmer, district: e.target.value })}
-                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent"
+                        onChange={(e) =>
+                          setFarmer({ ...farmer, district: e.target.value })
+                        }
+                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
                       />
                     </div>
                   </div>
 
                   <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-1.5">Cooperative</label>
+                    <label
+                      htmlFor="farmer-coop"
+                      className="block text-sm font-medium text-stone-800 mb-1.5"
+                    >
+                      Cooperative
+                    </label>
                     <div className="relative">
-                      <Building2 className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
-                      <select
-                        value={farmer.cooperative}
-                        onChange={(e) => setFarmer({ ...farmer, cooperative: e.target.value })}
-                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 focus:border-transparent bg-white appearance-none"
+                      <Building2
+                        className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400"
+                        aria-hidden="true"
+                      />
+                      <div
+                        id="farmer-coop"
+                        className="w-full pl-9 pr-4 py-2.5 rounded-lg border border-stone-200 text-sm bg-stone-50 text-stone-700 min-h-12 flex items-center"
                       >
-                        <option value="">Select cooperative</option>
-                        {cooperatives.map((c) => (
-                          <option key={c} value={c}>{c}</option>
-                        ))}
-                      </select>
+                        {coop ? coop.name : (
+                          <span className="text-stone-400">Loading…</span>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                </div>
-              </div>
-
-              {/* Existing farmer suggestion */}
-              <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                <div className="flex items-start gap-3">
-                  <CheckCircle className="w-4 h-4 text-emerald-600 mt-0.5 flex-shrink-0" />
-                  <div>
-                    <p className="text-sm font-medium text-emerald-800">Existing Farmer Found</p>
-                    <p className="text-xs text-emerald-600 mt-0.5">
-                      Amina Wanjiku Mbeki · F001 · Kibosho · 2 farms registered
-                    </p>
-                    <button className="text-xs font-semibold text-emerald-700 mt-1 underline">
-                      Load existing record →
-                    </button>
                   </div>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 1: Crop Profile */}
+          {/* ── Step 1: Crop profile ────────────────────────────────────── */}
           {step === 1 && (
-            <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-stone-200 p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-amber-50 rounded-xl flex items-center justify-center">
-                    <Leaf className="w-5 h-5 text-amber-600" />
-                  </div>
-                  <div>
-                    <h2 className="font-semibold text-stone-900">Crop Profile</h2>
-                    <p className="text-xs text-stone-500">What is grown on this farm plot?</p>
-                  </div>
+            <div className="rounded-2xl border border-stone-200 bg-white p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-amber-50 flex items-center justify-center">
+                  <Leaf className="w-5 h-5 text-amber-600" aria-hidden="true" />
                 </div>
+                <div>
+                  <h2 className="font-semibold text-stone-900">Crop profile</h2>
+                  <p className="text-xs text-stone-500">
+                    What is grown on this farm plot?
+                  </p>
+                </div>
+              </div>
 
-                <div className="space-y-4">
-                  {/* Crop type toggle */}
-                  <div>
-                    <label className="block text-sm font-medium text-stone-700 mb-2">Crop Type</label>
-                    <div className="grid grid-cols-2 gap-3">
-                      {(["coffee", "avocado"] as const).map((type) => (
+              <div className="space-y-4">
+                <div>
+                  <fieldset>
+                    <legend className="block text-sm font-medium text-stone-800 mb-2">
+                      Crop type
+                    </legend>
+                    <div className="grid grid-cols-3 gap-2">
+                      {(
+                        [
+                          { type: "coffee", icon: Coffee, sub: "Arabica · Robusta" },
+                          { type: "avocado", icon: Leaf, sub: "Hass · Fuerte" },
+                          { type: "macadamia", icon: Nut, sub: "Beaumont · A4" },
+                        ] as const
+                      ).map(({ type, icon: Icon, sub }) => (
                         <button
                           key={type}
-                          onClick={() => setCrop({ ...crop, cropType: type, variety: "" })}
-                          className={`flex items-center gap-3 p-4 rounded-xl border-2 transition-all ${
+                          type="button"
+                          onClick={() =>
+                            setCrop({ ...crop, cropType: type, variety: "" })
+                          }
+                          className={`flex flex-col items-center gap-1.5 p-3 rounded-xl border-2 transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 ${
                             crop.cropType === type
                               ? "border-emerald-500 bg-emerald-50"
                               : "border-stone-200 hover:border-stone-300"
                           }`}
                         >
-                          {type === "coffee" ? (
-                            <Coffee className={`w-6 h-6 ${crop.cropType === type ? "text-emerald-600" : "text-stone-400"}`} />
-                          ) : (
-                            <Leaf className={`w-6 h-6 ${crop.cropType === type ? "text-emerald-600" : "text-stone-400"}`} />
-                          )}
-                          <div className="text-left">
-                            <div className={`text-sm font-semibold capitalize ${crop.cropType === type ? "text-emerald-700" : "text-stone-700"}`}>
-                              {type}
-                            </div>
-                            <div className="text-xs text-stone-400">
-                              {type === "coffee" ? "Arabica / Robusta" : "Hass / Fuerte"}
-                            </div>
-                          </div>
+                          <Icon
+                            className={`w-5 h-5 ${crop.cropType === type ? "text-emerald-600" : "text-stone-400"}`}
+                            aria-hidden="true"
+                          />
+                          <span
+                            className={`text-xs font-semibold capitalize ${crop.cropType === type ? "text-emerald-700" : "text-stone-700"}`}
+                          >
+                            {type}
+                          </span>
+                          <span className="text-[10px] text-stone-400">{sub}</span>
                         </button>
                       ))}
                     </div>
-                  </div>
-
-                  {crop.cropType && (
-                    <>
-                      <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-1.5">Variety</label>
-                        <select
-                          value={crop.variety}
-                          onChange={(e) => setCrop({ ...crop, variety: e.target.value })}
-                          className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500 bg-white"
-                        >
-                          <option value="">Select variety</option>
-                          {(crop.cropType === "coffee" ? coffeeVarieties : avocadoVarieties).map((v) => (
-                            <option key={v} value={v}>{v}</option>
-                          ))}
-                        </select>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-1.5">
-                          Estimated Area (hectares)
-                        </label>
-                        <input
-                          type="number"
-                          step="0.1"
-                          min="0.1"
-                          placeholder="e.g. 1.5"
-                          value={crop.estimatedArea}
-                          onChange={(e) => setCrop({ ...crop, estimatedArea: e.target.value })}
-                          className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm focus:outline-none focus:ring-2 focus:ring-emerald-500"
-                        />
-                        <p className="text-xs text-stone-400 mt-1">Will be confirmed by GPS polygon capture in the next step</p>
-                      </div>
-
-                      <div>
-                        <label className="block text-sm font-medium text-stone-700 mb-2">
-                          Existing Certifications
-                        </label>
-                        <div className="flex flex-wrap gap-2">
-                          {certOptions.map((cert) => (
-                            <button
-                              key={cert}
-                              onClick={() => {
-                                const has = crop.certifications.includes(cert);
-                                setCrop({
-                                  ...crop,
-                                  certifications: has
-                                    ? crop.certifications.filter((c) => c !== cert)
-                                    : [...crop.certifications, cert],
-                                });
-                              }}
-                              className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all ${
-                                crop.certifications.includes(cert)
-                                  ? "bg-emerald-600 text-white border-emerald-600"
-                                  : "bg-white text-stone-600 border-stone-300 hover:border-stone-400"
-                              }`}
-                            >
-                              {cert}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                    </>
-                  )}
+                  </fieldset>
                 </div>
+
+                {crop.cropType && (
+                  <>
+                    <div>
+                      <label
+                        htmlFor="crop-variety"
+                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                      >
+                        Variety
+                      </label>
+                      <select
+                        id="crop-variety"
+                        value={crop.variety}
+                        onChange={(e) =>
+                          setCrop({ ...crop, variety: e.target.value })
+                        }
+                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                      >
+                        <option value="">Select variety</option>
+                        {varietiesFor(crop.cropType).map((v) => (
+                          <option key={v} value={v}>
+                            {v}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+
+                    <div>
+                      <label
+                        htmlFor="crop-area"
+                        className="block text-sm font-medium text-stone-800 mb-1.5"
+                      >
+                        Estimated area (ha)
+                      </label>
+                      <input
+                        id="crop-area"
+                        type="number"
+                        step="0.1"
+                        min="0.1"
+                        placeholder="e.g. 0.8"
+                        value={crop.estimatedArea}
+                        onChange={(e) =>
+                          setCrop({ ...crop, estimatedArea: e.target.value })
+                        }
+                        className="w-full px-3 py-2.5 rounded-lg border border-stone-300 text-sm bg-white focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 min-h-12"
+                      />
+                      <p className="text-xs text-stone-600 mt-1">
+                        Confirmed by polygon capture in the next step
+                      </p>
+                    </div>
+
+                    <fieldset>
+                      <legend className="block text-sm font-medium text-stone-800 mb-2">
+                        Existing certifications
+                      </legend>
+                      <div className="flex flex-wrap gap-2">
+                        {CERT_OPTIONS.map((cert) => (
+                          <button
+                            key={cert}
+                            type="button"
+                            onClick={() => {
+                              const has = crop.certifications.includes(cert);
+                              setCrop({
+                                ...crop,
+                                certifications: has
+                                  ? crop.certifications.filter((c) => c !== cert)
+                                  : [...crop.certifications, cert],
+                              });
+                            }}
+                            className={`px-3 py-1.5 rounded-lg text-xs font-medium border transition-all focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 ${
+                              crop.certifications.includes(cert)
+                                ? "bg-emerald-600 text-white border-emerald-600"
+                                : "bg-white text-stone-600 border-stone-300 hover:border-stone-400"
+                            }`}
+                          >
+                            {cert}
+                          </button>
+                        ))}
+                      </div>
+                    </fieldset>
+                  </>
+                )}
               </div>
             </div>
           )}
 
-          {/* Step 2: Map / GPS Polygon */}
+          {/* ── Step 2: Farm boundary ───────────────────────────────────── */}
           {step === 2 && (
             <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-stone-200 overflow-hidden">
+              <div className="rounded-2xl border border-stone-200 bg-white overflow-hidden">
                 <div className="p-5 border-b border-stone-100">
                   <div className="flex items-center gap-3">
-                    <div className="w-10 h-10 bg-blue-50 rounded-xl flex items-center justify-center">
-                      <MapPin className="w-5 h-5 text-blue-600" />
+                    <div className="w-10 h-10 rounded-xl bg-emerald-50 flex items-center justify-center">
+                      <MapPin
+                        className="w-5 h-5 text-emerald-600"
+                        aria-hidden="true"
+                      />
                     </div>
                     <div>
-                      <h2 className="font-semibold text-stone-900">GPS Farm Boundary</h2>
-                      <p className="text-xs text-stone-500">Walk the perimeter to capture the polygon</p>
+                      <h2 className="font-semibold text-stone-900">Farm boundary</h2>
+                      <p className="text-xs text-stone-500">
+                        Walk the perimeter to record the polygon
+                      </p>
                     </div>
                   </div>
                 </div>
 
                 <div className="p-4">
-                  <PolygonPreview />
+                  <PolygonCapture
+                    villageCenter={villageCenter(farmer.village)}
+                    seed={strHash(farmer.name + farmer.village)}
+                    mode="simulated"
+                    onComplete={(geojson: GeoJSONPolygon, areaHa: number) => {
+                      setCapturedPolygon(geojson);
+                      setCapturedAreaHa(areaHa);
+                    }}
+                  />
                 </div>
 
-                <div className="p-4 space-y-3">
-                  {/* GPS points */}
-                  <div className="bg-stone-50 rounded-xl p-3 space-y-2">
-                    <div className="text-xs font-semibold text-stone-500 uppercase tracking-wider mb-2">
-                      Captured Points
+                {capturedPolygon && (
+                  <div className="mx-4 mb-4 rounded-xl bg-emerald-50 border border-emerald-200 p-4">
+                    <div className="flex items-center gap-2">
+                      <CheckCircle2
+                        className="w-4 h-4 text-emerald-600"
+                        aria-hidden="true"
+                      />
+                      <span className="text-sm font-medium text-emerald-800">
+                        Boundary recorded —{" "}
+                        <span className="font-mono tabular-nums">
+                          {capturedAreaHa?.toFixed(2)} ha
+                        </span>{" "}
+                        · 12 points
+                      </span>
                     </div>
-                    {mockPolygonPoints.map((pt) => (
-                      <div key={pt.label} className="flex items-center justify-between text-xs">
-                        <span className="w-5 h-5 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-[10px]">
-                          {pt.label}
-                        </span>
-                        <span className="font-mono text-stone-600">
-                          {pt.lat.toFixed(4)}, {pt.lng.toFixed(4)}
-                        </span>
-                        <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
-                      </div>
-                    ))}
                   </div>
+                )}
 
-                  {captured ? (
-                    <div className="bg-emerald-50 border border-emerald-200 rounded-xl p-4">
-                      <div className="flex items-center gap-2 mb-2">
-                        <CheckCircle className="w-5 h-5 text-emerald-600" />
-                        <span className="font-semibold text-emerald-800">Polygon Captured</span>
-                      </div>
-                      <div className="grid grid-cols-2 gap-2 text-sm">
-                        <div>
-                          <span className="text-stone-500">Area:</span>
-                          <span className="ml-1 font-semibold text-stone-800">1.82 ha</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Points:</span>
-                          <span className="ml-1 font-semibold text-stone-800">4</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Accuracy:</span>
-                          <span className="ml-1 font-semibold text-stone-800">±3m GPS</span>
-                        </div>
-                        <div>
-                          <span className="text-stone-500">Overlap:</span>
-                          <span className="ml-1 font-semibold text-emerald-700">None ✓</span>
-                        </div>
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={handleCapture}
-                      disabled={capturing}
-                      className="w-full flex items-center justify-center gap-2 py-3.5 rounded-xl bg-blue-600 text-white font-semibold text-sm hover:bg-blue-700 transition-colors disabled:opacity-70"
-                    >
-                      {capturing ? (
-                        <>
-                          <Navigation className="w-4 h-4 animate-pulse" />
-                          Capturing boundary...
-                        </>
-                      ) : (
-                        <>
-                          <Navigation className="w-4 h-4" />
-                          Start GPS Capture
-                        </>
-                      )}
-                    </button>
-                  )}
-
-                  <div className="flex items-start gap-2 p-3 bg-amber-50 border border-amber-100 rounded-lg">
-                    <AlertCircle className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5" />
-                    <p className="text-xs text-amber-700">
-                      Walk slowly along the farm boundary. GPS capture works offline — points are
-                      stored locally and uploaded when signal returns.
-                    </p>
-                  </div>
+                <div className="mx-4 mb-4 flex items-start gap-2 rounded-lg bg-amber-50 border border-amber-100 p-3">
+                  <AlertCircle
+                    className="w-4 h-4 text-amber-600 flex-shrink-0 mt-0.5"
+                    aria-hidden="true"
+                  />
+                  <p className="text-xs text-amber-700">
+                    Walk slowly along the farm boundary. Capture works offline —
+                    points are stored locally and uploaded when signal returns.
+                  </p>
                 </div>
               </div>
             </div>
           )}
 
-          {/* Step 3: Submit */}
+          {/* ── Step 3: Review & submit ─────────────────────────────────── */}
           {step === 3 && (
-            <div className="space-y-4">
-              <div className="bg-white rounded-2xl border border-stone-200 p-6">
-                <div className="flex items-center gap-3 mb-6">
-                  <div className="w-10 h-10 bg-stone-100 rounded-xl flex items-center justify-center">
-                    <Upload className="w-5 h-5 text-stone-600" />
+            <div className="rounded-2xl border border-stone-200 bg-white p-6">
+              <div className="flex items-center gap-3 mb-6">
+                <div className="w-10 h-10 rounded-xl bg-stone-100 flex items-center justify-center">
+                  <Upload
+                    className="w-5 h-5 text-stone-600"
+                    aria-hidden="true"
+                  />
+                </div>
+                <div>
+                  <h2 className="font-semibold text-stone-900">Review &amp; submit</h2>
+                  <p className="text-xs text-stone-500">
+                    Confirm before queueing for verification
+                  </p>
+                </div>
+              </div>
+
+              <div className="space-y-4">
+                {/* Farmer */}
+                <div className="rounded-xl bg-stone-50 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                    Farmer
                   </div>
-                  <div>
-                    <h2 className="font-semibold text-stone-900">Review & Submit</h2>
-                    <p className="text-xs text-stone-500">Confirm before queueing for verification</p>
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
+                    <span className="text-stone-500">Name</span>
+                    <span className="font-medium text-stone-900">
+                      {farmer.name || "—"}
+                    </span>
+                    <span className="text-stone-500">Phone</span>
+                    <span className="font-medium text-stone-900 font-mono text-xs">
+                      {farmer.phone || "—"}
+                    </span>
+                    <span className="text-stone-500">Village</span>
+                    <span className="font-medium text-stone-900">
+                      {farmer.village || "—"}
+                    </span>
+                    <span className="text-stone-500">Cooperative</span>
+                    <span className="font-medium text-stone-900 text-xs">
+                      {coop?.name ?? COOP_NAME}
+                    </span>
                   </div>
                 </div>
 
-                <div className="space-y-4">
-                  {/* Farmer summary */}
-                  <div className="rounded-xl bg-stone-50 p-4 space-y-2">
-                    <div className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">Farmer</div>
-                    <div className="grid grid-cols-2 gap-y-2 text-sm">
-                      <span className="text-stone-500">Name</span>
-                      <span className="font-medium text-stone-800">{farmer.name || "—"}</span>
-                      <span className="text-stone-500">Phone</span>
-                      <span className="font-medium text-stone-800">{farmer.phone || "—"}</span>
-                      <span className="text-stone-500">Village</span>
-                      <span className="font-medium text-stone-800">{farmer.village || "—"}</span>
-                      <span className="text-stone-500">Cooperative</span>
-                      <span className="font-medium text-stone-800 text-xs">{farmer.cooperative || "—"}</span>
-                    </div>
+                {/* Crop */}
+                <div className="rounded-xl bg-stone-50 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                    Crop
                   </div>
-
-                  {/* Crop summary */}
-                  <div className="rounded-xl bg-stone-50 p-4 space-y-2">
-                    <div className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">Crop</div>
-                    <div className="grid grid-cols-2 gap-y-2 text-sm">
-                      <span className="text-stone-500">Type</span>
-                      <span className="font-medium text-stone-800 capitalize">{crop.cropType || "—"}</span>
-                      <span className="text-stone-500">Variety</span>
-                      <span className="font-medium text-stone-800">{crop.variety || "—"}</span>
-                      <span className="text-stone-500">Est. Area</span>
-                      <span className="font-medium text-stone-800">{crop.estimatedArea ? `${crop.estimatedArea} ha` : "—"}</span>
+                  <div className="grid grid-cols-2 gap-y-2 text-sm">
+                    <span className="text-stone-500">Type</span>
+                    <span className="font-medium text-stone-900 capitalize">
+                      {crop.cropType || "—"}
+                    </span>
+                    <span className="text-stone-500">Variety</span>
+                    <span className="font-medium text-stone-900">
+                      {crop.variety || "—"}
+                    </span>
+                    <span className="text-stone-500">Estimated area</span>
+                    <span className="font-mono tabular-nums text-stone-900">
+                      {crop.estimatedArea ? `${crop.estimatedArea} ha` : "—"}
+                    </span>
+                  </div>
+                  {crop.certifications.length > 0 && (
+                    <div className="flex flex-wrap gap-1 mt-2">
+                      {crop.certifications.map((c) => (
+                        <span
+                          key={c}
+                          className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700"
+                        >
+                          {c}
+                        </span>
+                      ))}
                     </div>
-                    {crop.certifications.length > 0 && (
-                      <div className="flex flex-wrap gap-1 pt-1">
-                        {crop.certifications.map((c) => (
-                          <span key={c} className="px-2 py-0.5 rounded-full text-xs bg-emerald-100 text-emerald-700">
-                            {c}
-                          </span>
-                        ))}
-                      </div>
+                  )}
+                </div>
+
+                {/* Boundary */}
+                <div className="rounded-xl bg-stone-50 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-stone-500 mb-3">
+                    Farm boundary
+                  </div>
+                  <div className="flex items-center gap-2">
+                    {capturedPolygon ? (
+                      <>
+                        <CheckCircle2
+                          className="w-4 h-4 text-emerald-500"
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm font-medium text-emerald-700">
+                          Recorded ·{" "}
+                          <span className="font-mono tabular-nums">
+                            {capturedAreaHa?.toFixed(2)} ha
+                          </span>{" "}
+                          · 12 points
+                        </span>
+                      </>
+                    ) : (
+                      <>
+                        <AlertCircle
+                          className="w-4 h-4 text-amber-500"
+                          aria-hidden="true"
+                        />
+                        <span className="text-sm text-amber-700">
+                          Not recorded — verification will be delayed
+                        </span>
+                      </>
                     )}
                   </div>
+                </div>
 
-                  {/* GPS summary */}
-                  <div className="rounded-xl bg-stone-50 p-4">
-                    <div className="text-xs font-semibold text-stone-400 uppercase tracking-wider mb-2">GPS Polygon</div>
-                    <div className="flex items-center gap-2">
-                      {captured ? (
-                        <>
-                          <CheckCircle className="w-4 h-4 text-emerald-500" />
-                          <span className="text-sm text-emerald-700 font-medium">Captured · 1.82 ha · 4 points</span>
-                        </>
-                      ) : (
-                        <>
-                          <AlertCircle className="w-4 h-4 text-amber-500" />
-                          <span className="text-sm text-amber-700">Not captured — verification will be delayed</span>
-                        </>
-                      )}
-                    </div>
+                {/* What happens next */}
+                <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
+                  <div className="text-xs font-mono uppercase tracking-wider text-emerald-700 mb-2">
+                    What happens next
                   </div>
-
-                  {/* What happens next */}
-                  <div className="rounded-xl border border-emerald-200 bg-emerald-50 p-4">
-                    <div className="text-xs font-semibold text-emerald-700 uppercase tracking-wider mb-2">What Happens Next</div>
-                    <ul className="space-y-1.5">
-                      {[
-                        "Record saved locally and queued for sync",
-                        "Cooperative reviews polygon on dashboard",
-                        "Deforestation cross-check runs automatically",
-                        "Farmer receives SMS with verification status",
-                        "Eligible for batch inclusion once verified",
-                      ].map((item) => (
-                        <li key={item} className="flex items-start gap-2 text-xs text-emerald-800">
-                          <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
-                          {item}
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  <ul className="space-y-1.5">
+                    {[
+                      "Record saved locally and queued for sync",
+                      "Cooperative reviews polygon on dashboard",
+                      "Deforestation cross-check runs automatically",
+                      "Farmer receives SMS with verification status",
+                      "Eligible for batch inclusion once verified",
+                    ].map((item) => (
+                      <li
+                        key={item}
+                        className="flex items-start gap-2 text-xs text-emerald-800"
+                      >
+                        <span className="w-1 h-1 rounded-full bg-emerald-500 mt-1.5 flex-shrink-0" />
+                        {item}
+                      </li>
+                    ))}
+                  </ul>
                 </div>
               </div>
             </div>
           )}
+
         </div>
       </div>
 
-      {/* Bottom nav */}
-      <div className="sticky bottom-0 bg-white border-t border-stone-200 px-4 py-4">
+      {/* ── Sticky stepper ─────────────────────────────────────────────── */}
+      <div className="sticky bottom-0 bg-stone-50 border-t border-stone-200 px-4 pt-4 pb-[max(1rem,env(safe-area-inset-bottom))]">
         <div className="max-w-lg mx-auto flex gap-3">
           {step > 0 && (
             <button
               onClick={() => setStep((s) => (s - 1) as Step)}
-              className="flex items-center gap-1.5 px-4 py-3 rounded-xl border border-stone-300 text-stone-700 font-medium text-sm hover:bg-stone-50 transition-colors"
+              className="inline-flex items-center gap-1.5 px-4 py-3 rounded-xl border border-stone-300 bg-white text-stone-700 font-medium text-sm hover:bg-stone-50 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
             >
-              <ChevronLeft className="w-4 h-4" />
+              <ChevronLeft className="w-4 h-4" aria-hidden="true" />
               Back
             </button>
           )}
+
           {step < 3 ? (
             <button
               onClick={() => setStep((s) => (s + 1) as Step)}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition-colors"
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
             >
-              {stepLabels[step + 1]}
-              <ChevronRight className="w-4 h-4" />
+              {["Farmer", "Crop", "Map", "Submit"][step + 1]}
+              <ChevronRight className="w-4 h-4" aria-hidden="true" />
             </button>
           ) : (
             <button
               onClick={handleSubmit}
-              className="flex-1 flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition-colors"
+              disabled={submitting || !coop}
+              className="flex-1 inline-flex items-center justify-center gap-1.5 py-3 rounded-xl bg-emerald-700 text-white font-semibold text-sm hover:bg-emerald-800 transition disabled:opacity-60 disabled:cursor-not-allowed focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2"
             >
-              <Upload className="w-4 h-4" />
-              Submit Farm Registration
+              {submitting ? (
+                <>
+                  <Loader2
+                    className="w-4 h-4 animate-spin"
+                    aria-hidden="true"
+                  />
+                  Queuing…
+                </>
+              ) : (
+                <>
+                  <Upload className="w-4 h-4" aria-hidden="true" />
+                  Submit registration
+                </>
+              )}
             </button>
           )}
         </div>
