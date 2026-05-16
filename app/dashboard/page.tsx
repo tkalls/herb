@@ -448,8 +448,17 @@ export default function DashboardPage() {
             {filteredFarms.length === 0 ? (
               <div className="rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
                 <MapPin className="w-8 h-8 text-stone-300 mx-auto mb-3" aria-hidden="true" />
-                <p className="text-sm font-medium text-stone-600">No farms match the current filter.</p>
-                <p className="text-xs text-stone-400 mt-1">Try selecting a different crop or clearing the filter.</p>
+                {farms.length === 0 ? (
+                  <>
+                    <p className="text-sm font-medium text-stone-600 mb-1">No farms registered yet.</p>
+                    <p className="text-xs text-stone-400">Use the field app to register the first farm and it will appear here within seconds.</p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-sm font-medium text-stone-600 mb-1">No {activeCrop === "all" ? "" : activeCrop + " "}farms match the current filter.</p>
+                    <p className="text-xs text-stone-400">Try selecting a different crop using the tabs above.</p>
+                  </>
+                )}
               </div>
             ) : (
               <div className="bg-white rounded-xl border border-stone-200 shadow-sm overflow-hidden">
@@ -563,7 +572,8 @@ export default function DashboardPage() {
             {filteredBatches.length === 0 ? (
               <div className="rounded-xl border border-stone-200 bg-white p-12 text-center shadow-sm">
                 <Package className="w-8 h-8 text-stone-300 mx-auto mb-3" aria-hidden="true" />
-                <p className="text-sm font-medium text-stone-600">No batches found.</p>
+                <p className="text-sm font-medium text-stone-600 mb-1">No export batches yet.</p>
+                <p className="text-xs text-stone-400">Batches are created once farms pass EUDR verification and are grouped for export.</p>
               </div>
             ) : (
               filteredBatches.map((batch) => {
@@ -758,12 +768,17 @@ export default function DashboardPage() {
               )}
             </div>
 
-            <div className="rounded-xl border border-dashed border-stone-300 p-6 text-center">
-              <TrendingUp className="w-8 h-8 text-stone-300 mx-auto mb-3" />
-              <h3 className="font-semibold text-stone-600 mb-1">Buyer Marketplace</h3>
-              <p className="text-sm text-stone-400 max-w-sm mx-auto">
-                Direct RFQ from verified EU, Middle East, and US buyers. Transparent pricing,
-                EUDR documentation auto-attached. Part of Herb&apos;s 12-month roadmap.
+            <div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+              <div className="flex items-center gap-3 mb-3">
+                <div className="w-9 h-9 rounded-lg bg-stone-100 flex items-center justify-center flex-shrink-0">
+                  <TrendingUp className="text-stone-500" style={{ width: "18px", height: "18px" }} aria-hidden="true" />
+                </div>
+                <h3 className="font-semibold text-stone-800">Export coordinator</h3>
+              </div>
+              <p className="text-sm text-stone-500">
+                To initiate a new buyer relationship or issue a direct RFQ, contact the KNCU export desk
+                at <span className="font-mono text-stone-700">exports@kncu.coop.tz</span>.
+                Verified EUDR documentation is attached automatically to every shipment.
               </p>
             </div>
           </div>
