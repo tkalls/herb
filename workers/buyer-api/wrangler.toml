@@ -1,0 +1,12 @@
+name = "herb-buyer-api"
+main = "src/index.ts"
+compatibility_date = "2025-05-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Deploy target: api.herb.shamba
+# Add after DNS is configured:
+# routes = [{ pattern = "api.herb.shamba/v1/*", zone_name = "herb.shamba" }]
+
+[vars]
+# Override in production via: wrangler secret put CONVEX_URL
+CONVEX_URL = "https://placeholder.convex.cloud"
