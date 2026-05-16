@@ -56,6 +56,27 @@ function backoffMs(attempts: number): number {
   return Math.min(500 * 2 ** attempts, 30_000);
 }
 
+// Retry transient failures (e.g. Convex WS not yet reconnected after coming online)
+// without incrementing the persistent attempts counter. Conflict/validation errors
+// are re-thrown immediately so the caller handles them as permanent failures.
+async function withRetry<T>(
+  fn: () => Promise<T>,
+  maxRetries = 3,
+  delayMs = 1000,
+): Promise<T> {
+  let lastErr: unknown;
+  for (let i = 0; i < maxRetries; i++) {
+    try {
+      return await fn();
+    } catch (err) {
+      if (isConflictError(err) || isValidationError(err)) throw err;
+      lastErr = err;
+      if (i < maxRetries - 1) await new Promise((r) => setTimeout(r, delayMs));
+    }
+  }
+  throw lastErr;
+}
+
 export function useSyncQueue(): SyncStatus {
   const [online, setOnline] = useState(
     typeof navigator !== "undefined" ? navigator.onLine : true,
@@ -113,6 +134,11 @@ export function useSyncQueue(): SyncStatus {
       const count = await pendingCount();
       if (count === 0) return;
 
+      // Give Convex WS time to reconnect before firing mutations — the browser
+      // `online` event fires before the WebSocket handshake completes.
+      await new Promise((r) => setTimeout(r, 500));
+      if (cancelled || !navigator.onLine) return;
+
       drainingRef.current = true;
       setDraining(true);
 
@@ -128,7 +154,7 @@ export function useSyncQueue(): SyncStatus {
         }
 
         try {
-          await drainRow(row);
+          await withRetry(() => drainRow(row));
           await dequeue(row.id);
           setLastError(null);
         } catch (err) {
