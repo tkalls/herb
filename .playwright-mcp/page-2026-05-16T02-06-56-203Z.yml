@@ -1,0 +1,125 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "herb" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e9]: herb
+      - navigation [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - link "Field" [ref=e12] [cursor=pointer]:
+          - /url: /field
+        - link "Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e15]:
+        - generic [ref=e16]: Beta
+        - generic [ref=e17]: EUDR Ready
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img [ref=e23]
+          - text: Online · Syncing
+        - generic [ref=e27]:
+          - img [ref=e28]
+          - generic [ref=e31]: 3 items in queue
+      - generic [ref=e33]:
+        - heading "Farm Registration" [level=1] [ref=e34]
+        - paragraph [ref=e35]: Kilimanjaro Native Cooperative Union
+      - generic [ref=e36]:
+        - generic [ref=e38]: "1"
+        - generic [ref=e41]: "2"
+        - generic [ref=e44]: "3"
+        - generic [ref=e47]: "4"
+        - generic [ref=e48]: Step 1 of 4
+      - generic [ref=e51]:
+        - generic [ref=e52]:
+          - generic [ref=e53]:
+            - img [ref=e55]
+            - generic [ref=e58]:
+              - heading "Farmer Details" [level=2] [ref=e59]
+              - paragraph [ref=e60]: Search existing or register new
+          - generic [ref=e61]:
+            - generic [ref=e62]:
+              - generic [ref=e63]: Full Name
+              - generic [ref=e64]:
+                - img [ref=e65]
+                - textbox "e.g. Amina Wanjiku Mbeki" [active] [ref=e68]
+            - generic [ref=e69]:
+              - generic [ref=e70]: Phone Number
+              - generic [ref=e71]:
+                - img [ref=e72]
+                - textbox "+255 7XX XXX XXX" [ref=e74]
+            - generic [ref=e75]:
+              - generic [ref=e76]: National ID
+              - generic [ref=e77]:
+                - img [ref=e78]
+                - textbox "TZ-YYYYMMDD-XXX" [ref=e81]
+            - generic [ref=e82]:
+              - generic [ref=e83]:
+                - generic [ref=e84]: Village
+                - generic [ref=e85]:
+                  - img [ref=e86]
+                  - textbox "e.g. Kibosho" [ref=e89]
+              - generic [ref=e90]:
+                - generic [ref=e91]: District
+                - textbox "e.g. Moshi Rural" [ref=e92]
+            - generic [ref=e93]:
+              - generic [ref=e94]: Cooperative
+              - generic [ref=e95]:
+                - img [ref=e96]
+                - combobox [ref=e100]:
+                  - option "Select cooperative" [selected]
+                  - option "Kilimanjaro Native Cooperative Union (KNCU)"
+                  - option "Mbinga Coffee Cooperative"
+                  - option "Mbeya Coffee Cooperative"
+                  - option "Arusha Coffee Cooperative"
+                  - option "Other"
+        - generic [ref=e102]:
+          - img [ref=e103]
+          - generic [ref=e106]:
+            - paragraph [ref=e107]: Existing Farmer Found
+            - paragraph [ref=e108]: Amina Wanjiku Mbeki · F001 · Kibosho · 2 farms registered
+            - button "Load existing record →" [ref=e109]
+      - button "Crop" [ref=e112]:
+        - text: Crop
+        - img [ref=e113]
+  - contentinfo [ref=e115]:
+    - generic [ref=e116]:
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - img [ref=e120]
+            - generic [ref=e123]: herb
+          - paragraph [ref=e124]: Farm-to-market trust infrastructure for East African smallholder agriculture. Built for EUDR compliance, designed for the farmer.
+          - generic [ref=e125]:
+            - generic [ref=e126]: Tanzania Pilot
+            - generic [ref=e127]: EUDR Aligned
+        - generic [ref=e128]:
+          - heading "Platform" [level=3] [ref=e129]
+          - list [ref=e130]:
+            - listitem [ref=e131]:
+              - link "Field App" [ref=e132] [cursor=pointer]:
+                - /url: /field
+            - listitem [ref=e133]:
+              - link "Dashboard" [ref=e134] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e135]:
+              - link "About & Research" [ref=e136] [cursor=pointer]:
+                - /url: /about
+        - generic [ref=e137]:
+          - heading "Focus Areas" [level=3] [ref=e138]
+          - list [ref=e139]:
+            - listitem [ref=e140]: Tanzania Coffee
+            - listitem [ref=e141]: East Africa Avocado
+            - listitem [ref=e142]: EUDR Compliance
+            - listitem [ref=e143]: Cooperative Traceability
+      - generic [ref=e144]:
+        - paragraph [ref=e145]: © 2024 Herb · A demonstration platform for smallholder agriculture traceability.
+        - paragraph [ref=e146]: Built for the Shortcut Asia Challenge · Tanzanian pilot focus
+  - button "Open Next.js Dev Tools" [ref=e153] [cursor=pointer]:
+    - img [ref=e154]
+  - alert [ref=e147]

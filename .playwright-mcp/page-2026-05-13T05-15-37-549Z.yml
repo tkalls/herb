@@ -1,0 +1,208 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "herb" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e9]: herb
+      - navigation [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - link "Field" [ref=e12] [cursor=pointer]:
+          - /url: /field
+        - link "Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e15]:
+        - generic [ref=e16]: Beta
+        - generic [ref=e17]: EUDR Ready
+  - main [ref=e19]:
+    - generic [ref=e55]:
+      - generic [ref=e57]:
+        - generic [ref=e58]:
+          - generic [ref=e59]:
+            - generic [ref=e61]: Moshi Rural · Kilimanjaro · Tanzania
+            - heading "Kilimanjaro Native Cooperative Union" [level=1] [ref=e62]
+            - paragraph [ref=e63]: KNCU · 5 farmers · 8 farms · 12.6 ha
+          - generic [ref=e64]:
+            - generic [ref=e65]: Live Dashboard
+            - button "Export" [ref=e67]:
+              - img [ref=e68]
+              - text: Export
+            - button "Sync" [ref=e71]:
+              - img [ref=e72]
+              - text: Sync
+        - generic [ref=e77]:
+          - button "All Crops" [ref=e78]
+          - button "☕ Coffee" [ref=e79]
+          - button "🥑 Avocado" [ref=e80]
+      - generic [ref=e83]:
+        - button "overview" [ref=e84]
+        - button "farms" [active] [ref=e85]
+        - button "batches" [ref=e86]
+        - button "buyers" [ref=e87]
+      - generic [ref=e265]:
+        - generic [ref=e266]:
+          - paragraph [ref=e267]: 5 farms shown
+          - button "Filter" [ref=e268]:
+            - img [ref=e269]
+            - text: Filter
+        - table [ref=e273]:
+          - rowgroup [ref=e274]:
+            - row "Farm Farmer Crop Area Status EUDR Risk Last Sync" [ref=e275]:
+              - columnheader "Farm" [ref=e276]
+              - columnheader "Farmer" [ref=e277]
+              - columnheader "Crop" [ref=e278]
+              - columnheader "Area" [ref=e279]
+              - columnheader "Status" [ref=e280]
+              - columnheader "EUDR" [ref=e281]
+              - columnheader "Risk" [ref=e282]
+              - columnheader "Last Sync" [ref=e283]
+          - rowgroup [ref=e284]:
+            - row "FM001 Amina Wanjiku Mbeki Kibosho coffee Arabica SL28 1.8 ha Verified low 13 May" [ref=e285]:
+              - cell "FM001" [ref=e286]
+              - cell "Amina Wanjiku Mbeki Kibosho" [ref=e287]:
+                - generic [ref=e288]:
+                  - generic [ref=e289]: Amina Wanjiku Mbeki
+                  - generic [ref=e290]: Kibosho
+              - cell "coffee Arabica SL28" [ref=e291]:
+                - generic [ref=e292]:
+                  - img [ref=e293]
+                  - generic [ref=e295]:
+                    - generic [ref=e296]: coffee
+                    - generic [ref=e297]: Arabica SL28
+              - cell "1.8 ha" [ref=e298]
+              - cell "Verified" [ref=e299]:
+                - generic [ref=e300]: Verified
+              - cell [ref=e302]:
+                - img [ref=e303]
+              - cell "low" [ref=e306]
+              - cell "13 May" [ref=e307]:
+                - generic [ref=e308]: 13 May
+            - row "FM002 Joseph Mwanga Msemwa Lyamungu coffee Arabica N39 2.4 ha Verified low 13 May" [ref=e309]:
+              - cell "FM002" [ref=e310]
+              - cell "Joseph Mwanga Msemwa Lyamungu" [ref=e311]:
+                - generic [ref=e312]:
+                  - generic [ref=e313]: Joseph Mwanga Msemwa
+                  - generic [ref=e314]: Lyamungu
+              - cell "coffee Arabica N39" [ref=e315]:
+                - generic [ref=e316]:
+                  - img [ref=e317]
+                  - generic [ref=e319]:
+                    - generic [ref=e320]: coffee
+                    - generic [ref=e321]: Arabica N39
+              - cell "2.4 ha" [ref=e322]
+              - cell "Verified" [ref=e323]:
+                - generic [ref=e324]: Verified
+              - cell [ref=e326]:
+                - img [ref=e327]
+              - cell "low" [ref=e330]
+              - cell "13 May" [ref=e331]:
+                - generic [ref=e332]: 13 May
+            - row "FM004 Grace Nalishebo Temba Marangu coffee Arabica Bourbon 1.2 ha Pending medium 13 May" [ref=e333]:
+              - cell "FM004" [ref=e334]
+              - cell "Grace Nalishebo Temba Marangu" [ref=e335]:
+                - generic [ref=e336]:
+                  - generic [ref=e337]: Grace Nalishebo Temba
+                  - generic [ref=e338]: Marangu
+              - cell "coffee Arabica Bourbon" [ref=e339]:
+                - generic [ref=e340]:
+                  - img [ref=e341]
+                  - generic [ref=e343]:
+                    - generic [ref=e344]: coffee
+                    - generic [ref=e345]: Arabica Bourbon
+              - cell "1.2 ha" [ref=e346]
+              - cell "Pending" [ref=e347]:
+                - generic [ref=e348]: Pending
+              - cell [ref=e350]:
+                - img [ref=e351]
+              - cell "medium" [ref=e355]
+              - cell "13 May" [ref=e356]:
+                - generic [ref=e357]: 13 May
+            - row "FM007 Bernard Kaunda Mwita Uru coffee Arabica Kent 0.7 ha Verified low 13 May" [ref=e358]:
+              - cell "FM007" [ref=e359]
+              - cell "Bernard Kaunda Mwita Uru" [ref=e360]:
+                - generic [ref=e361]:
+                  - generic [ref=e362]: Bernard Kaunda Mwita
+                  - generic [ref=e363]: Uru
+              - cell "coffee Arabica Kent" [ref=e364]:
+                - generic [ref=e365]:
+                  - img [ref=e366]
+                  - generic [ref=e368]:
+                    - generic [ref=e369]: coffee
+                    - generic [ref=e370]: Arabica Kent
+              - cell "0.7 ha" [ref=e371]
+              - cell "Verified" [ref=e372]:
+                - generic [ref=e373]: Verified
+              - cell [ref=e375]:
+                - img [ref=e376]
+              - cell "low" [ref=e379]
+              - cell "13 May" [ref=e380]:
+                - generic [ref=e381]: 13 May
+            - row "FM008 Fatuma Rashid Ally Kibosho coffee Arabica SL28 1.1 ha Unverified low 13 May" [ref=e382]:
+              - cell "FM008" [ref=e383]
+              - cell "Fatuma Rashid Ally Kibosho" [ref=e384]:
+                - generic [ref=e385]:
+                  - generic [ref=e386]: Fatuma Rashid Ally
+                  - generic [ref=e387]: Kibosho
+              - cell "coffee Arabica SL28" [ref=e388]:
+                - generic [ref=e389]:
+                  - img [ref=e390]
+                  - generic [ref=e392]:
+                    - generic [ref=e393]: coffee
+                    - generic [ref=e394]: Arabica SL28
+              - cell "1.1 ha" [ref=e395]
+              - cell "Unverified" [ref=e396]:
+                - generic [ref=e397]: Unverified
+              - cell [ref=e399]:
+                - img [ref=e400]
+              - cell "low" [ref=e404]
+              - cell "13 May" [ref=e405]:
+                - generic [ref=e406]: 13 May
+        - generic [ref=e407]:
+          - img [ref=e408]
+          - generic [ref=e410]:
+            - generic [ref=e411]: FM004 · Grace Nalishebo Temba
+            - generic [ref=e412]: Polygon verification pending. Awaiting satellite cross-check.
+        - generic [ref=e413]:
+          - img [ref=e414]
+          - generic [ref=e416]:
+            - generic [ref=e417]: FM008 · Fatuma Rashid Ally
+            - generic [ref=e418]: Newly registered. GPS capture not yet completed.
+  - contentinfo [ref=e22]:
+    - generic [ref=e23]:
+      - generic [ref=e24]:
+        - generic [ref=e25]:
+          - generic [ref=e26]:
+            - img [ref=e27]
+            - generic [ref=e30]: herb
+          - paragraph [ref=e31]: Farm-to-market trust infrastructure for East African smallholder agriculture. Built for EUDR compliance, designed for the farmer.
+          - generic [ref=e32]:
+            - generic [ref=e33]: Tanzania Pilot
+            - generic [ref=e34]: EUDR Aligned
+        - generic [ref=e35]:
+          - heading "Platform" [level=3] [ref=e36]
+          - list [ref=e37]:
+            - listitem [ref=e38]:
+              - link "Field App" [ref=e39] [cursor=pointer]:
+                - /url: /field
+            - listitem [ref=e40]:
+              - link "Dashboard" [ref=e41] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e42]:
+              - link "About & Research" [ref=e43] [cursor=pointer]:
+                - /url: /about
+        - generic [ref=e44]:
+          - heading "Focus Areas" [level=3] [ref=e45]
+          - list [ref=e46]:
+            - listitem [ref=e47]: Tanzania Coffee
+            - listitem [ref=e48]: East Africa Avocado
+            - listitem [ref=e49]: EUDR Compliance
+            - listitem [ref=e50]: Cooperative Traceability
+      - generic [ref=e51]:
+        - paragraph [ref=e52]: © 2024 Herb · A demonstration platform for smallholder agriculture traceability.
+        - paragraph [ref=e53]: Built for the Shortcut Asia Challenge · Tanzanian pilot focus
+  - button "Open Next.js Dev Tools" [ref=e261] [cursor=pointer]:
+    - img [ref=e262]
+  - alert [ref=e54]

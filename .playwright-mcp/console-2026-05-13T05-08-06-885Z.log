@@ -1,0 +1,3167 @@
+[     214ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     251ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[    9380ms] [WARNING] Detected `scroll-behavior: smooth` on the `<html>` element. To disable smooth scrolling during route transitions, add `data-scroll-behavior="smooth"` to your <html> element. Learn more: https://nextjs.org/docs/messages/missing-data-scroll-behavior @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  948880ms] [LOG] WebSocket closed with code 1006 @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  948881ms] [LOG] Attempting reconnect in 1073ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  948894ms] [ERROR] WebSocket is already in CLOSING or CLOSED state. @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2836
+[  949899ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[  950906ms] [LOG] WebSocket reconnected at t=950.9s after disconnect due to closed with code 1006 @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 2811371ms] [LOG] Attempting reconnect in 99ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 2812257ms] [LOG] WebSocket reconnected at t=1012.1s after disconnect due to InactiveServer @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4499680ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4499703ms] [LOG] [Fast Refresh] done in 125ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4945156ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4945257ms] [LOG] [Fast Refresh] done in 173ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4958136ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4958166ms] [LOG] [Fast Refresh] done in 60ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4998786ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 4998889ms] [LOG] [Fast Refresh] done in 167ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5015899ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5015927ms] [LOG] [Fast Refresh] done in 65ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5027578ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5027606ms] [LOG] [Fast Refresh] done in 41ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5066521ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5066552ms] [LOG] [Fast Refresh] done in 62ms @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5084538ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5084891ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5084891ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5084891ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5084935ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5084935ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5084935ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085036ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5085258ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085258ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085258ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085360ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[ 5085578ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085578ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085578ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_115brz8._.js:3318
+[ 5085587ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard?_rsc=baRm8Hg-bKr8antF:0
+[ 5085604ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard?_rsc=baRm8Hg-bKr8antF:0
+[ 5085618ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard?_rsc=baRm8Hg-bKr8antF:0
+[ 5085642ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5085708ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5085740ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5085738ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5085739ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085740ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085740ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085792ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085792ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085792ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5085852ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5086360ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5086360ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5086360ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5086418ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5089476ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5089527ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089527ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089527ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089537ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5089575ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5089591ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5089590ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5089597ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089597ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089597ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089626ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089626ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089626ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5089696ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5097151ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5097200ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097200ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097200ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097219ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5097247ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5097255ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5097255ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5097262ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097262ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097262ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097290ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097290ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097290ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5097363ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5099387ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5099387ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5099387ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5099425ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5104753ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5104830ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104831ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104831ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104842ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5104852ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5104857ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5104856ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5104858ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104858ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104858ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104891ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104891ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5104891ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110851ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5110899ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110899ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110899ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110908ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5110918ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5110924ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5110923ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5110926ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110926ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110926ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110958ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110958ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5110958ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114237ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5114403ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114403ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114403ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114436ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5114456ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5114465ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5114461ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5114463ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114463ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114463ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114464ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114464ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114464ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114495ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114496ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114496ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5114564ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5139001ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5139001ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5139001ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5139015ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5145209ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5145294ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145294ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145294ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145316ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5145342ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5145356ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5145356ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5145358ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145358ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145358ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145390ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145391ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145391ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5145459ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5154479ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5154534ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154534ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154534ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154547ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5154562ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5154568ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5154568ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5154570ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154570ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154570ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154602ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154603ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5154603ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5175400ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5175400ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5175400ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5175468ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5187125ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5187148ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187148ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187148ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187233ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5187250ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5187266ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5187259ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5187261ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187261ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187263ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187302ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187302ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187302ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5187365ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5200076ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5200304ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5200325ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5200335ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5200334ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5200335ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200335ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200335ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200335ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200335ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200336ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200369ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200369ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200369ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5200437ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5203772ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5203837ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203837ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203837ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203848ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5203862ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5203876ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5203873ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5203875ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203875ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203876ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203881ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203881ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203881ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203909ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203909ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203909ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5203979ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5244357ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5244357ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5244357ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5244424ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5305222ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5305222ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5305222ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5305258ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5309094ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5309094ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5309094ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5309162ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5315194ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5315259ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315259ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315259ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315280ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5315302ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5315310ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5315309ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5315312ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315312ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315312ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315344ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315344ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315344ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5315412ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5323355ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5323413ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323413ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323413ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323431ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3001/dashboard:0
+[ 5323447ms] [INFO] %cDownload the React DevTools for a better development experience: https://react.dev/link/react-devtools font-weight:bold @ http://localhost:3001/_next/static/chunks/node_modules_react-dom_0bruynb._.js:15305
+[ 5323456ms] Error: ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found
+
+
+    at <unknown> (Error: ./components/map/PolygonCapture.tsx:13:3)
+    at <unknown> (https://nextjs.org/docs/messages/module-not-found)
+    at Object.getCompilationErrors (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/hot-reloader-turbopack.js:1186:59)
+    at DevBundlerService.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/lib/dev-bundler-service.js:44:55)
+    at DevServer.getCompilationError (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:720:42)
+    at DevServer.findPageComponents (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/dev/next-dev-server.js:690:43)
+    at async DevServer.renderErrorToResponseImpl (file:///Users/tobi/Desktop/herb/node_modules/next/dist/server/base-server.js:1753:26)
+[ 5323468ms] [LOG] [HMR] connected @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5323479ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323479ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323479ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323521ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323521ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323521ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5323591ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5325911ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5325911ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5325911ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5325980ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226
+[ 5327489ms] [ERROR] ./components/map/PolygonCapture.tsx:13:3
+Module not found: Can't resolve '@turf/area'
+  11 | let turfHelpers: { polygon: (coords: number[][][]) => any } = { polygon: () => null };
+  12 | if (typeof window !== "undefined") {
+> 13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+     |   ^^^^^^^^^^^^^^^^^^^^
+  14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+  15 | }
+  16 |
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5327489ms] [ERROR] ./components/map/PolygonCapture.tsx:14:3
+Module not found: Can't resolve '@turf/helpers'
+  12 | if (typeof window !== "undefined") {
+  13 |   import("@turf/area").then((m) => { turfArea = m.default ?? m; });
+> 14 |   import("@turf/helpers").then((m) => { turfHelpers = m; });
+     |   ^^^^^^^^^^^^^^^^^^^^^^^
+  15 | }
+  16 |
+  17 | export interface PolygonCaptureProps {
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5327489ms] [ERROR] ./components/map/PolygonCapture.tsx:59:5
+Module not found: Can't resolve 'maplibre-gl'
+  57 |     let destroyed = false;
+  58 |
+> 59 |     import("maplibre-gl").then(({ Map, NavigationControl }) => {
+     |     ^^^^^^^^^^^^^^^^^^^^^
+  60 |       if (destroyed || !containerRef.current) return;
+  61 |
+  62 |       const styleUrl = MAPTILER_KEY
+
+Import trace:
+  Client Component Browser:
+    ./components/map/PolygonCapture.tsx [Client Component Browser]
+    ./app/field/page.tsx [Client Component Browser]
+    ./app/field/page.tsx [Server Component]
+
+https://nextjs.org/docs/messages/module-not-found @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1945
+[ 5327556ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3001/_next/static/chunks/node_modules_next_dist_0u_w_5s._.js:1226

@@ -1,0 +1,55 @@
+- generic [active] [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "herb" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e9]: herb
+      - navigation [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - link "Field" [ref=e12] [cursor=pointer]:
+          - /url: /field
+        - link "Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e15]:
+        - generic [ref=e16]: Beta
+        - generic [ref=e17]: EUDR Ready
+  - main [ref=e19]
+  - contentinfo [ref=e44]:
+    - generic [ref=e45]:
+      - generic [ref=e46]:
+        - generic [ref=e47]:
+          - generic [ref=e48]:
+            - img [ref=e49]
+            - generic [ref=e52]: herb
+          - paragraph [ref=e53]: Farm-to-market trust infrastructure for East African smallholder agriculture. Built for EUDR compliance, designed for the farmer.
+          - generic [ref=e54]:
+            - generic [ref=e55]: Tanzania Pilot
+            - generic [ref=e56]: EUDR Aligned
+        - generic [ref=e57]:
+          - heading "Platform" [level=3] [ref=e58]
+          - list [ref=e59]:
+            - listitem [ref=e60]:
+              - link "Field App" [ref=e61] [cursor=pointer]:
+                - /url: /field
+            - listitem [ref=e62]:
+              - link "Dashboard" [ref=e63] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e64]:
+              - link "About & Research" [ref=e65] [cursor=pointer]:
+                - /url: /about
+        - generic [ref=e66]:
+          - heading "Focus Areas" [level=3] [ref=e67]
+          - list [ref=e68]:
+            - listitem [ref=e69]: Tanzania Coffee
+            - listitem [ref=e70]: East Africa Avocado
+            - listitem [ref=e71]: EUDR Compliance
+            - listitem [ref=e72]: Cooperative Traceability
+      - generic [ref=e73]:
+        - paragraph [ref=e74]: © 2024 Herb · A demonstration platform for smallholder agriculture traceability.
+        - paragraph [ref=e75]: Built for the Shortcut Asia Challenge · Tanzanian pilot focus
+  - button "Open Next.js Dev Tools" [ref=e81] [cursor=pointer]:
+    - img [ref=e82]

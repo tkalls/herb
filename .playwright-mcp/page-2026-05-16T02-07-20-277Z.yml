@@ -1,0 +1,99 @@
+- generic [ref=e1]:
+  - banner [ref=e2]:
+    - generic [ref=e4]:
+      - link "herb" [ref=e5] [cursor=pointer]:
+        - /url: /
+        - img [ref=e6]
+        - generic [ref=e9]: herb
+      - navigation [ref=e10]:
+        - link "Home" [ref=e11] [cursor=pointer]:
+          - /url: /
+        - link "Field" [ref=e12] [cursor=pointer]:
+          - /url: /field
+        - link "Dashboard" [ref=e13] [cursor=pointer]:
+          - /url: /dashboard
+        - link "About" [ref=e14] [cursor=pointer]:
+          - /url: /about
+      - generic [ref=e15]:
+        - generic [ref=e16]: Beta
+        - generic [ref=e17]: EUDR Ready
+  - main [ref=e19]:
+    - generic [ref=e20]:
+      - generic [ref=e21]:
+        - generic [ref=e22]:
+          - img [ref=e23]
+          - text: Online · Syncing
+        - generic [ref=e27]:
+          - img [ref=e28]
+          - generic [ref=e31]: 3 items in queue
+      - generic [ref=e33]:
+        - heading "Farm Registration" [level=1] [ref=e34]
+        - paragraph [ref=e35]: Kilimanjaro Native Cooperative Union
+      - generic [ref=e36]:
+        - img [ref=e157]
+        - generic [ref=e41]: "2"
+        - generic [ref=e44]: "3"
+        - generic [ref=e47]: "4"
+        - generic [ref=e48]: Step 2 of 4
+      - generic [ref=e161]:
+        - generic [ref=e162]:
+          - img [ref=e164]
+          - generic [ref=e167]:
+            - heading "Crop Profile" [level=2] [ref=e168]
+            - paragraph [ref=e169]: What is grown on this farm plot?
+        - generic [ref=e171]:
+          - generic [ref=e172]: Crop Type
+          - generic [ref=e173]:
+            - button "coffee Arabica / Robusta" [ref=e174]:
+              - img [ref=e175]
+              - generic [ref=e177]:
+                - generic [ref=e178]: coffee
+                - generic [ref=e179]: Arabica / Robusta
+            - button "avocado Hass / Fuerte" [ref=e180]:
+              - img [ref=e181]
+              - generic [ref=e184]:
+                - generic [ref=e185]: avocado
+                - generic [ref=e186]: Hass / Fuerte
+      - generic [ref=e111]:
+        - button "Back" [ref=e187]:
+          - img [ref=e188]
+          - text: Back
+        - button "Map" [active] [ref=e190]:
+          - text: Map
+          - img [ref=e113]
+  - contentinfo [ref=e115]:
+    - generic [ref=e116]:
+      - generic [ref=e117]:
+        - generic [ref=e118]:
+          - generic [ref=e119]:
+            - img [ref=e120]
+            - generic [ref=e123]: herb
+          - paragraph [ref=e124]: Farm-to-market trust infrastructure for East African smallholder agriculture. Built for EUDR compliance, designed for the farmer.
+          - generic [ref=e125]:
+            - generic [ref=e126]: Tanzania Pilot
+            - generic [ref=e127]: EUDR Aligned
+        - generic [ref=e128]:
+          - heading "Platform" [level=3] [ref=e129]
+          - list [ref=e130]:
+            - listitem [ref=e131]:
+              - link "Field App" [ref=e132] [cursor=pointer]:
+                - /url: /field
+            - listitem [ref=e133]:
+              - link "Dashboard" [ref=e134] [cursor=pointer]:
+                - /url: /dashboard
+            - listitem [ref=e135]:
+              - link "About & Research" [ref=e136] [cursor=pointer]:
+                - /url: /about
+        - generic [ref=e137]:
+          - heading "Focus Areas" [level=3] [ref=e138]
+          - list [ref=e139]:
+            - listitem [ref=e140]: Tanzania Coffee
+            - listitem [ref=e141]: East Africa Avocado
+            - listitem [ref=e142]: EUDR Compliance
+            - listitem [ref=e143]: Cooperative Traceability
+      - generic [ref=e144]:
+        - paragraph [ref=e145]: © 2024 Herb · A demonstration platform for smallholder agriculture traceability.
+        - paragraph [ref=e146]: Built for the Shortcut Asia Challenge · Tanzanian pilot focus
+  - button "Open Next.js Dev Tools" [ref=e153] [cursor=pointer]:
+    - img [ref=e154]
+  - alert [ref=e147]

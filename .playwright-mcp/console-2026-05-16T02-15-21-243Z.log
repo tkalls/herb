@@ -1,0 +1,6 @@
+[     129ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     667ms] [LOG] [Fast Refresh] done in 639ms @ http://localhost:3002/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     768ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     850ms] [LOG] [Fast Refresh] done in 183ms @ http://localhost:3002/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[     951ms] [LOG] [Fast Refresh] rebuilding @ http://localhost:3002/_next/static/chunks/node_modules_next_dist_115brz8._.js:2477
+[    1012ms] [ERROR] Failed to load resource: the server responded with a status of 500 (Internal Server Error) @ http://localhost:3002/field:0

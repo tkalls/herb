@@ -1,0 +1,38 @@
+[    4830ms] [WARNING] [GSI_LOGGER]: Your client application uses one of the Google One Tap prompt UI status methods that may stop functioning when FedCM becomes mandatory. Refer to the migration guide to update your code accordingly and opt-in to FedCM to test your changes. Learn more: https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#display_moment and https://developers.google.com/identity/gsi/web/guides/fedcm-migration?s=dc#skipped_moment @ https://accounts.google.com/gsi/client:84
+[    5726ms] [ERROR] The request has been aborted. @ https://chatgpt.com/:0
+[    5726ms] [ERROR] [GSI_LOGGER]: FedCM get() rejects with AbortError: signal is aborted without reason @ https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:60
+[   16367ms] [WARNING] Warning: Missing `Description` or `aria-describedby={undefined}` for {DialogContent}. @ https://chatgpt.com/cdn/assets/4813494d-mg5pbd4t89tqt5n1.js:116
+[ 6727246ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778834027863&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 6727247ms] [ERROR] Failed to load resource: net::ERR_TIMED_OUT @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778834041179&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7244459ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778834983202&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7244460ms] [ERROR] Failed to load resource: net::ERR_NETWORK_CHANGED @ https://chatgpt.com/backend-api/sentinel/heartbeat:0
+[ 7248978ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835502917&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7248982ms] [ERROR]  ERROR  [Statsig] A networking error occurred during POST request to https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835502917&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1. TypeError: Failed to fetch TypeError: Failed to fetch
+    at o (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:59:3287)
+    at aie (https://chatgpt.com/cdn/assets/4813494d-mg5pbd4t89tqt5n1.js:2:72099)
+    at iie (https://chatgpt.com/cdn/assets/4813494d-mg5pbd4t89tqt5n1.js:2:72032)
+    at e.default.<anonymous> (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:130108)
+    at Generator.next (<anonymous>)
+    at https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:127532
+    at new Promise (<anonymous>)
+    at t (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:127332)
+    at e.default._sendRequest (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:129323)
+    at https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:160434 @ https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:60
+[ 7248995ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835502940&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7249504ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835503448&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7251513ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835505456&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7440213ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835694151&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7440214ms] [ERROR]  ERROR  [Statsig] A networking error occurred during POST request to https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835694151&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1. TypeError: Failed to fetch TypeError: Failed to fetch
+    at o (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:59:3287)
+    at aie (https://chatgpt.com/cdn/assets/4813494d-mg5pbd4t89tqt5n1.js:2:72099)
+    at iie (https://chatgpt.com/cdn/assets/4813494d-mg5pbd4t89tqt5n1.js:2:72032)
+    at e.default.<anonymous> (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:130108)
+    at Generator.next (<anonymous>)
+    at https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:127532
+    at new Promise (<anonymous>)
+    at t (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:127332)
+    at e.default._sendRequest (https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:129323)
+    at https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:62:160434 @ https://chatgpt.com/cdn/assets/2340486e-jkew7l4sun7qs3pb.js:60
+[ 7440222ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835694166&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7440726ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835694673&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0
+[ 7442735ms] [ERROR] Failed to load resource: net::ERR_INTERNET_DISCONNECTED @ https://chatgpt.com/ces/v1/rgstr?k=client-nb0qtYlZuy2tCMN5s5ncnuIBCJncjRViT0IzFm7GqST&st=javascript-client&sv=3.32.6&t=1778835696678&sid=363becc5-cea8-4a7d-8914-241bb1ff8a9f&ec=10&gz=1:0

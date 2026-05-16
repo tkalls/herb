@@ -1,0 +1,498 @@
+---
+title: Herb Design System
+version: 1.0
+appliesTo: /Users/tobi/Desktop/herb
+binding: true
+lastReviewed: 2026-05-12
+---
+
+# Herb Design System — Binding Contract for Claude Code
+
+This MDX file is the **single source of design truth** for Herb. If a frontend instruction in `HERB_BACKEND_BRIEF.md` contradicts this file, **this file wins** for visual decisions. Backend brief wins for data shape, schema, and architecture.
+
+> Read this entire file before generating any JSX. Do not skim.
+
+---
+
+## 1. Identity and tone
+
+Herb lives at **herb.shamba** — "shamba" is Swahili for farm or field. The name tells any East African user what this is before they read a word, and tells everyone else that the product was named from inside the language it serves, not from outside.
+
+Herb is a working tool, not a marketing site. The cooperative manager in Moshi, the field agent in Kibosho, and the buyer in Oslo are all going to look at it. The design has to feel:
+
+- **Calm.** Warm off-white background, never pure white. No glassmorphism, no gradients on text, no neon.
+- **Earned.** Numbers are mono-spaced. Scores have units. Statuses say what they mean.
+- **Field-trustable.** Tap targets large. Online/offline state always visible. Nothing requires hover to be understood.
+- **EU-audit-ready.** Every screen could be screenshotted and dropped into a compliance report without embarrassment.
+
+If a design choice fails any of these four tests, do not ship it.
+
+---
+
+## 2. Design tokens (Tailwind v4)
+
+These already exist in `app/globals.css`. **Do not overwrite them.** Reference them only.
+
+```css
+/* The palette is fixed. Do not introduce new hues. */
+--background:  stone-50;     /* #fafaf9 — page background, warm off-white */
+--surface:     white;        /* card and panel base */
+--surface-alt: stone-100;    /* inset rows, table stripes */
+--border:      stone-200;    /* every divider, every card edge */
+--ink:         stone-900;    /* primary text */
+--ink-soft:    stone-600;    /* secondary text, captions */
+--ink-faint:   stone-400;    /* placeholder, disabled */
+
+--brand:       emerald-700;  /* primary buttons, links, headings on hero */
+--brand-deep:  emerald-900;  /* dark hero backgrounds */
+--brand-soft:  emerald-50;   /* badge fill for positive states */
+
+--accent:      amber-500;    /* harvest gold, coffee, alerts that need attention */
+--accent-soft: amber-50;     /* EUDR alert banner background */
+
+--danger:      red-500;      /* needs_review status, errors */
+--danger-soft: red-50;       /* danger card background */
+
+--info:        sky-600;      /* informational badges, never primary */
+```
+
+**Forbidden:** any blue that isn't `sky-600`. Any purple, pink, teal, indigo. Any custom color outside Tailwind's stone/emerald/amber/red/sky scales.
+
+**Typography:**
+
+| Use | Font | Class |
+|---|---|---|
+| All UI prose | Geist Sans (next/font/google) | default |
+| Numbers, IDs, coordinates, scores | Geist Mono | `font-mono` |
+| Display (hero h1) | Geist Sans, `font-semibold tracking-tight` | — |
+
+Type scale, no exceptions:
+- Display: `text-4xl md:text-5xl lg:text-6xl font-semibold tracking-tight`
+- H2: `text-2xl md:text-3xl font-semibold`
+- H3: `text-lg font-semibold`
+- Body: `text-sm md:text-base`
+- Caption: `text-xs text-stone-600`
+- Mono labels: `text-xs font-mono uppercase tracking-wider text-stone-500`
+
+**Radii:**
+- Inputs, buttons: `rounded-lg`
+- Cards: `rounded-xl`
+- Hero / feature cards: `rounded-2xl`
+- Pills, badges: `rounded-full`
+
+**Shadows:**
+- Default card: `shadow-sm`
+- Elevated (modal, dropdown): `shadow-lg`
+- Never `shadow-xl` or deeper. Never colored shadows.
+
+**Spacing rhythm:** multiples of 4 (Tailwind defaults). Section padding `py-12 md:py-20`. Card padding `p-6`. Tight stacks `space-y-2`, comfy stacks `space-y-6`.
+
+---
+
+## 3. Hard rules (read these twice)
+
+1. **No shadcn, no Radix, no headless UI.** All components are hand-rolled with Tailwind classes inline. This is non-negotiable — Tobi's existing code is custom-only and we keep it consistent.
+2. **No `cn()` helper.** Use template literals or plain class strings.
+3. **No client-side routing libraries.** Next.js App Router only.
+4. **No animation libraries.** CSS transitions only, max duration 200ms, easing `ease-out`.
+5. **Respect `prefers-reduced-motion`.** Anything that moves must check `@media (prefers-reduced-motion: reduce)`.
+6. **Mobile first.** `/field` is mobile-only in spirit; design at 375px and scale up.
+7. **Every interactive element needs a visible focus ring.** `focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2`.
+8. **Minimum tap target on `/field`: 48×48px.** Test with `min-h-12 min-w-12`.
+9. **No emoji in UI labels.** Lucide icons only.
+10. **All numbers in tables and KPIs use `font-mono` and right-align.**
+
+---
+
+## 4. Component recipes
+
+These are the building blocks. Claude Code may add new components only by following these patterns.
+
+### 4.1 Card
+
+The most-used surface in the app. Two variants only.
+
+```tsx
+// Standard card
+<div className="rounded-xl border border-stone-200 bg-white p-6 shadow-sm">
+  {/* content */}
+</div>
+
+// Hero / feature card (only on / and /about)
+<div className="rounded-2xl border border-stone-200 bg-white p-8 shadow-sm">
+  {/* content */}
+</div>
+```
+
+No card has more than one border. No card uses a gradient background. No card sits on `bg-stone-50` without a border.
+
+### 4.2 Button
+
+Three variants. That is all.
+
+```tsx
+// Primary
+<button className="inline-flex items-center justify-center gap-2 rounded-lg bg-emerald-700 px-4 py-2.5 text-sm font-medium text-white shadow-sm transition hover:bg-emerald-800 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2 disabled:opacity-50">
+  Save
+</button>
+
+// Secondary
+<button className="inline-flex items-center justify-center gap-2 rounded-lg border border-stone-300 bg-white px-4 py-2.5 text-sm font-medium text-stone-900 shadow-sm transition hover:bg-stone-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600 focus-visible:outline-offset-2">
+  Cancel
+</button>
+
+// Ghost (used in tables, nav)
+<button className="inline-flex items-center gap-1.5 rounded-lg px-2 py-1 text-sm text-stone-700 transition hover:bg-stone-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-emerald-600">
+  View
+</button>
+```
+
+Field-app primary action is **larger**: `px-5 py-3.5 text-base min-h-12`.
+
+### 4.3 Badge (status pill)
+
+Status badges always use the same vocabulary. Build a `<StatusBadge status="verified">` helper that switches palette by status — do NOT inline these everywhere.
+
+```tsx
+// verified
+"bg-emerald-50 text-emerald-800 border border-emerald-200"
+
+// pending
+"bg-amber-50 text-amber-800 border border-amber-200"
+
+// needs_review
+"bg-red-50 text-red-800 border border-red-200"
+
+// unverified
+"bg-stone-100 text-stone-700 border border-stone-200"
+```
+
+Badge wrapper:
+```tsx
+<span className={`inline-flex items-center gap-1 rounded-full px-2.5 py-0.5 text-xs font-medium ${palette}`}>
+  <Icon size={12} />
+  {label}
+</span>
+```
+
+### 4.4 KPI tile (dashboard top row)
+
+```tsx
+<div className="rounded-xl border border-stone-200 bg-white p-5 shadow-sm">
+  <div className="text-xs font-mono uppercase tracking-wider text-stone-500">Verified farms</div>
+  <div className="mt-2 text-3xl font-mono font-semibold text-stone-900 tabular-nums">892</div>
+  <div className="mt-1 text-xs text-stone-600">of 1,203 total</div>
+</div>
+```
+
+KPI numbers are ALWAYS mono and `tabular-nums` so they don't jitter as Convex reactive queries update them.
+
+### 4.5 Score gauge (SVG)
+
+Used on `/dashboard` for compliance scores. Donut with the score in the center. Build it as a server component that takes `score` and `label`.
+
+- Track ring: `stone-200`.
+- Fill ring: `emerald-600` if score ≥ 80, `amber-500` if 60–79, `red-500` below 60.
+- Center number: `font-mono font-semibold text-3xl`.
+- Center label: `text-xs font-mono uppercase tracking-wider text-stone-500`.
+- Width: `w-32` mobile, `w-40` desktop.
+
+### 4.6 Sync badge (NEW — Phase 2)
+
+Always visible at the top of `/field`. Drives off the `useSyncQueue` hook.
+
+States:
+
+| State | Bar color | Icon | Text |
+|---|---|---|---|
+| online + empty queue | `bg-emerald-50 border-emerald-200 text-emerald-800` | `<Wifi size={14} />` | "Online — synced" |
+| online + draining | `bg-sky-50 border-sky-200 text-sky-800` | spinner | "Syncing N item(s)…" |
+| offline + queued | `bg-amber-50 border-amber-200 text-amber-800` | `<WifiOff size={14} />` | "Offline — N queued" |
+| error | `bg-red-50 border-red-200 text-red-800` | `<AlertTriangle size={14} />` | "Sync issue — tap to retry" |
+
+Layout:
+```tsx
+<div className={`flex items-center justify-between rounded-lg border px-3 py-2 text-xs ${palette}`}>
+  <span className="inline-flex items-center gap-1.5">{icon}{text}</span>
+  {queueCount > 0 && <span className="font-mono">{queueCount}</span>}
+</div>
+```
+
+### 4.7 Form step (the `/field` 4-step flow)
+
+- Page padding: `p-4` on mobile, `p-6` from `md:`.
+- Step header: small mono caption ("Step 2 of 4"), then h2 title, then one-line description.
+- Inputs: full-width, `rounded-lg`, `border border-stone-300`, `bg-white`, `min-h-12`, `text-base`. Focus = emerald ring.
+- Labels: `text-sm font-medium text-stone-800 mb-1.5`.
+- Help text under input: `text-xs text-stone-600 mt-1`.
+- Error text: `text-xs text-red-700 mt-1`.
+- Stepper at bottom: full-width sticky `bg-stone-50` with `border-t border-stone-200`. Primary "Next" right, secondary "Back" left.
+
+### 4.8 Table (dashboard Farms / Batches)
+
+- Outer wrapper: `rounded-xl border border-stone-200 bg-white overflow-hidden`.
+- Header row: `bg-stone-50 text-xs font-mono uppercase tracking-wider text-stone-600`.
+- Body row: hover `hover:bg-stone-50`, divider `border-t border-stone-200`.
+- Numeric cells: `font-mono tabular-nums text-right`.
+- Sticky header on scroll: `sticky top-0 z-10`.
+
+### 4.9 PolygonMap (MapLibre — simulated walk capture + view + edit)
+
+The most important component in v1. Looks indistinguishable from a real GPS capture to a reviewer watching the screen. Real `navigator.geolocation` ships in v1.1 by flipping a `mode` prop.
+
+**Visual contract:**
+- Container: `rounded-xl border border-stone-200 overflow-hidden`. Aspect ratio: `aspect-[4/3]` on mobile, `aspect-[16/10]` on desktop.
+- Base style: MapTiler satellite (URL keyed off `NEXT_PUBLIC_MAPTILER_KEY`). Fallback: OSM raster, stone-tinted.
+- Polygon fill: `emerald-500` at 25% opacity. Polygon stroke: `emerald-700`, width 2.
+- Vertex handles (edit mode only): 10px circles, `bg-white border-2 border-emerald-700 shadow-sm`. Hover: scale 1.2.
+- Capture-in-progress polygon: dashed stroke `stroke-dasharray="6 4"`, fill at 15%, redrawn each tick.
+- Walk head marker: small `Crosshair` icon at the latest point, `text-emerald-700`, gentle pulse (suppressed under `prefers-reduced-motion`).
+- Deforestation toggle (view mode): pill button in the top-right corner of the map, follows the badge palette. v1 toggles a stylized red-500 raster mock; v1.1 swaps in real GFW WMS tiles.
+- Attribution: `text-[10px] text-stone-500` bottom-right, never collapsed.
+
+**Capture-mode controls (simulated walk, v1):**
+- Bottom-center: full-width primary button `min-h-14 rounded-2xl`. Label states: "Start walk" → "Walking — {n} of 12" (with a thin progress bar inside the button, `bg-white/30`) → "Walk complete".
+- Mid-walk a small secondary "Pause" appears bottom-right; on pause it becomes "Resume".
+- Bottom-left chip: live area readout `font-mono tabular-nums`. Format: `0.74 ha`. Empty until the polygon closes.
+- Top-left chip: accuracy `font-mono`. v1 always shows `±3 m text-emerald-700`. v1.1 reads from `position.coords.accuracy` and goes amber > 10 m, red > 20 m.
+
+**View-mode controls:**
+- Top-right: toggle pills for "Satellite" / "Streets" / "Show deforestation".
+- Click on polygon: opens audit drawer (right slide-over, `w-96`).
+- Tap-to-edit (post-capture, before submit): tap a vertex to drag-reposition; tap empty edge to insert vertex; tap vertex's small × badge to delete. Recompute area each change.
+
+**Honest copy:** Do not write "simulated", "mock", "test mode", or "demo walk" anywhere in the visible UI. The button says "Start walk". The accuracy chip says `±3 m`. The internals know the difference; the user does not need to.
+
+### 4.10 BatchTraceMap (the live-transit moment)
+
+Used on `/dashboard` Batches detail and `/buyer/[batchCode]`.
+
+- Same map container as PolygonMap.
+- Route line: from cooperative origin to buyer destination. Render the great-circle path as a 2px `emerald-600` line at 60% opacity.
+- Past handoff stages: small dots `bg-emerald-700` with a `font-mono` label below (`"Cooperative intake — 14:22"`).
+- Current position (transit): a single 14px circle `bg-amber-500 border-2 border-white shadow-md`. Subtle `animate-pulse` (suppressed under `prefers-reduced-motion`).
+- Trailing path: last 30 pings rendered as a fading line, `emerald-600` going to transparent.
+- Camera: auto-fits the bounds of route + current ping, padded.
+- Loading state: skeleton map (stone-100 base with a centered `Loader2` spinner). Never empty.
+
+### 4.11 SignatureButton (the buyer receipt moment)
+
+Lives on `/buyer/[batchCode]` only. Appears when batch is within 10 km of destination.
+
+States and treatment:
+
+| State | Treatment |
+|---|---|
+| Hidden | Component returns null. |
+| Available | Primary button, full-width on mobile, `min-h-14`, label "Confirm receipt of this batch". Subtitle below: "By signing you record receipt against this trace permanently." |
+| Modal open | Modal card `rounded-2xl bg-white shadow-lg p-6 max-w-md`. One input "Your full name" (`min-h-12`). Two buttons: primary "Sign and confirm", secondary "Cancel". |
+| Signing | Primary button shows `<Loader2 className="animate-spin" />` + "Signing…". Disabled. |
+| Signed | Replace the entire component with a stamp card: `rounded-xl bg-emerald-50 border border-emerald-200 p-5`. `CheckCircle2` icon `text-emerald-700`. Headline `font-semibold text-stone-900`: "Receipt confirmed". Subtitle `text-sm text-stone-700`: signer name + timestamp in mono. Below, in a `font-mono text-xs text-stone-500 break-all`: the SHA-256 signature hash with a "Copy" ghost button. |
+
+The signed stamp is permanent. Reloading the page must show it. No "Sign again" option.
+
+### 4.12 Conflict modal (Phase 2 fallback)
+
+If the same farm is edited offline by two agents and both come online, we need a conflict UI. Spec:
+
+- Modal card: `rounded-2xl bg-white shadow-lg max-w-lg mx-auto p-6`.
+- Title: "Two versions of this farm". Subtitle: "Pick which one to keep, or merge fields."
+- Side-by-side diff rendered as a two-column grid. Differing fields highlighted with `bg-amber-50`.
+- Two buttons: "Keep mine" (primary), "Keep theirs" (secondary). Optional "Merge by field" (ghost) for v2.
+
+Do not build this UI in Phase 2 unless time permits — but document it so a stub exists.
+
+---
+
+## 5. Page-level layouts
+
+### 5.1 `/` (landing) — already built, do not change
+
+Locked. No edits without Tobi's explicit ask.
+
+### 5.2 `/field` — mobile-first form flow
+
+- Max width `max-w-md mx-auto`.
+- Sync badge at top, always visible.
+- Step content scrolls; stepper sticky at bottom.
+- Confirmation screen uses the hero card variant (`rounded-2xl`) with the generated farm ID in mono.
+- Geolocation capture button (Step 2): full-width, primary green, `min-h-16`, label "Hold to capture" → "Capturing… {n} points" while pressed.
+
+### 5.3 `/dashboard` — desktop-first, responsive down to 768px
+
+- Sidebar nav on `lg:` (cooperative info, page tabs Overview/Farms/Batches/Buyers).
+- Main column: KPIs on top in a 4-col grid (`grid-cols-2 lg:grid-cols-4 gap-4`), then content per tab.
+- Gauges in a 2-col grid `md:grid-cols-2`, each with sub-score list.
+- All numbers reactive: wrap them in a `<LiveNumber value={data?.x ?? 0} />` that uses `tabular-nums` so digits don't jitter as Convex pushes updates.
+
+### 5.4 `/about` — already built, do not change
+
+Locked.
+
+### 5.5 `/buyer/[batchCode]` — public buyer trace page (Phase 3, full loop)
+
+This is the buyer's permanent record. Designed to be screenshot-worthy and pasted into a procurement system.
+
+**Header band** (`bg-stone-900 text-white`, full-bleed):
+- Left: cooperative crest + name, batch code in `font-mono text-lg`.
+- Right: status badge (preparing / ready / in_transit / received).
+
+**Section 1 — Summary card** (the hero):
+- Three KPI tiles in a row: weight (kg, mono), origin (region, country), buyer (company, country).
+- Below: a `BatchTraceMap` (component 4.10) showing the route + live position.
+
+**Section 2 — Origin farms** (the trust):
+- Grid of farm cards. Each card: farmer initials (`A.W.M.`), variety, area, EUDR score gauge, mini `PolygonView` thumbnail.
+- Click any card: opens a drawer with the full polygon on a MapLibre map and the audit history.
+- No full farmer names. No phone numbers. No national IDs. Ever.
+
+**Section 3 — Chain of custody** (the spine):
+- Vertical timeline of `batchEvents`. Each row: stage icon, actor name + role, timestamp (mono), evidence chip (clickable, opens R2 signed URL).
+- Lines connecting rows: `border-l-2 border-stone-200`, completed stages `border-emerald-600`.
+- Latest row is highlighted with a soft `bg-emerald-50` band.
+
+**Section 4 — Receipt**:
+- The `SignatureButton` (component 4.11) lives here.
+- Before sign: button + explanation paragraph.
+- After sign: the permanent green stamp card.
+
+**Section 5 — Documents**:
+- EUDR declaration PDF (R2 link).
+- Phytosanitary certificate (R2 link, if present).
+- Quality grading report (R2 link, if present).
+- Each as a row with file icon, name, size, "Open" ghost button.
+
+**Footer band**:
+- Left: "Audited by Herb. Verified against trace ID `tr_xxxx`." `font-mono text-xs text-stone-500`.
+- Right: "Last updated 14:22 EAT, 12 May 2026."
+- No marketing CTA. No "Try Herb". This page is for buyers — let it breathe.
+
+**Auth**: none. **PII**: none. **Indexable**: no (robots noindex).
+
+---
+
+## 6. States Claude Code must always implement
+
+For every screen that reads data, render all six:
+
+| State | Treatment |
+|---|---|
+| Loading | Skeleton blocks (`bg-stone-200 animate-pulse rounded-lg`), same shape as final content. Never spinners on a page-load — only on inline actions. |
+| Empty | Centered illustration-free card: lucide icon (`Sprout`, `Map`, etc.) at 32px stone-400, one-line message, optional secondary button. |
+| Error | Inline card with red-50 background, red-200 border, red-800 text. Include the actual error message in a `<details>` for the dev. |
+| Loaded | The real content. |
+| Optimistic | Row shown immediately with `opacity-70` and a `<Loader2 size={12} className="animate-spin" />` until the queue confirms. Then fades to full opacity. |
+| Signed / Confirmed | Once an action is cryptographically signed (buyer receipt, audit-log write), the affected row gets a small mono timestamp + `CheckCircle2` in `text-emerald-700`. This state is permanent — no undo affordance. |
+
+---
+
+## 7. Accessibility checklist
+
+Run through this before declaring any screen done:
+
+- [ ] All form inputs have a `<label>` (not just placeholder).
+- [ ] All buttons have either visible text or `aria-label`.
+- [ ] Status badges have a text label, not just color.
+- [ ] Focus rings are visible on every interactive element.
+- [ ] Tap targets on `/field` are at least 48×48px.
+- [ ] Color contrast: body text on stone-50 ≥ 7:1, secondary text ≥ 4.5:1.
+- [ ] All icons in interactive controls have `aria-hidden="true"` (because the button has its own label).
+- [ ] Tables have `<th scope="col">`.
+- [ ] Modal traps focus and returns it on close.
+- [ ] No content depends on color alone (status icons accompany status colors).
+
+---
+
+## 8. Things that look right but are wrong
+
+A short list of mistakes the model tends to make. Reject them on review:
+
+- Glass cards (`backdrop-blur`). Forbidden.
+- Pure white `bg-white` page background. Always `bg-stone-50`.
+- Bold colored borders (e.g. `border-emerald-500`). Borders are stone-200.
+- Centered-everything pages. Dashboard is left-aligned, max-width `max-w-7xl mx-auto px-4`.
+- Inline SVGs as logos. Use Lucide.
+- Multiple font weights stacked (`font-bold`, `font-extrabold`). Use `font-semibold` for emphasis, that's it.
+- `text-black`. Use `text-stone-900`.
+- Pixel values in className. Stick to Tailwind's scale.
+- A toast library. Use a small inline banner instead.
+- Decorative emojis (🌱 🌍 ☕). Replaced with Lucide `<Sprout>`, `<Globe>`, `<Coffee>`.
+
+**Production-language forbiddens (zero tolerance):**
+
+- The strings "Beta", "Demo", "Coming Soon", "WIP", "Test", "Sandbox", "Preview", "Alpha", "v0", "Prototype" anywhere a user can see them.
+- Watermarks, ribbons, banners, or chips that announce the build's status.
+- `@example.com`, `@test.com`, `@herb.demo`, `demo@`, `test@`, or any `Lorem ipsum` derivative.
+- "Placeholder" as a literal word in helper text.
+- Date placeholders like `MM/DD/YYYY` shown as if they were data. Use real localized timestamps (`12 May 2026 · 14:22 EAT`).
+- Phone numbers like `+1 555 0100`. Use real-format Tanzanian / Kenyan numbers (`+255 7xx xxx xxx`, `+254 7xx xxx xxx`).
+- The product self-describing itself. No "Herb is a platform that..." inside the product. The product is operated, not explained.
+
+**Modern, deliberate, restrained — what to do INSTEAD of "innovative-looking":**
+
+- Confidence in white space. Sections breathe at `py-16` minimum on desktop.
+- One feature per screen at the top fold. Stack secondary features below.
+- Numbers do the talking. Big mono numbers next to short labels beat any illustration.
+- Color earned, not sprayed. Emerald is for the brand action. Amber is for "attention needed". Red is for "stop". Everything else is stone.
+- Motion that confirms, never decorates. A transform on success, a fade on transition, never a bounce, never a parallax.
+- Real photos > stock illustrations > vector mascots. If you can't find a real photo, omit the visual.
+
+---
+
+## 9. Iconography
+
+Lucide-react only. Suggested mappings:
+
+| Concept | Icon |
+|---|---|
+| Farmer / person | `User` |
+| Farm / land | `Sprout` or `MapPin` |
+| Coffee | `Coffee` |
+| Avocado / generic crop | `Apple` (stand-in) or custom inline SVG |
+| Macadamia | `Nut` |
+| Mobile-money / payout | `Smartphone` (rail unknown) or `Banknote` (settled) |
+| Receipt / signature | `Signature` or `PenLine` |
+| Cooperative federation | `Network` |
+| Transit / shipping | `Truck` for road, `Ship` for sea, `Plane` for air |
+| GPS / map | `Map`, `MapPin`, `Crosshair` |
+| Online / sync | `Wifi`, `RefreshCw` |
+| Offline | `WifiOff` |
+| EUDR / compliance | `ShieldCheck` |
+| Risk / warning | `AlertTriangle` |
+| Verified | `CheckCircle2` |
+| Pending | `Clock` |
+| Buyer / export | `Ship`, `Globe2` |
+| Audit / logs | `FileText`, `History` |
+| Cooperative | `Users` |
+
+Always render icons at sizes from this scale only: 12, 14, 16, 20, 24, 32.
+
+---
+
+## 10. Performance budget
+
+- First Contentful Paint on /dashboard: under 1.5s on a fast 3G profile.
+- Total JS shipped to /field: under 180 KB gzipped (Dexie + Convex client + Turf is the heavy bit).
+- No image larger than 200 KB. R2-hosted images served as WebP via a CF Worker image transform.
+- No CLS — reserve heights for KPI tiles and gauges with explicit dimensions.
+
+---
+
+## 11. What to do when you're not sure
+
+If Claude Code is generating a component and isn't sure which pattern applies:
+
+1. Find the closest existing component in `/Users/tobi/Desktop/herb/components/` or `/app/`.
+2. Mimic its structure exactly.
+3. If nothing close exists, default to a standard card with the standard form input recipe.
+4. Add a comment `// design-review: please confirm` so Tobi can flag it.
+
+Never invent a new design pattern under deadline pressure. Mimic, ship, refine later.
+
+---
+
+## 12. The one-sentence summary
+
+> Warm off-white, emerald primary, amber accent, stone borders, mono numbers, big tap targets, every screen has loading/empty/error/loaded, and we never ship a fancy interaction we haven't checked under `prefers-reduced-motion`.
+
+If everything else burns down, follow that sentence.
