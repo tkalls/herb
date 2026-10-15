@@ -43,3 +43,7 @@ next-env.d.ts
 # Herb — never commit
 CREDENTIALS.md
 BLOCKERS.md
+
+# tool caches
+.playwright-mcp/
+.lean-ctx/
